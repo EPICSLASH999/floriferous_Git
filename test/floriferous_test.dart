@@ -8,7 +8,9 @@ import 'package:test/test.dart';
 
 
 void main() {
-  test('Tamaño de cards = 55', () {
+
+  group('Cards', () {
+    test('Tamaño de cards = 55', () {
     expect(gardenCards.length, equals(55));
   });
   test('Tarjeta de Flores es tipo "Flower"', () {
@@ -30,6 +32,10 @@ void main() {
     GardenCard card = gardenCards.elementAt(0);
     expect(card._typeOfCard, equals(TypeOfCard.Flower));
   });
+  test('Cast as FlowerCard from GardenCard', () {
+    FlowerCard card = gardenCards.elementAt(0) as FlowerCard;
+    expect(card, equals(isA<FlowerCard>()));
+  });
   test('Las cartas no tienen piedra por "omisión"', () {
     FlowerCard card = gardenCards.elementAt(0) as FlowerCard;
     expect(card.hasStone, equals(false));
@@ -38,18 +44,34 @@ void main() {
     FlowerCard card = FlowerCard(tipoDeCarta: TypeOfCard.Flower, flor: Flowers.Daisy, col: Colors.Orange, tienePiedra: true);
     expect(card.hasStone, equals(true));
   });
-
   test('Generar 3 bountyCard aleatorias', () {
     List<BountyCard> bounties = generateBountyCards();
-    print(bounties.length);
-    print(bounties.elementAt(0).requirement1);
-    print(bounties.elementAt(1).requirement1);
-    print(bounties.elementAt(2).requirement1);
-    print(bounties);
+    //print(bounties);
+    expect(bounties.length, equals(3));
   });
+  
+  });
+  
+  
+  test('Game ha generado sus bounty cards', () {
+    Game game = Game();
+    //print(game.bountyCards);
+    expect(game.bountyCards.length, equals(3));
+  });
+
 
 }
 
+class Game{
+  late final List<BountyCard> bountyCards;
+
+  Game(){
+    bountyCards = generateBountyCards();
+  }
+}
+
+
+/* ---------------------------------- CARDS ---------------------------------- */
 List<BountyCard> generateBountyCards() {
   List<BountyCard> temporalCards = bountyCards;
   List<BountyCard> finalCards = [];
@@ -197,15 +219,26 @@ class CupOfTeaCard{
 }
 
 class BountyCard extends Equatable{
+  // Equatable is for its "parameters" to be seen when print
 
   late final Enum requirement1;
   late final Enum requirement2;
   late final Enum requirement3;
 
+  bool _isCompleated = false;
+  bool get isCompleated  => _isCompleated;
+
+  late final int _wasCompleatedAtDay;
+  int get wasCompleatedAtDay => _wasCompleatedAtDay;
+
   BountyCard({required Enum requerimiento1, required Enum requerimiento2, required Enum requerimiento3}) {
     requirement1 = requerimiento1;
     requirement2 = requerimiento2;
     requirement3 = requerimiento3;
+  }
+
+  void compleatedAtDay(int day){
+    _wasCompleatedAtDay = day;
   }
 
   @override
@@ -227,3 +260,4 @@ class CrowCard{
 
 }
 
+/* ---------------------------------------------------------------------------- */
