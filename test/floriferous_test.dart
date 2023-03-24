@@ -9,7 +9,7 @@ import 'package:test/test.dart';
 
 void main() {
 
-  group('Cards', () {
+  group('Cards: ', () {
     test('Tamaño de cards = 55', () {
     expect(gardenCards.length, equals(55));
   });
@@ -53,20 +53,44 @@ void main() {
   });
   
   
-  group('Game', () {
+  group('Game: ', () {
     test('Game ha generado sus bounty cards', () {
       Game game = Game();
-      //print(game.bountyCards);
-      expect(game.bountyCards.length, equals(3));
+      //print(game.GetBountyCards());
+      expect(game.GetBountyCards().length, equals(3));
     });
     test('Game ha generado sus garden cards', () {
       Game game = Game();
       //print(game.gardenCards);
-      expect(game.gardenCards.length, equals(10));
+      expect(game.GetGardenCards().length, equals(10));
     });
-    test('test name', () {
-      
+    test('Al generar renglones de dia 1 quedan 45 cartas de jardin', () {
+      Game game = Game();
+      game.BuildRows();
+      expect(game.GetGardenCards().length, equals(45));
     });
+    test('Columna 1 es Mum:Orange y Mum:Pink', () {
+      Game game = Game();
+      List<GardenCard> expectedCards = [gardenCards.elementAt(0), gardenCards.elementAt(5)];
+      List<GardenCard> actualCards = game.GetRowByColumn();
+      print(expectedCards);
+      expect(actualCards, equals(expectedCards));
+    });
+    test('Despues de turno es columna 2', () {
+      Game game = Game();
+      game.NextTurn();
+      expect(game.column, equals(2));
+    });
+    test('Despues de 5 turnos es columna 1 de nuevo', () {
+      Game game = Game();
+      game.NextTurn();
+      game.NextTurn();
+      game.NextTurn();
+      game.NextTurn();
+      game.NextTurn();
+      expect(game.column, equals(1));
+    });
+
 
   });
   
@@ -75,37 +99,78 @@ void main() {
 }
 
 class Game{
-  late final List<BountyCard> bountyCards;
-  late final List<GardenCard> gardenCards;
+  late final List<BountyCard> _bountyCards;
+  List<GardenCard> _gardenCards = [];
 
   int day = 1;
-  int round = 0;
+  int column = 1;
+
+  List<GardenCard> row1 = [];
+  List<GardenCard> row2 = [];
 
   Game(){
-    bountyCards = generateBountyCards();
-    gardenCards = generateGardenCards();
+    _bountyCards = generateBountyCards();
+
+    BuildDay();
+  }
+  
+  void BuildDay() {
+    //gardenCards = generateGardenCards(gardenCards, gardenCards.length); 
+    _gardenCards = gardenCards;
+    
+    BuildRows2();
   }
 
-  void Turn(){
-    gardenCards.elementAt(0);
-    round++;
+  void NextTurn(){
+    column++;
+    if (column > 5){
+      column = 1;
+      day++;
+    }
   }
+
+
+  BuildRows(){
+    row1 = generateGardenCards(_gardenCards, 5);
+    row2 = generateGardenCards(_gardenCards, 5);
+  }
+
+  BuildRows2(){
+    row1 = [_gardenCards.elementAt(column-1),_gardenCards.elementAt(column),_gardenCards.elementAt(column+1),_gardenCards.elementAt(column+2),_gardenCards.elementAt(column+3)];
+    row2 = [_gardenCards.elementAt(column+4),_gardenCards.elementAt(column+5),_gardenCards.elementAt(column+6),_gardenCards.elementAt(column+7),_gardenCards.elementAt(column+8)];
+  }
+
+  List<GardenCard> GetRowByColumn(){
+    return [row1.elementAt(column-1), row2.elementAt(column-1)];
+
+  }
+
+  List<GardenCard> GetGardenCards(){
+    return _gardenCards;
+  }
+  List<BountyCard> GetBountyCards(){
+    return _bountyCards;
+  }
+
+  List<GardenCard> generateGardenCards(List<GardenCard> receivedCarts, int numberOfCards) {
+    List<GardenCard> temporalCards = receivedCarts;
+    List<GardenCard> finalCards = [];
+
+    for (var i = 0; i < numberOfCards; i++) {
+      final _random = new Random();
+      GardenCard c = temporalCards[_random.nextInt(temporalCards.length)];
+      finalCards.add(c);
+      temporalCards.remove(c);
+    }
+
+    _gardenCards = temporalCards;
+    return finalCards;
+}
+
 
 }
 
-List<GardenCard> generateGardenCards() {
-  List<GardenCard> temporalCards = gardenCards;
-  List<GardenCard> finalCards = [];
 
-  for (var i = 0; i < 10; i++) {
-    final _random = new Random();
-    GardenCard c = temporalCards[_random.nextInt(temporalCards.length)];
-    finalCards.add(c);
-    temporalCards.remove(c);
-  }
-
-  return finalCards;
-}
 
 
 /* ---------------------------------- CARDS ---------------------------------- */
@@ -122,6 +187,7 @@ List<BountyCard> generateBountyCards() {
 
   return finalCards;
 }
+
 
 enum Flowers {Daisy, Lily, Mum, Poppy, Tulip}
 enum Colors {White, Yellow, Orange, Pink, Purple}
@@ -201,7 +267,7 @@ List <BountyCard> bountyCards = [
   
 ];
 
-class GardenCard{
+class GardenCard extends Equatable{
 
   late final TypeOfCard _typeOfCard;
   TypeOfCard get typeOfCard => _typeOfCard;
@@ -217,6 +283,9 @@ class GardenCard{
   GardenCard({required TypeOfCard tipoDeCarta}){
     _typeOfCard = tipoDeCarta;
   }
+
+  @override
+  List<Object?> get props => [_flower, _color, _bug];
 
 }
 
