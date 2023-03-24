@@ -50,19 +50,21 @@ void main() {
   });
   
   
-  group('Game: ', () {
-    test('Game ha generado sus bounty cards', () {
-      Game game = Game();
-      //print(game.GetBountyCards());
-      expect(game.GetBountyCards().length, equals(3));
-    });
-
+  group('Game1: ', () {
+    
     test('El total de garden cards disminuye a 45 tras contruir el tablero', () {
       Game game = Game();
       //print(game.gardenCards);
       expect(game.GetGardenCards().length, equals(45));
     });
-    
+  });
+
+  group('Game2: ', () {
+    test('Game ha generado sus bounty cards', () {
+      Game game = Game();
+      //print(game.GetBountyCards());
+      expect(game.GetBountyCards().length, equals(3));
+    });
     test('Despues de turno es columna 2', () {
       Game game = Game();
       game.NextTurn();
@@ -77,14 +79,14 @@ void main() {
       game.NextTurn();
       expect(game.column, equals(1));
     });
-    
+  });
+  
+  group('Game3: ', () {
     test('Imprimir tablero', () {
       Game game = Game();
       game.ImprimirTablero();
     });
-
   });
-  
 
 
 }
@@ -125,10 +127,10 @@ class Game{
     row1 = generateGardenCards(_gardenCards, 5);
     row2 = generateGardenCards(_gardenCards, 5);
 
-    SetCards();
+    SetCardsOfRows();
   }
 
-  SetCards(){
+  SetCardsOfRows(){
     // Move this to the BuildRows method
 
     row1.elementAt(1).TurnCard();
@@ -140,6 +142,10 @@ class Game{
   }
 
   void ImprimirTablero(){
+    PrintBountyCardsZone();
+  }
+
+  void PrintBountyCardsZone(){
     // ignore: prefer_interpolation_to_compose_strings
     String message = ('|| ${_bountyCards.elementAt(0).requirement1.name} ${_bountyCards.elementAt(0).requirement2.name} ${_bountyCards.elementAt(0).requirement3.name} || '+
           ' ${_bountyCards.elementAt(1).requirement1.name} ${_bountyCards.elementAt(1).requirement2.name} ${_bountyCards.elementAt(1).requirement3.name} ' +
@@ -148,11 +154,11 @@ class Game{
     String title = ' BOUNTY CARDS ';
 
     String line1 = '-' * ((message.length~/2) - title.length~/2);
-    String line2 = '-' * (message.length~/2);
+    String line2 = '-' * (message.length);
     
     print('$line1$title$line1');
     print(message);
-    print('$line2$line2');
+    print(line2);
   }
 
 
@@ -266,7 +272,7 @@ List<GardenCard> gardenCards = [
   ArrangementCard(tipoDeCarta: TypeOfCard.Arrangement, flor: Flowers.Poppy, col: Colors.Orange, bicho: Bugs.Moth),
   ArrangementCard(tipoDeCarta: TypeOfCard.Arrangement, flor: Flowers.Tulip, col: Colors.Yellow, bicho: Bugs.Ladybug),
   ArrangementCard(tipoDeCarta: TypeOfCard.Arrangement, flor: Flowers.Lily, col: Colors.Purple, bicho: Bugs.Butterfly),
-  ArrangementCard(tipoDeCarta: TypeOfCard.Arrangement, flor: Flowers.Daisy, col: Colors.White, bicho: Bugs.Moth),
+  ArrangementCard(tipoDeCarta: TypeOfCard.Arrangement, flor: Flowers.Daisy, col: Colors.White, bicho: Bugs.Bee),
   ArrangementCard(tipoDeCarta: TypeOfCard.Arrangement, flor: Flowers.Mum, col: Colors.Pink, bicho: Bugs.Beetle),
 ];
 
