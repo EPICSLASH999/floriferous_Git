@@ -53,21 +53,58 @@ void main() {
   });
   
   
-  test('Game ha generado sus bounty cards', () {
-    Game game = Game();
-    //print(game.bountyCards);
-    expect(game.bountyCards.length, equals(3));
+  group('Game', () {
+    test('Game ha generado sus bounty cards', () {
+      Game game = Game();
+      //print(game.bountyCards);
+      expect(game.bountyCards.length, equals(3));
+    });
+    test('Game ha generado sus garden cards', () {
+      Game game = Game();
+      //print(game.gardenCards);
+      expect(game.gardenCards.length, equals(10));
+    });
+    test('test name', () {
+      
+    });
+
   });
+  
 
 
 }
 
 class Game{
   late final List<BountyCard> bountyCards;
+  late final List<GardenCard> gardenCards;
+
+  int day = 1;
+  int round = 0;
 
   Game(){
     bountyCards = generateBountyCards();
+    gardenCards = generateGardenCards();
   }
+
+  void Turn(){
+    gardenCards.elementAt(0);
+    round++;
+  }
+
+}
+
+List<GardenCard> generateGardenCards() {
+  List<GardenCard> temporalCards = gardenCards;
+  List<GardenCard> finalCards = [];
+
+  for (var i = 0; i < 10; i++) {
+    final _random = new Random();
+    GardenCard c = temporalCards[_random.nextInt(temporalCards.length)];
+    finalCards.add(c);
+    temporalCards.remove(c);
+  }
+
+  return finalCards;
 }
 
 
