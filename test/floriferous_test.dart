@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:ffi';
 import 'dart:math';
 
 import 'package:equatable/equatable.dart';
@@ -40,10 +41,6 @@ void main() {
     FlowerCard card = gardenCards.elementAt(0) as FlowerCard;
     expect(card.hasStone, equals(false));
   });
-  test('Carta con piedra es "true"', () {
-    FlowerCard card = FlowerCard(tipoDeCarta: TypeOfCard.Flower, flor: Flowers.Daisy, col: Colors.Orange, tienePiedra: true);
-    expect(card.hasStone, equals(true));
-  });
   test('Generar 3 bountyCard aleatorias', () {
     List<BountyCard> bounties = generateBountyCards();
     //print(bounties);
@@ -59,23 +56,13 @@ void main() {
       //print(game.GetBountyCards());
       expect(game.GetBountyCards().length, equals(3));
     });
-    test('Game ha generado sus garden cards', () {
+
+    test('El total de garden cards disminuye a 45 tras contruir el tablero', () {
       Game game = Game();
       //print(game.gardenCards);
-      expect(game.GetGardenCards().length, equals(10));
-    });
-    test('Al generar renglones de dia 1 quedan 45 cartas de jardin', () {
-      Game game = Game();
-      game.BuildRows();
       expect(game.GetGardenCards().length, equals(45));
     });
-    test('Columna 1 es Mum:Orange y Mum:Pink', () {
-      Game game = Game();
-      List<GardenCard> expectedCards = [gardenCards.elementAt(0), gardenCards.elementAt(5)];
-      List<GardenCard> actualCards = game.GetRowByColumn();
-      print(expectedCards);
-      expect(actualCards, equals(expectedCards));
-    });
+    
     test('Despues de turno es columna 2', () {
       Game game = Game();
       game.NextTurn();
@@ -90,7 +77,11 @@ void main() {
       game.NextTurn();
       expect(game.column, equals(1));
     });
-
+    
+    test('Imprimir tablero', () {
+      Game game = Game();
+      game.ImprimirTablero();
+    });
 
   });
   
@@ -117,8 +108,8 @@ class Game{
   void BuildDay() {
     //gardenCards = generateGardenCards(gardenCards, gardenCards.length); 
     _gardenCards = gardenCards;
-    
-    BuildRows2();
+
+    BuildRows();
   }
 
   void NextTurn(){
@@ -133,12 +124,37 @@ class Game{
   BuildRows(){
     row1 = generateGardenCards(_gardenCards, 5);
     row2 = generateGardenCards(_gardenCards, 5);
+
+    SetCards();
   }
 
-  BuildRows2(){
-    row1 = [_gardenCards.elementAt(column-1),_gardenCards.elementAt(column),_gardenCards.elementAt(column+1),_gardenCards.elementAt(column+2),_gardenCards.elementAt(column+3)];
-    row2 = [_gardenCards.elementAt(column+4),_gardenCards.elementAt(column+5),_gardenCards.elementAt(column+6),_gardenCards.elementAt(column+7),_gardenCards.elementAt(column+8)];
+  SetCards(){
+    // Move this to the BuildRows method
+
+    row1.elementAt(1).TurnCard();
+    row1.elementAt(3).TurnCard();
+
+    row2.elementAt(0).hasStone = true;
+    row2.elementAt(2).hasStone = true;
+    row2.elementAt(4).hasStone = true;
   }
+
+  void ImprimirTablero(){
+    // ignore: prefer_interpolation_to_compose_strings
+    String message = ('|| ${_bountyCards.elementAt(0).requirement1.name} ${_bountyCards.elementAt(0).requirement2.name} ${_bountyCards.elementAt(0).requirement3.name} || '+
+          ' ${_bountyCards.elementAt(1).requirement1.name} ${_bountyCards.elementAt(1).requirement2.name} ${_bountyCards.elementAt(1).requirement3.name} ' +
+         ' || ${_bountyCards.elementAt(2).requirement1.name} ${_bountyCards.elementAt(2).requirement2.name} ${_bountyCards.elementAt(2).requirement3.name} ||');;
+
+    String title = ' BOUNTY CARDS ';
+
+    String line1 = '-' * ((message.length~/2) - title.length~/2);
+    String line2 = '-' * (message.length~/2);
+    
+    print('$line1$title$line1');
+    print(message);
+    print('$line2$line2');
+  }
+
 
   List<GardenCard> GetRowByColumn(){
     return [row1.elementAt(column-1), row2.elementAt(column-1)];
@@ -280,8 +296,17 @@ class GardenCard extends Equatable{
   Colors get color => _color;
   Bugs get bug => _bug;
 
+  bool hasStone = false;
+  bool _isUpsidedown = false;
+  bool get isUpsidedown => _isUpsidedown;
+
+
   GardenCard({required TypeOfCard tipoDeCarta}){
     _typeOfCard = tipoDeCarta;
+  }
+
+  void TurnCard(){
+    _isUpsidedown = !_isUpsidedown;
   }
 
   @override
@@ -291,21 +316,12 @@ class GardenCard extends Equatable{
 
 class FlowerCard extends GardenCard{
 
-  late final bool hasStone;
-  bool _isUpsidedown = false;
-  bool get isUpsidedown => _isUpsidedown;
-
-  FlowerCard({required super.tipoDeCarta, required Flowers flor,required Colors col, Bugs bicho = Bugs.Null, bool tienePiedra = false}){
+  FlowerCard({required super.tipoDeCarta, required Flowers flor,required Colors col, Bugs bicho = Bugs.Null}){
     _flower = flor;
     _color = col;
     _bug = bicho;
-
-    hasStone = tienePiedra;
   }
 
-  void TurnCard(){
-    _isUpsidedown = !_isUpsidedown;
-  }
 
 }
 
