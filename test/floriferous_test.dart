@@ -184,7 +184,12 @@ void main() {
 
       expect(game._crowCards.length, equals(8));
     });
- 
+    test('Esta bocaabajo una Desirecard', () {
+      Game game = Game();
+      //print(game.row3.elementAt(0)._isUpsidedown);
+      game.row3.elementAt(0)._isUpsidedown = true;
+      expect(game.row3.elementAt(0)._isUpsidedown, equals(true));
+    });
   });
 
   group('Turns: ', () {
@@ -470,7 +475,16 @@ List<CrowCard> crowCards = [
 ];
 
 // CLASSES
-class GardenCard extends Equatable{
+
+class Card {
+  bool _isUpsidedown = false;
+  bool get isUpsidedown => _isUpsidedown;
+
+  bool _isThere = true;
+  int _stonesInSpace = 0;
+}
+
+class GardenCard extends Card{
 
   late final TypesOfCard _typeOfCard;
   TypesOfCard get typeOfCard => _typeOfCard;
@@ -484,9 +498,6 @@ class GardenCard extends Equatable{
   Bugs get bug => _bug;
 
   bool hasStone = false;
-  bool _isUpsidedown = false;
-  bool get isUpsidedown => _isUpsidedown;
-
 
   GardenCard({required TypesOfCard tipoDeCarta}){
     _typeOfCard = tipoDeCarta;
@@ -496,8 +507,8 @@ class GardenCard extends Equatable{
     _isUpsidedown = !_isUpsidedown;
   }
 
-  @override
-  List<Object?> get props => [_flower, _color, _bug];
+  //@override
+  //List<Object?> get props => [_flower, _color, _bug];
 
 }
 
@@ -555,7 +566,7 @@ class BountyCard extends Equatable{
 
 }
 
-class DesireCard{
+class DesireCard extends Card{
 
   late final Enum typeOfDesire;
   late final Enum requirement;
