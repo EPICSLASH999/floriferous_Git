@@ -75,6 +75,13 @@ void main() {
     test('CrowCards son 9', () {
       expect(crowCards.length, equals(9));
     });    
+    test('CrowCards barajeadas no es igual a lista original', () {
+      List<CrowCard> cards = shuffleCrowCards(crowCards.toList());
+      //print(cards.elementAt(0));
+      //print(crowCards.elementAt(0));
+      expect(cards.equals(crowCards), equals(false));
+    });
+    
 
   });
   
@@ -151,7 +158,33 @@ void main() {
       Game game = Game();
       expect(game.getDesireCards().length, equals(16));
     });
+    test('Draw CrowCard toma la ultima y la resta a la baraja', () {
+      Game game = Game();
+      CrowCard card1 = game._crowCards.elementAt(game._crowCards.length-1);
+      CrowCard card2 = game.drawCrowCard();
+      
+      //print(card1);
+      //print(card2);
 
+      expect(game._crowCards.length, equals(8));
+
+    });
+    test('Al tomar las 9 CrowCards se reinicia la baraja', () {
+      Game game = Game();
+      CrowCard card = game.drawCrowCard();
+      card = game.drawCrowCard();
+      card = game.drawCrowCard();
+      card = game.drawCrowCard();
+      card = game.drawCrowCard();
+      card = game.drawCrowCard();
+      card = game.drawCrowCard();
+      card = game.drawCrowCard();
+      card = game.drawCrowCard();
+      card = game.drawCrowCard();
+
+      expect(game._crowCards.length, equals(8));
+    });
+ 
   });
 
   group('Turns: ', () {
@@ -188,6 +221,7 @@ class Game{
   late final List<BountyCard> _bountyCards;
   List<GardenCard> _gardenCards = [];
   List<DesireCard> _desireCards = [];
+  List<CrowCard> _crowCards = [];
 
   List<GardenCard> row1 = [];
   List<GardenCard> row2 = [];
@@ -199,6 +233,7 @@ class Game{
   Game(){
     _gardenCards = shuffleGardenCards(gardenCards.toList()).toList();
     _desireCards = shuffleDesireCards(desireCards.toList()).toList();
+    _crowCards = shuffleCrowCards(crowCards.toList()).toList();
 
     generateDay();
   }
@@ -247,7 +282,7 @@ class Game{
     }
     return tempCards;
   }
-   DesireCard drawDesireCard(){
+  DesireCard drawDesireCard(){
     DesireCard card = _desireCards.elementAt(_desireCards.length-1);
     _desireCards.removeAt(_desireCards.length-1);
     return card;
@@ -258,6 +293,15 @@ class Game{
       tempCards.add(drawDesireCard());
     }
     return tempCards;
+  }
+  CrowCard drawCrowCard() {
+    if (_crowCards.isEmpty){
+      _crowCards = shuffleCrowCards(crowCards.toList()).toList();
+    }
+
+    CrowCard card = _crowCards.elementAt(_crowCards.length-1);
+    _crowCards.removeAt(_crowCards.length-1);
+    return card;
   }
 
   void nextTurn(){
@@ -525,7 +569,7 @@ class DesireCard{
 
 }
 
-class CrowCard{
+class CrowCard extends Equatable{
 
   late final int _replaceRowAt;
   late final Enum _replaceWith;
@@ -536,6 +580,10 @@ class CrowCard{
     _replaceWith = reemplazo;
     _numberOfStones = numeroDePiedras;
   }
+
+  
+  @override
+  List<Object?> get props => [_replaceRowAt, _replaceWith, _numberOfStones];
 
 }
 
@@ -550,6 +598,10 @@ List<GardenCard> shuffleGardenCards(List<GardenCard> cards){
   return cards;
 }
 List<DesireCard> shuffleDesireCards(List<DesireCard> cards){
+  cards.shuffle();
+  return cards;
+}
+List<CrowCard> shuffleCrowCards(List<CrowCard> cards){
   cards.shuffle();
   return cards;
 }
