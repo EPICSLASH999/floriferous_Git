@@ -17,8 +17,8 @@ void main() {
     expect(gardenCards.length, equals(55));
   });
     test('Tarjeta de Flores es tipo "Flower"', () {
-      FlowerCard card = FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.daisy, col: Colors.orange);
-      expect(card.typeOfCard, equals(TypesOfCard.flower));
+      FlowerCard card = FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.daisy, col: Colors.orange);
+      expect(card.typeOfCard, equals(TypesOfGardenCard.flower));
     });
     test('Requerimiento1 de BountyCard1 es "tulip"', () {
       BountyCard bounty = bountyCards.elementAt(0);
@@ -33,7 +33,7 @@ void main() {
     });
     test('La primera carta de gardenCards es tipo "Flower"', () {
       GardenCard card = gardenCards.elementAt(0);
-      expect(card._typeOfCard, equals(TypesOfCard.flower));
+      expect(card._typeOfCard, equals(TypesOfGardenCard.flower));
     });
     test('Cast as FlowerCard from GardenCard', () {
       FlowerCard card = gardenCards.elementAt(0) as FlowerCard;
@@ -192,6 +192,84 @@ void main() {
     });
   });
 
+  group('Puntajes: ', () {
+    test('Obtener que flor aparece más', () {
+      Game game = Game();
+      List<Card> misCartas = [
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.orange),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.pink),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.yellow),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.white),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.purple),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.purple, bicho: Bugs.butterfly),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.orange, bicho: Bugs.beetle),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.white, bicho: Bugs.ladybug),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.pink, bicho: Bugs.bee),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.moth),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.white),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.orange),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.pink),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.yellow)
+      ];
+      expect(game.obtainMaxOccurence(misCartas, Flowers.daisy), equals("mum"));
+    });
+    test('Obtener que color aparece más', () {
+      Game game = Game();
+      List<Card> misCartas = [
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.pink),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.purple, bicho: Bugs.butterfly),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.orange, bicho: Bugs.beetle),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.pink, bicho: Bugs.bee),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.moth),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.white),
+      ];
+      expect(game.obtainMaxOccurence(misCartas, Colors.orange), equals('pink'));
+    });
+    test('Obtener que insecto aparece más', () {
+      Game game = Game();
+      List<Card> misCartas = [
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.orange),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.pink),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.yellow),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.white),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.purple),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.purple, bicho: Bugs.butterfly),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.orange, bicho: Bugs.beetle),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.white, bicho: Bugs.ladybug),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.pink, bicho: Bugs.bee),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.moth),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.white),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.orange),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.pink),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.yellow, bicho: Bugs.moth)
+      ];
+      expect(game.obtainMaxOccurence(misCartas, Bugs.none), equals("moth"));
+    });
+    
+    
+    test('Obtener puntaje de 4 flores del mismo color', () {
+      Game game = Game();
+      List<Card> misCartas = [
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.orange),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.pink),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.yellow),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.white),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.purple),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.purple, bicho: Bugs.butterfly),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.orange, bicho: Bugs.beetle),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.white, bicho: Bugs.ladybug),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.pink, bicho: Bugs.bee),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.moth),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.white),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.orange),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.pink),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.yellow)
+      ];
+    });
+
+
+  });
+
   group('Turns: ', () {
     
     test('Despues de turno es columna 2', () {
@@ -221,7 +299,7 @@ void main() {
 
 
 }
-
+/* -------------------------------- GAME -------------------------------------- */
 class Game{
   late final List<BountyCard> _bountyCards;
   List<GardenCard> _gardenCards = [];
@@ -231,6 +309,8 @@ class Game{
   List<GardenCard> row1 = [];
   List<GardenCard> row2 = [];
   List<DesireCard> row3 = [];
+
+  List<Card> _deck = [];
 
   int day = 1;
   int column = 1;
@@ -309,6 +389,42 @@ class Game{
     return card;
   }
 
+  String obtainMaxOccurence(List<Card> listOfCards, Enum occurrence){
+    var map = Map();
+
+    listOfCards.forEach((element) {
+      GardenCard card = element as GardenCard;
+
+      Enum? keyValue;
+      String enumName = occurrence.toString().split('.').first;
+
+      switch (enumName){
+        case "Flowers": keyValue = card._flower; 
+          break;
+        case "Colors": keyValue = card._color; 
+          break; 
+        case "Bugs": keyValue = card._bug; 
+          break;
+      }
+
+      if (!map.containsKey(keyValue)) {
+        map[keyValue] = 1;
+      } else {
+        map[keyValue] += 1;
+      }
+    });
+    if (map.containsKey(Bugs.none)) map.remove(Bugs.none);
+    
+    List sortedValues = map.values.toList()..sort();
+    int popularValue = sortedValues.last;
+    var key = map.keys.firstWhere((k)
+          => map[k] == popularValue, orElse: () => null);
+    
+    return key.toString().split('.').last;
+    
+  }
+
+
   void nextTurn(){
     column++;
     if (column > 5){
@@ -354,78 +470,82 @@ class Game{
   List<DesireCard> getDesireCards(){
     return _desireCards;
   }
-  
+  List<CrowCard> getCrowCards(){
+    return _crowCards;
+  }
 }
+/* ----------------------------- END OF GAME ---------------------------------- */
 
-/* ---------------------------------- CARDS ---------------------------------- */
 
+/* ---------------------------------------------------------------------------- */
+/* ----------------------------------- CARDS ---------------------------------- */
 // ENUMS
 enum Flowers {daisy, lily, mum, poppy, tulip}
 enum Colors {white, yellow, orange, pink, purple}
 enum Bugs {bee, beetle, butterfly, ladybug, moth, none}
 
-enum TypesOfCard {flower, arrangement}
+enum TypesOfGardenCard {flower, arrangement}
 enum TypesOfDesire {simple, same, different}
 enum CrowReplacements {stone, card}
 
 // LISTS
 List<GardenCard> gardenCards = [
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.mum, col: Colors.orange),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.mum, col: Colors.pink),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.mum, col: Colors.yellow),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.mum, col: Colors.white),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.mum, col: Colors.purple),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.mum, col: Colors.purple, bicho: Bugs.butterfly),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.mum, col: Colors.orange, bicho: Bugs.beetle),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.mum, col: Colors.white, bicho: Bugs.ladybug),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.mum, col: Colors.pink, bicho: Bugs.bee),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.moth),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.poppy, col: Colors.white),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.poppy, col: Colors.orange),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.poppy, col: Colors.pink),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.poppy, col: Colors.yellow),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.poppy, col: Colors.purple),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.poppy, col: Colors.purple, bicho: Bugs.beetle),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.poppy, col: Colors.pink, bicho: Bugs.butterfly),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.poppy, col: Colors.orange, bicho: Bugs.ladybug),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.poppy, col: Colors.yellow, bicho: Bugs.bee),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.poppy, col: Colors.white, bicho: Bugs.moth),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.tulip, col: Colors.pink),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.tulip, col: Colors.orange),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.tulip, col: Colors.white),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.tulip, col: Colors.yellow),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.tulip, col: Colors.purple),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.tulip, col: Colors.pink, bicho: Bugs.beetle),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.tulip, col: Colors.orange, bicho: Bugs.moth),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.tulip, col: Colors.white, bicho: Bugs.bee),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.tulip, col: Colors.yellow, bicho: Bugs.butterfly),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.tulip, col: Colors.purple, bicho: Bugs.ladybug),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.daisy, col: Colors.purple),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.daisy, col: Colors.pink),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.daisy, col: Colors.white),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.daisy, col: Colors.orange),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.daisy, col: Colors.yellow),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.daisy, col: Colors.purple, bicho: Bugs.moth),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.daisy, col: Colors.pink, bicho: Bugs.ladybug),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.daisy, col: Colors.white, bicho: Bugs.butterfly),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.daisy, col: Colors.orange, bicho: Bugs.bee),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.daisy, col: Colors.yellow, bicho: Bugs.beetle),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.lily, col: Colors.purple),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.lily, col: Colors.orange),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.lily, col: Colors.white),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.lily, col: Colors.yellow),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.lily, col: Colors.pink),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.lily, col: Colors.purple, bicho: Bugs.bee),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.lily, col: Colors.orange, bicho: Bugs.butterfly),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.lily, col: Colors.white, bicho: Bugs.beetle),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.lily, col: Colors.yellow, bicho: Bugs.ladybug),
-  FlowerCard(tipoDeCarta: TypesOfCard.flower, flor: Flowers.lily, col: Colors.pink, bicho: Bugs.moth),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.orange),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.pink),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.yellow),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.white),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.purple),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.purple, bicho: Bugs.butterfly),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.orange, bicho: Bugs.beetle),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.white, bicho: Bugs.ladybug),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.pink, bicho: Bugs.bee),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.moth),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.white),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.orange),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.pink),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.yellow),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.purple),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.purple, bicho: Bugs.beetle),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.pink, bicho: Bugs.butterfly),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.orange, bicho: Bugs.ladybug),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.yellow, bicho: Bugs.bee),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.white, bicho: Bugs.moth),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.tulip, col: Colors.pink),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.tulip, col: Colors.orange),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.tulip, col: Colors.white),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.tulip, col: Colors.yellow),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.tulip, col: Colors.purple),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.tulip, col: Colors.pink, bicho: Bugs.beetle),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.tulip, col: Colors.orange, bicho: Bugs.moth),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.tulip, col: Colors.white, bicho: Bugs.bee),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.tulip, col: Colors.yellow, bicho: Bugs.butterfly),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.tulip, col: Colors.purple, bicho: Bugs.ladybug),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.daisy, col: Colors.purple),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.daisy, col: Colors.pink),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.daisy, col: Colors.white),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.daisy, col: Colors.orange),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.daisy, col: Colors.yellow),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.daisy, col: Colors.purple, bicho: Bugs.moth),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.daisy, col: Colors.pink, bicho: Bugs.ladybug),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.daisy, col: Colors.white, bicho: Bugs.butterfly),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.daisy, col: Colors.orange, bicho: Bugs.bee),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.daisy, col: Colors.yellow, bicho: Bugs.beetle),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.lily, col: Colors.purple),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.lily, col: Colors.orange),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.lily, col: Colors.white),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.lily, col: Colors.yellow),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.lily, col: Colors.pink),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.lily, col: Colors.purple, bicho: Bugs.bee),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.lily, col: Colors.orange, bicho: Bugs.butterfly),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.lily, col: Colors.white, bicho: Bugs.beetle),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.lily, col: Colors.yellow, bicho: Bugs.ladybug),
+  FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.lily, col: Colors.pink, bicho: Bugs.moth),
 
-  ArrangementCard(tipoDeCarta: TypesOfCard.arrangement, flor: Flowers.poppy, col: Colors.orange, bicho: Bugs.moth),
-  ArrangementCard(tipoDeCarta: TypesOfCard.arrangement, flor: Flowers.tulip, col: Colors.yellow, bicho: Bugs.ladybug),
-  ArrangementCard(tipoDeCarta: TypesOfCard.arrangement, flor: Flowers.lily, col: Colors.purple, bicho: Bugs.butterfly),
-  ArrangementCard(tipoDeCarta: TypesOfCard.arrangement, flor: Flowers.daisy, col: Colors.white, bicho: Bugs.bee),
-  ArrangementCard(tipoDeCarta: TypesOfCard.arrangement, flor: Flowers.mum, col: Colors.pink, bicho: Bugs.beetle),
+  ArrangementCard(tipoDeCarta: TypesOfGardenCard.arrangement, flor: Flowers.poppy, col: Colors.orange, bicho: Bugs.moth),
+  ArrangementCard(tipoDeCarta: TypesOfGardenCard.arrangement, flor: Flowers.tulip, col: Colors.yellow, bicho: Bugs.ladybug),
+  ArrangementCard(tipoDeCarta: TypesOfGardenCard.arrangement, flor: Flowers.lily, col: Colors.purple, bicho: Bugs.butterfly),
+  ArrangementCard(tipoDeCarta: TypesOfGardenCard.arrangement, flor: Flowers.daisy, col: Colors.white, bicho: Bugs.bee),
+  ArrangementCard(tipoDeCarta: TypesOfGardenCard.arrangement, flor: Flowers.mum, col: Colors.pink, bicho: Bugs.beetle),
 ];
 List <BountyCard> bountyCards = [
   BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Bugs.ladybug, requerimiento3: Bugs.butterfly),
@@ -486,8 +606,8 @@ class Card {
 
 class GardenCard extends Card{
 
-  late final TypesOfCard _typeOfCard;
-  TypesOfCard get typeOfCard => _typeOfCard;
+  late final TypesOfGardenCard _typeOfCard;
+  TypesOfGardenCard get typeOfCard => _typeOfCard;
 
   late final Flowers _flower;
   late final Colors _color;
@@ -499,7 +619,7 @@ class GardenCard extends Card{
 
   bool hasStone = false;
 
-  GardenCard({required TypesOfCard tipoDeCarta}){
+  GardenCard({required TypesOfGardenCard tipoDeCarta}){
     _typeOfCard = tipoDeCarta;
   }
 
@@ -618,4 +738,5 @@ List<CrowCard> shuffleCrowCards(List<CrowCard> cards){
 }
 
 
+/* ---------------------------- END OF CARDS ---------------------------------- */
 /* ---------------------------------------------------------------------------- */
