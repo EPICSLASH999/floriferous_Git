@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:ffi';
 import 'dart:math';
 
+import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:floriferous/floriferous.dart';
 import 'package:test/test.dart';
@@ -41,12 +42,39 @@ void main() {
     FlowerCard card = gardenCards.elementAt(0) as FlowerCard;
     expect(card.hasStone, equals(false));
   });
-  test('Generar 3 bountyCard aleatorias', () {
-    List<BountyCard> bounties = generateBountyCards();
-    //print(bounties);
-    expect(bounties.length, equals(3));
+  test('Primera carta de nueva lista de bounties es igual a index 0 de bountyCards', () {
+    List<BountyCard> bounties = bountyCards;
+    BountyCard bCard = bounties.elementAt(0);
+    //print(bCard);
+    expect(bCard, equals(bountyCards.elementAt(0)));
   });
-  
+  test('Bounties barajeadas no es igual a lista original', () {
+    List<BountyCard> randomBounties = shuffleBountyCards(bountyCards.toList());
+
+    //print(randomBounties.elementAt(0));
+    //print(bountyCards.elementAt(0));
+
+    expect(randomBounties.equals(bountyCards), equals(false));
+  });
+  test('GardenCards barajeadas no es igual a lista original', () {
+    List<GardenCard> randomCards = shuffleGardenCards(gardenCards.toList());
+
+    //print(randomCards.elementAt(0));
+    //print(gardenCards.elementAt(0));
+
+    expect(randomCards.equals(gardenCards), equals(false));
+  });
+  test('Tarjeta tomada de mazo es la ultima', () {
+    List<GardenCard> cards = gardenCards.toList();
+    GardenCard card = drawGardenCard(cards);
+
+    print(cards.elementAt(cards.length-1));
+    print(card);
+
+    expect(cards.elementAt(cards.length-1), equals(card));
+
+  });
+
   });
   
   
@@ -90,6 +118,8 @@ void main() {
 
 
 }
+
+
 
 class Game{
   late final List<BountyCard> _bountyCards;
@@ -210,6 +240,18 @@ List<BountyCard> generateBountyCards() {
   return finalCards;
 }
 
+List<BountyCard> shuffleBountyCards(List<BountyCard> cards){
+  cards.shuffle();
+  return cards;
+}
+List<GardenCard> shuffleGardenCards(List<GardenCard> cards){
+  cards.shuffle();
+  return cards;
+}
+GardenCard drawGardenCard(List<GardenCard> cards) {
+  return cards.elementAt(cards.length-1);
+
+}
 
 enum Flowers {Daisy, Lily, Mum, Poppy, Tulip}
 enum Colors {White, Yellow, Orange, Pink, Purple}
@@ -285,7 +327,7 @@ List <BountyCard> bountyCards = [
   BountyCard(requerimiento1: Flowers.Lily, requerimiento2: Flowers.Lily, requerimiento3: Bugs.Ladybug),
   BountyCard(requerimiento1: Flowers.Poppy, requerimiento2: Flowers.Daisy, requerimiento3: Bugs.Beetle),
   BountyCard(requerimiento1: Flowers.Lily, requerimiento2: Flowers.Poppy, requerimiento3: Bugs.Moth),
-  BountyCard(requerimiento1: Flowers.Poppy, requerimiento2: Flowers.Mum, requerimiento3: Bugs.Butterfly),
+  BountyCard(requerimiento1: Flowers.Poppy, requerimiento2: Flowers.Mum, requerimiento3: Bugs.Butterfly)
   
 ];
 
