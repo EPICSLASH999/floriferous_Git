@@ -15,64 +15,78 @@ void main() {
     test('Tamaño de cards = 55', () {
     expect(gardenCards.length, equals(55));
   });
-  test('Tarjeta de Flores es tipo "Flower"', () {
-    FlowerCard card = FlowerCard(tipoDeCarta: TypeOfCard.Flower, flor: Flowers.Daisy, col: Colors.Orange);
-    expect(card.typeOfCard, equals(TypeOfCard.Flower));
-  });
-  test('Requerimiento1 es "tulip"', () {
-    BountyCard bounty = bountyCards.elementAt(0);
-    expect(bounty.requirement1, equals(Flowers.Tulip));
-  });
-  test('Tamaño de bountyCards es 9', () {
-    expect(bountyCards.length, equals(9));
-  });
-  test('La primera carta de gardenCards es color "Orange"', () {
-    GardenCard card = gardenCards.elementAt(0);
-    expect(card._color, equals(Colors.Orange));
-  });
-  test('La primera carta de gardenCards es tipo "Flower"', () {
-    GardenCard card = gardenCards.elementAt(0);
-    expect(card._typeOfCard, equals(TypeOfCard.Flower));
-  });
-  test('Cast as FlowerCard from GardenCard', () {
-    FlowerCard card = gardenCards.elementAt(0) as FlowerCard;
-    expect(card, equals(isA<FlowerCard>()));
-  });
-  test('Las cartas no tienen piedra por "omisión"', () {
-    FlowerCard card = gardenCards.elementAt(0) as FlowerCard;
-    expect(card.hasStone, equals(false));
-  });
-  test('Primera carta de nueva lista de bounties es igual a index 0 de bountyCards', () {
-    List<BountyCard> bounties = bountyCards;
-    BountyCard bCard = bounties.elementAt(0);
-    //print(bCard);
-    expect(bCard, equals(bountyCards.elementAt(0)));
-  });
-  test('Bounties barajeadas no es igual a lista original', () {
-    List<BountyCard> randomBounties = shuffleBountyCards(bountyCards.toList());
+    test('Tarjeta de Flores es tipo "Flower"', () {
+      FlowerCard card = FlowerCard(tipoDeCarta: TypeOfCard.Flower, flor: Flowers.Daisy, col: Colors.Orange);
+      expect(card.typeOfCard, equals(TypeOfCard.Flower));
+    });
+    test('Requerimiento1 es "tulip"', () {
+      BountyCard bounty = bountyCards.elementAt(0);
+      expect(bounty.requirement1, equals(Flowers.Tulip));
+    });
+    test('Tamaño de bountyCards es 9', () {
+      expect(bountyCards.length, equals(9));
+    });
+    test('La primera carta de gardenCards es color "Orange"', () {
+      GardenCard card = gardenCards.elementAt(0);
+      expect(card._color, equals(Colors.Orange));
+    });
+    test('La primera carta de gardenCards es tipo "Flower"', () {
+      GardenCard card = gardenCards.elementAt(0);
+      expect(card._typeOfCard, equals(TypeOfCard.Flower));
+    });
+    test('Cast as FlowerCard from GardenCard', () {
+      FlowerCard card = gardenCards.elementAt(0) as FlowerCard;
+      expect(card, equals(isA<FlowerCard>()));
+    });
+    test('Las cartas no tienen piedra por "omisión"', () {
+      FlowerCard card = gardenCards.elementAt(0) as FlowerCard;
+      expect(card.hasStone, equals(false));
+    });
+    test('Primera carta de nueva lista de bounties es igual a index 0 de bountyCards', () {
+      List<BountyCard> bounties = bountyCards;
+      BountyCard bCard = bounties.elementAt(0);
+      //print(bCard);
+      expect(bCard, equals(bountyCards.elementAt(0)));
+    });
+    test('Bounties barajeadas no es igual a lista original', () {
+      List<BountyCard> randomBounties = shuffleBountyCards(bountyCards.toList());
 
-    //print(randomBounties.elementAt(0));
-    //print(bountyCards.elementAt(0));
+      //print(randomBounties.elementAt(0));
+      //print(bountyCards.elementAt(0));
 
-    expect(randomBounties.equals(bountyCards), equals(false));
-  });
-  test('GardenCards barajeadas no es igual a lista original', () {
-    List<GardenCard> randomCards = shuffleGardenCards(gardenCards.toList());
+      expect(randomBounties.equals(bountyCards), equals(false));
+    });
+    test('GardenCards barajeadas no es igual a lista original', () {
+      List<GardenCard> randomCards = shuffleGardenCards(gardenCards.toList());
 
-    //print(randomCards.elementAt(0));
-    //print(gardenCards.elementAt(0));
+      //print(randomCards.elementAt(0));
+      //print(gardenCards.elementAt(0));
 
-    expect(randomCards.equals(gardenCards), equals(false));
-  });
-  test('Tarjeta tomada de mazo es la ultima', () {
-    List<GardenCard> cards = gardenCards.toList();
-    GardenCard card = drawGardenCard(cards);
+      expect(randomCards.equals(gardenCards), equals(false));
+    });
+    test('Tarjeta tomada de mazo es la ultima', () {
+      Game game = Game();
+      game._gardenCards = gardenCards.toList();
+      GardenCard card = game.drawGardenCard();
 
-    print(cards.elementAt(cards.length-1));
-    print(card);
+      //print(gardenCards.elementAt(gardenCards.length-1));
+      //print(card);
 
-    expect(cards.elementAt(cards.length-1), equals(card));
+      expect(gardenCards.elementAt(gardenCards.length-1), equals(card));
 
+    });
+    test('Al tomar tarjeta se elimina del bonche', () {
+    Game game = Game();
+    game._gardenCards = gardenCards.toList();
+    int longitudInicial = game._gardenCards.length;
+
+    GardenCard card = game.drawGardenCard();
+    int longitudFinal = game._gardenCards.length;
+
+    //print(longitudFinal);
+
+    expect(longitudInicial == longitudFinal, equals(false));
+    
   });
 
   });
@@ -132,10 +146,19 @@ class Game{
   List<GardenCard> row2 = [];
 
   Game(){
-    _bountyCards = generateBountyCards();
+    //_bountyCards = generateBountyCards();
 
-    BuildDay();
+    //BuildDay();
   }
+
+  GardenCard drawGardenCard() {
+    GardenCard card = _gardenCards.elementAt(_gardenCards.length-1);
+    _gardenCards.removeAt(_gardenCards.length-1);
+    return card;
+  }
+
+
+
   
   void BuildDay() {
     //gardenCards = generateGardenCards(gardenCards, gardenCards.length); 
@@ -226,6 +249,8 @@ class Game{
 
 
 /* ---------------------------------- CARDS ---------------------------------- */
+
+// FUNCIONES
 List<BountyCard> generateBountyCards() {
   List<BountyCard> temporalCards = bountyCards;
   List<BountyCard> finalCards = [];
@@ -248,17 +273,16 @@ List<GardenCard> shuffleGardenCards(List<GardenCard> cards){
   cards.shuffle();
   return cards;
 }
-GardenCard drawGardenCard(List<GardenCard> cards) {
-  return cards.elementAt(cards.length-1);
 
-}
 
+// ENUMS
 enum Flowers {Daisy, Lily, Mum, Poppy, Tulip}
 enum Colors {White, Yellow, Orange, Pink, Purple}
 enum Bugs {Bee, Beetle, Butterfly, Ladybug, Moth, Null}
 
 enum TypeOfCard {Flower, Arrangement}
 
+// LISTS
 List<GardenCard> gardenCards = [
   FlowerCard(tipoDeCarta: TypeOfCard.Flower, flor: Flowers.Mum, col: Colors.Orange),
   FlowerCard(tipoDeCarta: TypeOfCard.Flower, flor: Flowers.Mum, col: Colors.Pink),
@@ -317,7 +341,6 @@ List<GardenCard> gardenCards = [
   ArrangementCard(tipoDeCarta: TypeOfCard.Arrangement, flor: Flowers.Daisy, col: Colors.White, bicho: Bugs.Bee),
   ArrangementCard(tipoDeCarta: TypeOfCard.Arrangement, flor: Flowers.Mum, col: Colors.Pink, bicho: Bugs.Beetle),
 ];
-
 List <BountyCard> bountyCards = [
   BountyCard(requerimiento1: Flowers.Tulip, requerimiento2: Bugs.Ladybug, requerimiento3: Bugs.Butterfly),
   BountyCard(requerimiento1: Flowers.Tulip, requerimiento2: Flowers.Tulip, requerimiento3: Flowers.Daisy),
@@ -331,6 +354,7 @@ List <BountyCard> bountyCards = [
   
 ];
 
+// CLASSES
 class GardenCard extends Equatable{
 
   late final TypeOfCard _typeOfCard;
