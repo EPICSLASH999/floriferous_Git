@@ -77,16 +77,16 @@ void main() {
 
     });
     test('Al tomar tarjeta se elimina del bonche', () {
-    Game game = Game();
-    game._gardenCards = gardenCards.toList();
-    int longitudInicial = game._gardenCards.length;
+      Game game = Game();
+      game._gardenCards = gardenCards.toList();
+      int longitudInicial = game._gardenCards.length;
 
-    GardenCard card = game.drawGardenCard();
-    int longitudFinal = game._gardenCards.length;
+      game.drawGardenCard();
+      int longitudFinal = game._gardenCards.length;
 
-    //print(longitudFinal);
+      //print(longitudFinal);
 
-    expect(longitudInicial == longitudFinal, equals(false));
+      expect(longitudInicial == longitudFinal, equals(false));
     
   });
     test('DesireCards son 21', () {
@@ -98,7 +98,6 @@ void main() {
     });
     test('Generar dia toma 10 tarjetas de Jardin', () {
       Game game = Game();
-      game.generateDay();
       
       int sum = game.row1.length + game.row2.length;
 
@@ -106,18 +105,15 @@ void main() {
     });
     test('Generar dia deja 45 tarjeas de jardin', () {
       Game game = Game();
-      game.generateDay();
       expect(game._gardenCards.length, equals(45));
     });
     test('Generar dia toma 3 tarjetas de Bounty', () {
       Game game = Game();
-      game.generateDay();
-      print(game._bountyCards);
+      //print(game._bountyCards);
       expect(game._bountyCards.length, equals(3));
     });
     test('En Row 1... Cards 2 y 4 estan volteadas', () {
       Game game = Game();
-      game.generateDay();
       bool volteada = game.row1.elementAt(1)._isUpsidedown && game.row1.elementAt(3)._isUpsidedown;
       //print('${game.row1.elementAt(0)._isUpsidedown} ${game.row1.elementAt(1)._isUpsidedown} ${game.row1.elementAt(2)._isUpsidedown} '+
       //'${game.row1.elementAt(3)._isUpsidedown} ${game.row1.elementAt(4)._isUpsidedown}');
@@ -125,7 +121,6 @@ void main() {
     });
     test('En Row2... Cards 1,3 y 5 tienen piedra', () {
       Game game = Game();
-      game.generateDay();
       bool tienenPiedras = game.row2.elementAt(0).hasStone && game.row2.elementAt(2).hasStone && game.row2.elementAt(4).hasStone;
       //print('${game.row2.elementAt(0).hasStone} ${game.row2.elementAt(1).hasStone} ${game.row2.elementAt(2).hasStone} '+
       //'${game.row2.elementAt(3).hasStone} ${game.row2.elementAt(4).hasStone}');
@@ -133,52 +128,54 @@ void main() {
     });
     test('Generar dia toma 5 tarjetas Desire', () {
       Game game = Game();
-      game.generateDay();
       expect(game.row3.length, equals(5));
     });
 
-
-
-
   });
   
   
-  group('Game1: ', () {
-    
+  group('Game: ', () {
     test('El total de garden cards disminuye a 45 tras contruir el tablero', () {
       Game game = Game();
       //print(game.gardenCards);
-      expect(game.GetGardenCards().length, equals(45));
+      expect(game.getGardenCards().length, equals(45));
     });
-  });
-
-  group('Game2: ', () {
-    test('Game ha generado sus bounty cards', () {
+    test('Game ha generado sus 3 bounty cards', () {
       Game game = Game();
       //print(game.GetBountyCards());
-      expect(game.GetBountyCards().length, equals(3));
+      expect(game.getBountyCards().length, equals(3));
     });
     test('Despues de turno es columna 2', () {
       Game game = Game();
-      game.NextTurn();
+      game.nextTurn();
       expect(game.column, equals(2));
     });
     test('Despues de 5 turnos es columna 1 de nuevo', () {
       Game game = Game();
-      game.NextTurn();
-      game.NextTurn();
-      game.NextTurn();
-      game.NextTurn();
-      game.NextTurn();
+      game.nextTurn();
+      game.nextTurn();
+      game.nextTurn();
+      game.nextTurn();
+      game.nextTurn();
       expect(game.column, equals(1));
     });
+    test('Total de DesireCards disminuye a 16 tras startgame', () {
+      Game game = Game();
+      expect(game.getDesireCards().length, equals(16));
+    });
+
+  });
+
+  group('xxx: ', () {
+    
+    
+    
   });
   
   group('Tablero Grafico: ', () {
     test('Imprimir BountyCards Row', () {
       Game game = Game();
-      game.generateDay();
-      game.ImprimirTablero();
+      game.imprimirTablero();
     });
   });
 
@@ -202,12 +199,14 @@ class Game{
   Game(){
     _gardenCards = shuffleGardenCards(gardenCards.toList()).toList();
     _desireCards = shuffleDesireCards(desireCards.toList()).toList();
+
+    generateDay();
   }
 
   void generateDay() {
     generateBountyRow();
     generateGardenRows();
-    SetCardsOfGardenRows();
+    setCardsOfGardenRows();
     generateDesireRow();
   }
 
@@ -223,7 +222,7 @@ class Game{
     row1 = drawGardenCards(5).toList();
     row2 = drawGardenCards(5).toList();
   }
-  void SetCardsOfGardenRows(){
+  void setCardsOfGardenRows(){
 
     row1.elementAt(1).TurnCard();
     row1.elementAt(3).TurnCard();
@@ -261,7 +260,7 @@ class Game{
     return tempCards;
   }
 
-  void NextTurn(){
+  void nextTurn(){
     column++;
     if (column > 5){
       column = 1;
@@ -271,11 +270,11 @@ class Game{
 
 
  /* ------ TABLERO GRAFICO ------ */
-  void ImprimirTablero(){
-    PrintBountyCardsZone();
+  void imprimirTablero(){
+    printBountyCardsZone();
   }
 
-  void PrintBountyCardsZone(){
+  void printBountyCardsZone(){
     // ignore: prefer_interpolation_to_compose_strings
     String message = ('|| ${_bountyCards.elementAt(0).requirement1.name} ${_bountyCards.elementAt(0).requirement2.name} ${_bountyCards.elementAt(0).requirement3.name} || '+
           ' ${_bountyCards.elementAt(1).requirement1.name} ${_bountyCards.elementAt(1).requirement2.name} ${_bountyCards.elementAt(1).requirement3.name} ' +
@@ -292,18 +291,20 @@ class Game{
   }
  /* ----------------------------- */
 
-  List<GardenCard> GetRowByColumn(){
+  List<GardenCard> getRowsByColumn(){
     return [row1.elementAt(column-1), row2.elementAt(column-1)];
 
   }
 
-  List<GardenCard> GetGardenCards(){
+  List<GardenCard> getGardenCards(){
     return _gardenCards;
   }
-  List<BountyCard> GetBountyCards(){
+  List<BountyCard> getBountyCards(){
     return _bountyCards;
   }
-  
+  List<DesireCard> getDesireCards(){
+    return _desireCards;
+  }
   
 
 }
@@ -314,20 +315,6 @@ class Game{
 /* ---------------------------------- CARDS ---------------------------------- */
 
 // FUNCIONES
-List<BountyCard> generateBountyCards() {
-  List<BountyCard> temporalCards = bountyCards.toList();
-  List<BountyCard> finalCards = [];
-
-  for (var i = 0; i < 3; i++) {
-    final _random = new Random();
-    BountyCard c = temporalCards[_random.nextInt(temporalCards.length)];
-    finalCards.add(c);
-    temporalCards.remove(c);
-  }
-
-  return finalCards;
-}
-
 List<BountyCard> shuffleBountyCards(List<BountyCard> cards){
   cards.shuffle();
   return cards;
