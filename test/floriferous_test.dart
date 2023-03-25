@@ -192,7 +192,88 @@ void main() {
     });
   });
 
-  group('Puntajes: ', () {
+  group('Puntajes Desire Simples: ', () {   
+    test('3 flores de color amarillo son 6 puntos', () {
+      Game game = Game();
+      List<Card> misCartas = [
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.yellow),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.purple),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.purple, bicho: Bugs.butterfly),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.orange, bicho: Bugs.beetle),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.white, bicho: Bugs.ladybug),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.pink, bicho: Bugs.bee),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.moth),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.white),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.orange),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.pink),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.yellow)
+      ];
+      DesireCard desireC = desireCards.elementAt(2);
+      int score = desireC.obtainScore(misCartas);
+      expect(score, equals(6));
+    });
+    test('4 abejas son 12 puntos', () {
+      Game game = Game();
+      List<Card> misCartas = [
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.bee),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.purple),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.purple, bicho: Bugs.butterfly),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.orange, bicho: Bugs.beetle),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.white, bicho: Bugs.ladybug),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.pink, bicho: Bugs.bee),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.moth),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.white),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.orange),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.pink, bicho: Bugs.bee),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.yellow, bicho: Bugs.bee)
+      ];
+      DesireCard desireC = DesireCard(tipo: TypesOfDesire.simple, requerimiento: Bugs.bee, puntos: [3]);
+      int score = desireC.obtainScore(misCartas);
+      expect(score, equals(12));
+    });
+    test('3 mum son 6 puntos', () {
+      Game game = Game();
+      List<Card> misCartas = [
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.purple, bicho: Bugs.butterfly),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.orange, bicho: Bugs.beetle),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.white, bicho: Bugs.ladybug),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.white),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.orange),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.pink, bicho: Bugs.bee),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.yellow, bicho: Bugs.bee)
+      ];
+      DesireCard desireC = DesireCard(tipo: TypesOfDesire.simple, requerimiento: Flowers.mum, puntos: [2]);
+      int score = desireC.obtainScore(misCartas);
+      expect(score, equals(6));
+    });
+    test('1 abejas son 3 puntos', () {
+      List<Card> misCartas = [
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.purple, bicho: Bugs.butterfly),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.orange, bicho: Bugs.beetle),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.white, bicho: Bugs.ladybug),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.white, bicho: Bugs.ladybug),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.orange, bicho: Bugs.ladybug),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.pink, bicho: Bugs.bee),
+      ];
+      DesireCard desireC = DesireCard(tipo: TypesOfDesire.simple, requerimiento: Bugs.bee, puntos: [3]);
+      int score = desireC.obtainScore(misCartas);
+      expect(score, equals(3));
+    });
+    test('0 abejas son 0 puntos', () {
+      List<Card> misCartas = [
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.purple, bicho: Bugs.butterfly),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.orange, bicho: Bugs.beetle),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.white, bicho: Bugs.ladybug),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.white, bicho: Bugs.ladybug),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.orange, bicho: Bugs.ladybug),
+      ];
+      DesireCard desireC = DesireCard(tipo: TypesOfDesire.simple, requerimiento: Bugs.bee, puntos: [3]);
+      int score = desireC.obtainScore(misCartas);
+      expect(score, equals(0));
+    });
+  });
+
+  group('Puntajes Desire Same: ', () {
     test('Obtener que flor aparece más', () {
       Game game = Game();
       List<Card> misCartas = [
@@ -211,7 +292,8 @@ void main() {
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.pink),
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.yellow)
       ];
-      expect(game.obtainMaxOccurence(misCartas, Flowers.daisy), equals("mum"));
+      DesireCard desireC = desireCards.elementAt(1);
+      expect(desireC.obtainMaxSameOccurence(misCartas).keys.first, equals(Flowers.mum));
     });
     test('Obtener que color aparece más', () {
       Game game = Game();
@@ -223,7 +305,8 @@ void main() {
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.moth),
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.white),
       ];
-      expect(game.obtainMaxOccurence(misCartas, Colors.orange), equals('pink'));
+      DesireCard desireC = desireCards.elementAt(2);
+      expect(desireC.obtainMaxSameOccurence(misCartas).keys.first, equals(Colors.pink));
     });
     test('Obtener que insecto aparece más', () {
       Game game = Game();
@@ -243,17 +326,13 @@ void main() {
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.pink),
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.yellow, bicho: Bugs.moth)
       ];
-      expect(game.obtainMaxOccurence(misCartas, Bugs.none), equals("moth"));
-    });
-    
-    
-    test('Obtener puntaje de 4 flores del mismo color', () {
+      DesireCard desireC = desireCards.elementAt(0);
+      expect(desireC.obtainMaxSameOccurence(misCartas).keys.first, equals(Bugs.moth));
+    });   
+    test('Mayormente 3 flores amarillas son 2 puntos', () {
       Game game = Game();
       List<Card> misCartas = [
-        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.orange),
-        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.pink),
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.yellow),
-        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.white),
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.purple),
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.purple, bicho: Bugs.butterfly),
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.orange, bicho: Bugs.beetle),
@@ -265,11 +344,44 @@ void main() {
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.pink),
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.yellow)
       ];
+      DesireCard desireC = DesireCard(tipo: TypesOfDesire.same, requerimiento: Colors.indifferent, puntos: [0,1,2,4,7]);
+      int score = desireC.obtainScore(misCartas);
+      expect(score, equals(2));
     });
-
-
+    test('Mayormente 6 flores amarillas son 7 puntos', () {
+      Game game = Game();
+      List<Card> misCartas = [
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.yellow),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.yellow),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.purple, bicho: Bugs.butterfly),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.orange, bicho: Bugs.beetle),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.ladybug),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.bee),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.moth),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.white),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.orange),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.pink),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.yellow)
+      ];
+      DesireCard desireC = DesireCard(tipo: TypesOfDesire.same, requerimiento: Colors.indifferent, puntos: [0,1,2,4,7]);
+      int score = desireC.obtainScore(misCartas);
+      expect(score, equals(7));
+    });
+    test('Mayormente ningun insecto son 0 puntos', () {
+      Game game = Game();
+      List<Card> misCartas = [
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.yellow),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.purple),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.white),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.orange),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.pink),
+        FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.yellow)
+      ];
+      DesireCard desireC = DesireCard(tipo: TypesOfDesire.same, requerimiento: Bugs.indifferent, puntos: [0,1,2,4,7]);
+      int score = desireC.obtainScore(misCartas);
+      expect(score, equals(0));
+    });
   });
-
   group('Turns: ', () {
     
     test('Despues de turno es columna 2', () {
@@ -389,42 +501,6 @@ class Game{
     return card;
   }
 
-  String obtainMaxOccurence(List<Card> listOfCards, Enum occurrence){
-    var map = Map();
-
-    listOfCards.forEach((element) {
-      GardenCard card = element as GardenCard;
-
-      Enum? keyValue;
-      String enumName = occurrence.toString().split('.').first;
-
-      switch (enumName){
-        case "Flowers": keyValue = card._flower; 
-          break;
-        case "Colors": keyValue = card._color; 
-          break; 
-        case "Bugs": keyValue = card._bug; 
-          break;
-      }
-
-      if (!map.containsKey(keyValue)) {
-        map[keyValue] = 1;
-      } else {
-        map[keyValue] += 1;
-      }
-    });
-    if (map.containsKey(Bugs.none)) map.remove(Bugs.none);
-    
-    List sortedValues = map.values.toList()..sort();
-    int popularValue = sortedValues.last;
-    var key = map.keys.firstWhere((k)
-          => map[k] == popularValue, orElse: () => null);
-    
-    return key.toString().split('.').last;
-    
-  }
-
-
   void nextTurn(){
     column++;
     if (column > 5){
@@ -473,6 +549,7 @@ class Game{
   List<CrowCard> getCrowCards(){
     return _crowCards;
   }
+  
 }
 /* ----------------------------- END OF GAME ---------------------------------- */
 
@@ -480,9 +557,9 @@ class Game{
 /* ---------------------------------------------------------------------------- */
 /* ----------------------------------- CARDS ---------------------------------- */
 // ENUMS
-enum Flowers {daisy, lily, mum, poppy, tulip}
-enum Colors {white, yellow, orange, pink, purple}
-enum Bugs {bee, beetle, butterfly, ladybug, moth, none}
+enum Flowers {daisy, lily, mum, poppy, tulip, indifferent}
+enum Colors {white, yellow, orange, pink, purple, indifferent}
+enum Bugs {bee, beetle, butterfly, ladybug, moth, none, indifferent}
 
 enum TypesOfGardenCard {flower, arrangement}
 enum TypesOfDesire {simple, same, different}
@@ -563,7 +640,7 @@ List<DesireCard> desireCards = [
   DesireCard(tipo: TypesOfDesire.simple, requerimiento: Bugs.bee, puntos: [3]),
   DesireCard(tipo: TypesOfDesire.simple, requerimiento: Flowers.mum, puntos: [2]),
   DesireCard(tipo: TypesOfDesire.simple, requerimiento: Colors.yellow, puntos: [2]),
-  DesireCard(tipo: TypesOfDesire.same, requerimiento: Bugs.none, puntos: [0,2,4,7,10]),
+  DesireCard(tipo: TypesOfDesire.same, requerimiento: Bugs.indifferent, puntos: [0,2,4,7,10]),
   DesireCard(tipo: TypesOfDesire.simple, requerimiento: Bugs.butterfly, puntos: [3]),
   DesireCard(tipo: TypesOfDesire.simple, requerimiento: Colors.orange, puntos: [2]),
   DesireCard(tipo: TypesOfDesire.different, requerimiento: Colors.yellow, puntos: [0,0,1,3,5]),
@@ -571,11 +648,11 @@ List<DesireCard> desireCards = [
   DesireCard(tipo: TypesOfDesire.simple, requerimiento: Colors.white, puntos: [2]),
   DesireCard(tipo: TypesOfDesire.simple, requerimiento: Bugs.ladybug, puntos: [3]),
   DesireCard(tipo: TypesOfDesire.simple, requerimiento: Flowers.lily, puntos: [2]),
-  DesireCard(tipo: TypesOfDesire.same, requerimiento: Flowers.daisy, puntos: [0,1,2,4,7]),
+  DesireCard(tipo: TypesOfDesire.same, requerimiento: Flowers.indifferent, puntos: [0,1,2,4,7]),
   DesireCard(tipo: TypesOfDesire.different, requerimiento: Flowers.daisy, puntos: [0,0,1,3,5]),
   DesireCard(tipo: TypesOfDesire.simple, requerimiento: Colors.purple, puntos: [2]),
   DesireCard(tipo: TypesOfDesire.simple, requerimiento: Colors.pink, puntos: [2]),
-  DesireCard(tipo: TypesOfDesire.same, requerimiento: Colors.orange, puntos: [0,1,2,4,7]),
+  DesireCard(tipo: TypesOfDesire.same, requerimiento: Colors.indifferent, puntos: [0,1,2,4,7]),
   DesireCard(tipo: TypesOfDesire.simple, requerimiento: Flowers.tulip, puntos: [2]),
   DesireCard(tipo: TypesOfDesire.different, requerimiento: Bugs.none, puntos: [0,1,2,4,7]),
   DesireCard(tipo: TypesOfDesire.simple, requerimiento: Bugs.moth, puntos: [3]),
@@ -691,12 +768,113 @@ class DesireCard extends Card{
   late final Enum typeOfDesire;
   late final Enum requirement;
   late final List<int> points;
+  final occurrencesLimit = 5;
 
   DesireCard({required TypesOfDesire tipo, required Enum requerimiento, required List<int> puntos}){
     typeOfDesire = tipo;
     requirement = requerimiento;
     points = puntos;
   }
+
+  int obtainScore(List<Card> listOfCards) {
+    String type = typeOfDesire.toString().split('.').last;
+    int score = 0;
+    switch(type){
+      case 'simple': score += obtainSimpleScore(listOfCards);
+        break;
+      case 'same': score += obtainSameScore(listOfCards);
+        break;
+    }
+    return score;
+  }
+
+  int obtainSimpleScore(List<Card> listOfCards){
+    int maxOccurrence = obtainRequerimentOccurence(listOfCards);
+    int score = maxOccurrence * points[0];
+    return score;
+  }
+  int obtainSameScore(List<Card> listOfCards){
+    Map maxOccurrence = obtainMaxSameOccurence(listOfCards);
+    int occurrences = maxOccurrence.values.first > occurrencesLimit? occurrencesLimit:maxOccurrence.values.first;
+    if (occurrences <= 0) occurrences = 1;
+
+    //print(occurrences);
+    int score = points[occurrences-1];
+    //print(maxOccurrence);
+    //print(maxOccurrence.keys.first);
+    //print(maxOccurrence.values.first);
+    return score;
+  }
+
+  int obtainRequerimentOccurence(List<Card> listOfCards){
+    var map = Map();
+
+    listOfCards.forEach((element) {
+      GardenCard card = element as GardenCard;
+
+      Enum? keyValue;
+      String enumName = requirement.toString().split('.').first;
+
+      switch (enumName){
+        case "Flowers": keyValue = card._flower; 
+          break;
+        case "Colors": keyValue = card._color; 
+          break; 
+        case "Bugs": keyValue = card._bug; 
+          break;
+      }
+
+      if (!map.containsKey(keyValue)) {
+        map[keyValue] = 1;
+      } else {
+        map[keyValue] += 1;
+      }
+    });
+    if (map.containsKey(Bugs.none)) map.remove(Bugs.none);
+    
+    if (map[requirement] == null) return 0;
+    return map[requirement];
+  } 
+  Map obtainMaxSameOccurence(List<Card> listOfCards){
+    var map = Map();
+
+    listOfCards.forEach((element) {
+      GardenCard card = element as GardenCard;
+
+      Enum? keyValue;
+      String enumName = requirement.toString().split('.').first;
+
+      switch (enumName){
+        case "Flowers": keyValue = card._flower; 
+          break;
+        case "Colors": keyValue = card._color; 
+          break; 
+        case "Bugs": keyValue = card._bug; 
+          break;
+      }
+
+      if (!map.containsKey(keyValue)) {
+        map[keyValue] = 1;
+      } else {
+        map[keyValue] += 1;
+      }
+    });
+    if (map.containsKey(Bugs.none)) map.remove(Bugs.none);
+    
+    List sortedValues = map.values.toList()..sort();
+    if (sortedValues.isEmpty) return {requirement:0};
+
+    int popularValue = sortedValues.last;
+    var key = map.keys.firstWhere((k)
+          => map[k] == popularValue, orElse: () => null);
+    
+    var map2 = Map();
+    map2[key] = popularValue;
+
+    //return key; //it was return Enum
+    return map2;
+  }
+  
 
 }
 
