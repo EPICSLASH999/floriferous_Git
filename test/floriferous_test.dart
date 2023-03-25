@@ -20,7 +20,7 @@ void main() {
       FlowerCard card = FlowerCard(tipoDeCarta: TypesOfCard.Flower, flor: Flowers.Daisy, col: Colors.Orange);
       expect(card.typeOfCard, equals(TypesOfCard.Flower));
     });
-    test('Requerimiento1 es "tulip"', () {
+    test('Requerimiento1 de BountyCard1 es "tulip"', () {
       BountyCard bounty = bountyCards.elementAt(0);
       expect(bounty.requirement1, equals(Flowers.Tulip));
     });
@@ -44,7 +44,7 @@ void main() {
       expect(card.hasStone, equals(false));
     });
     test('Primera carta de nueva lista de bounties es igual a index 0 de bountyCards', () {
-      List<BountyCard> bounties = bountyCards;
+      List<BountyCard> bounties = bountyCards.toList();
       BountyCard bCard = bounties.elementAt(0);
       //print(bCard);
       expect(bCard, equals(bountyCards.elementAt(0)));
@@ -64,7 +64,21 @@ void main() {
       //print(gardenCards.elementAt(0));
 
       expect(randomCards.equals(gardenCards), equals(false));
+    });  
+    test('DesireCards son 21', () {
+      expect(desireCards.length, equals(21));
     });
+    test('DesireCard 1 es tipo Simple', () {
+      DesireCard card = desireCards.elementAt(0);
+      expect(card.typeOfDesire, TypesOfDesire.Simple);
+    });
+    test('CrowCards son 9', () {
+      expect(crowCards.length, equals(9));
+    });    
+
+  });
+  
+  group('In Game Cards: ', () {
     test('Tarjeta tomada de mazo es la ultima', () {
       Game game = Game();
       game._gardenCards = gardenCards.toList();
@@ -89,12 +103,15 @@ void main() {
       expect(longitudInicial == longitudFinal, equals(false));
     
   });
-    test('DesireCards son 21', () {
-      expect(desireCards.length, equals(21));
+    test('El total de garden cards disminuye a 45 tras contruir el tablero', () {
+      Game game = Game();
+      //print(game.gardenCards);
+      expect(game.getGardenCards().length, equals(45));
     });
-    test('DesireCard 1 es tipo Simple', () {
-      DesireCard card = desireCards.elementAt(0);
-      expect(card.typeOfDesire, TypesOfDesire.Simple);
+    test('Game ha generado sus 3 bounty cards', () {
+      Game game = Game();
+      //print(game.GetBountyCards());
+      expect(game.getBountyCards().length, equals(3));
     });
     test('Generar dia toma 10 tarjetas de Jardin', () {
       Game game = Game();
@@ -129,22 +146,16 @@ void main() {
     test('Generar dia toma 5 tarjetas Desire', () {
       Game game = Game();
       expect(game.row3.length, equals(5));
+    });   
+    test('Total de DesireCards disminuye a 16 tras startgame', () {
+      Game game = Game();
+      expect(game.getDesireCards().length, equals(16));
     });
 
   });
-  
-  
-  group('Game: ', () {
-    test('El total de garden cards disminuye a 45 tras contruir el tablero', () {
-      Game game = Game();
-      //print(game.gardenCards);
-      expect(game.getGardenCards().length, equals(45));
-    });
-    test('Game ha generado sus 3 bounty cards', () {
-      Game game = Game();
-      //print(game.GetBountyCards());
-      expect(game.getBountyCards().length, equals(3));
-    });
+
+  group('Turns: ', () {
+    
     test('Despues de turno es columna 2', () {
       Game game = Game();
       game.nextTurn();
@@ -159,15 +170,6 @@ void main() {
       game.nextTurn();
       expect(game.column, equals(1));
     });
-    test('Total de DesireCards disminuye a 16 tras startgame', () {
-      Game game = Game();
-      expect(game.getDesireCards().length, equals(16));
-    });
-
-  });
-
-  group('xxx: ', () {
-    
     
     
   });
@@ -181,8 +183,6 @@ void main() {
 
 
 }
-
-
 
 class Game{
   late final List<BountyCard> _bountyCards;
@@ -306,27 +306,9 @@ class Game{
     return _desireCards;
   }
   
-
 }
-
-
-
 
 /* ---------------------------------- CARDS ---------------------------------- */
-
-// FUNCIONES
-List<BountyCard> shuffleBountyCards(List<BountyCard> cards){
-  cards.shuffle();
-  return cards;
-}
-List<GardenCard> shuffleGardenCards(List<GardenCard> cards){
-  cards.shuffle();
-  return cards;
-}
-List<DesireCard> shuffleDesireCards(List<DesireCard> cards){
-  cards.shuffle();
-  return cards;
-}
 
 // ENUMS
 enum Flowers {Daisy, Lily, Mum, Poppy, Tulip}
@@ -335,6 +317,7 @@ enum Bugs {Bee, Beetle, Butterfly, Ladybug, Moth, Null}
 
 enum TypesOfCard {Flower, Arrangement}
 enum TypesOfDesire {Simple, Same, Different}
+enum CrowReplacements {Stone, Card}
 
 // LISTS
 List<GardenCard> gardenCards = [
@@ -430,6 +413,18 @@ List<DesireCard> desireCards = [
   DesireCard(tipo: TypesOfDesire.Simple, requerimiento: Flowers.Daisy, puntos: [2]),
   DesireCard(tipo: TypesOfDesire.Simple, requerimiento: Flowers.Poppy, puntos: [2])
 ];
+List<CrowCard> crowCards = [
+  CrowCard(renglon: 3, reemplazo: CrowReplacements.Stone, numeroDePiedras: 2),
+  CrowCard(renglon: 3, reemplazo: CrowReplacements.Stone, numeroDePiedras: 1),
+  CrowCard(renglon: 3, reemplazo: CrowReplacements.Card),
+  CrowCard(renglon: 1, reemplazo: CrowReplacements.Stone, numeroDePiedras: 2),
+  CrowCard(renglon: 2, reemplazo: CrowReplacements.Stone, numeroDePiedras: 2),
+  CrowCard(renglon: 1, reemplazo: CrowReplacements.Stone, numeroDePiedras: 1),
+  CrowCard(renglon: 1, reemplazo: CrowReplacements.Card),
+  CrowCard(renglon: 2, reemplazo: CrowReplacements.Stone, numeroDePiedras: 1),
+  CrowCard(renglon: 2, reemplazo: CrowReplacements.Card)
+];
+
 // CLASSES
 class GardenCard extends Equatable{
 
@@ -532,11 +527,32 @@ class DesireCard{
 
 class CrowCard{
 
-  late final int replaceRowAt;
-  late final replaceWith;
+  late final int _replaceRowAt;
+  late final Enum _replaceWith;
+  late final int _numberOfStones;
 
-  CrowCard();
+  CrowCard({required int renglon, required CrowReplacements reemplazo, int numeroDePiedras = 0}){
+    _replaceRowAt = renglon;
+    _replaceWith = reemplazo;
+    _numberOfStones = numeroDePiedras;
+  }
 
 }
+
+
+// FUNCIONES
+List<BountyCard> shuffleBountyCards(List<BountyCard> cards){
+  cards.shuffle();
+  return cards;
+}
+List<GardenCard> shuffleGardenCards(List<GardenCard> cards){
+  cards.shuffle();
+  return cards;
+}
+List<DesireCard> shuffleDesireCards(List<DesireCard> cards){
+  cards.shuffle();
+  return cards;
+}
+
 
 /* ---------------------------------------------------------------------------- */
