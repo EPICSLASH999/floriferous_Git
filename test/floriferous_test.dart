@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:ffi';
+import 'dart:html';
 import 'dart:math';
 
 import 'package:collection/collection.dart';
@@ -91,7 +92,35 @@ void main() {
     test('DesireCards son 21', () {
       expect(desireCards.length, equals(21));
     });
+    test('DesireCard 1 es tipo Simple', () {
+      DesireCard card = desireCards.elementAt(0);
+      expect(card.typeOfDesire, TypesOfDesire.Simple);
+    });
+    test('Generar dia toma 10 tarjetas de Jardin', () {
+      Game game = Game();
+      game.generateDay();
+      
+      int sum = game.row1.length + game.row2.length;
 
+      expect(sum, equals(10));
+    });
+    test('Generar dia deja 45 tarjeas de jardin', () {
+      Game game = Game();
+      game.generateDay();
+      expect(game._gardenCards.length, equals(45));
+    });
+    test('Generar dia toma 3 tarjetas de Bounty', () {
+      Game game = Game();
+      game.generateDay();
+      print(game._bountyCards);
+      expect(game._bountyCards.length, equals(3));
+    });
+
+    test('En Row 1... Cards 2 y 4 estan volteadas', () {
+      Game game = Game();
+      game.generateDay();
+      
+    });
 
   });
   
@@ -142,6 +171,7 @@ void main() {
 class Game{
   late final List<BountyCard> _bountyCards;
   List<GardenCard> _gardenCards = [];
+  List<DesireCard> _desireCards = [];
 
   int day = 1;
   int column = 1;
@@ -150,19 +180,40 @@ class Game{
   List<GardenCard> row2 = [];
 
   Game(){
-    //_bountyCards = generateBountyCards();
-
-    //BuildDay();
+    _gardenCards = shuffleGardenCards(gardenCards.toList()).toList();
   }
+
+  void generateDay() {
+    generateGardenRows();
+    generateBountyRow();
+  }
+
+  void generateGardenRows(){
+    row1 = drawGardenCards(5).toList();
+    row2 = drawGardenCards(5).toList();
+  }
+  void generateBountyRow() {
+    List<BountyCard> shuffledBCards = shuffleBountyCards(bountyCards.toList());
+    List<BountyCard> tempCards = [];
+    for (var i = 0; i < 3; i++) {
+      tempCards.add(shuffledBCards.elementAt(i));
+    }
+    _bountyCards = tempCards.toList();
+  }
+
 
   GardenCard drawGardenCard() {
     GardenCard card = _gardenCards.elementAt(_gardenCards.length-1);
     _gardenCards.removeAt(_gardenCards.length-1);
     return card;
   }
-
-
-
+  List<GardenCard> drawGardenCards(int numberOfCards){
+    List<GardenCard> tempCards = [];
+    for (var i = 0; i < numberOfCards; i++) {
+      tempCards.add(drawGardenCard());
+    }
+    return tempCards;
+  }
   
   void BuildDay() {
     //gardenCards = generateGardenCards(gardenCards, gardenCards.length); 
@@ -246,6 +297,7 @@ class Game{
     return finalCards;
 }
 
+ 
 
 }
 
@@ -256,7 +308,7 @@ class Game{
 
 // FUNCIONES
 List<BountyCard> generateBountyCards() {
-  List<BountyCard> temporalCards = bountyCards;
+  List<BountyCard> temporalCards = bountyCards.toList();
   List<BountyCard> finalCards = [];
 
   for (var i = 0; i < 3; i++) {
@@ -277,7 +329,10 @@ List<GardenCard> shuffleGardenCards(List<GardenCard> cards){
   cards.shuffle();
   return cards;
 }
-
+List<DesireCard> shuffleDesireCards(List<DesireCard> cards){
+  cards.shuffle();
+  return cards;
+}
 
 // ENUMS
 enum Flowers {Daisy, Lily, Mum, Poppy, Tulip}
