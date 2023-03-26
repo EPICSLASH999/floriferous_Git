@@ -1,11 +1,11 @@
-import 'dart:developer';
-import 'dart:ffi';
+//import 'dart:developer';
+//import 'dart:ffi';
 //import 'dart:html';
-import 'dart:math';
+//import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
-import 'package:floriferous/floriferous.dart';
+//import 'package:floriferous/floriferous.dart';
 import 'package:test/test.dart';
 
 
@@ -84,7 +84,6 @@ void main() {
     
 
   });
-  
   group('In Game Cards: ', () {
     test('Tarjeta tomada de mazo es la ultima', () {
       Game game = Game();
@@ -160,27 +159,24 @@ void main() {
     });
     test('Draw CrowCard toma la ultima y la resta a la baraja', () {
       Game game = Game();
-      CrowCard card1 = game._crowCards.elementAt(game._crowCards.length-1);
-      CrowCard card2 = game.drawCrowCard();
-      
+      //CrowCard card1 = game._crowCards.elementAt(game._crowCards.length-1);
+      //CrowCard card2 = game.drawCrowCard();
       //print(card1);
       //print(card2);
-
       expect(game._crowCards.length, equals(8));
-
     });
     test('Al tomar las 9 CrowCards se reinicia la baraja', () {
       Game game = Game();
-      CrowCard card = game.drawCrowCard();
-      card = game.drawCrowCard();
-      card = game.drawCrowCard();
-      card = game.drawCrowCard();
-      card = game.drawCrowCard();
-      card = game.drawCrowCard();
-      card = game.drawCrowCard();
-      card = game.drawCrowCard();
-      card = game.drawCrowCard();
-      card = game.drawCrowCard();
+      game.drawCrowCard();
+      game.drawCrowCard();
+      game.drawCrowCard();
+      game.drawCrowCard();
+      game.drawCrowCard();
+      game.drawCrowCard();
+      game.drawCrowCard();
+      game.drawCrowCard();
+      game.drawCrowCard();
+      game.drawCrowCard();
 
       expect(game._crowCards.length, equals(8));
     });
@@ -191,10 +187,8 @@ void main() {
       expect(game.row3.elementAt(0)._isUpsidedown, equals(true));
     });
   });
-
   group('Puntajes Desire Simples: ', () {   
     test('3 flores de color amarillo son 6 puntos', () {
-      Game game = Game();
       List<Card> misCartas = [
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.yellow),
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.purple),
@@ -213,7 +207,6 @@ void main() {
       expect(score, equals(6));
     });
     test('4 abejas son 12 puntos', () {
-      Game game = Game();
       List<Card> misCartas = [
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.bee),
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.purple),
@@ -232,7 +225,6 @@ void main() {
       expect(score, equals(12));
     });
     test('3 mum son 6 puntos', () {
-      Game game = Game();
       List<Card> misCartas = [
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.purple, bicho: Bugs.butterfly),
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.orange, bicho: Bugs.beetle),
@@ -272,10 +264,8 @@ void main() {
       expect(score, equals(0));
     });
   });
-
   group('Puntajes Desire Same: ', () {
     test('Obtener que flor aparece más', () {
-      Game game = Game();
       List<Card> misCartas = [
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.orange),
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.pink),
@@ -296,7 +286,6 @@ void main() {
       expect(desireC.obtainMaxSameOccurence(misCartas).keys.first, equals(Flowers.mum));
     });
     test('Obtener que color aparece más', () {
-      Game game = Game();
       List<Card> misCartas = [
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.pink),
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.purple, bicho: Bugs.butterfly),
@@ -309,7 +298,6 @@ void main() {
       expect(desireC.obtainMaxSameOccurence(misCartas).keys.first, equals(Colors.pink));
     });
     test('Obtener que insecto aparece más', () {
-      Game game = Game();
       List<Card> misCartas = [
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.orange),
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.pink),
@@ -330,7 +318,6 @@ void main() {
       expect(desireC.obtainMaxSameOccurence(misCartas).keys.first, equals(Bugs.moth));
     });   
     test('Mayormente 3 flores amarillas son 2 puntos', () {
-      Game game = Game();
       List<Card> misCartas = [
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.yellow),
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.purple),
@@ -349,7 +336,6 @@ void main() {
       expect(score, equals(2));
     });
     test('Mayormente 6 flores amarillas son 7 puntos', () {
-      Game game = Game();
       List<Card> misCartas = [
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.yellow),
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.yellow),
@@ -368,7 +354,6 @@ void main() {
       expect(score, equals(7));
     });
     test('Mayormente ningun insecto son 0 puntos', () {
-      Game game = Game();
       List<Card> misCartas = [
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.yellow),
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.purple),
@@ -382,10 +367,8 @@ void main() {
       expect(score, equals(0));
     });
   });
-  
   group('Puntajes Desire Different: ', () {
     test('1 insectos diferente son 0 pts', () {
-      Game game = Game();
       List<Card> misCartas = [
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.butterfly),
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.poppy, col: Colors.white),
@@ -398,7 +381,6 @@ void main() {
       expect(score, equals(0));
     });
     test('2 insectos diferentes son 1 pts', () {
-      Game game = Game();
       List<Card> misCartas = [
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.butterfly),
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.orange, bicho: Bugs.beetle),
@@ -415,7 +397,6 @@ void main() {
       expect(score, equals(7));
     });
     test('3 insectos diferentes son 2 pts', () {
-      Game game = Game();
       List<Card> misCartas = [
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.yellow),
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.yellow),
@@ -432,7 +413,6 @@ void main() {
       expect(score, equals(2));
     });
     test('5 insectos diferentes son 7 pts', () {
-      Game game = Game();
       List<Card> misCartas = [
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.yellow),
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.yellow),
@@ -451,7 +431,6 @@ void main() {
       expect(score, equals(7));
     });
     test('0 insectos diferentes son 0 pts', () {
-      Game game = Game();
       List<Card> misCartas = [
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.yellow),
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.yellow),
@@ -465,7 +444,6 @@ void main() {
       expect(score, equals(0));
     });
     test('Muchos insectos repetidos pero 5 diferentes son 7 pts', () {
-      Game game = Game();
       List<Card> misCartas = [
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.butterfly),
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.butterfly),
@@ -484,7 +462,6 @@ void main() {
       expect(score, equals(7));
     });
     test('2 insectos diferentes pero repetidos son 1 pts', () {
-      Game game = Game();
       List<Card> misCartas = [
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.butterfly),
         FlowerCard(tipoDeCarta: TypesOfGardenCard.flower, flor: Flowers.mum, col: Colors.orange, bicho: Bugs.beetle),
@@ -498,6 +475,10 @@ void main() {
       expect(score, equals(1));
     });
  
+  });
+  
+  group('Puntaje final: ', () {
+    
   });
   
   group('Turns: ', () {
@@ -637,7 +618,7 @@ class Game{
     // ignore: prefer_interpolation_to_compose_strings
     String message = ('|| ${_bountyCards.elementAt(0).requirement1.name} ${_bountyCards.elementAt(0).requirement2.name} ${_bountyCards.elementAt(0).requirement3.name} || '+
           ' ${_bountyCards.elementAt(1).requirement1.name} ${_bountyCards.elementAt(1).requirement2.name} ${_bountyCards.elementAt(1).requirement3.name} ' +
-         ' || ${_bountyCards.elementAt(2).requirement1.name} ${_bountyCards.elementAt(2).requirement2.name} ${_bountyCards.elementAt(2).requirement3.name} ||');;
+         ' || ${_bountyCards.elementAt(2).requirement1.name} ${_bountyCards.elementAt(2).requirement2.name} ${_bountyCards.elementAt(2).requirement3.name} ||');
 
     String title = ' BOUNTY CARDS ';
 
