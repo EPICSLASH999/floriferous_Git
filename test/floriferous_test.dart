@@ -477,6 +477,72 @@ void main() {
  
   });
   
+  group('Puntaje ArrangementCards', () {
+    test('Obtener puntaje SOLO con arrangement card', () {
+      List<Card> miDeck = [
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.pink, bicho: Bugs.beetle),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.purple, bicho: Bugs.bee),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.orange, bicho: Bugs.moth),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.pink, bicho: Bugs.beetle),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.yellow, bicho: Bugs.butterfly),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.orange, bicho: Bugs.bee),
+      ];
+      ArrangementCard arrangementC = ArrangementCard(tipoDeCarta: TypesOfCards.arrangement, flor: Flowers.poppy, col: Colors.orange, bicho: Bugs.moth);
+      int score = arrangementC.obtainScore(miDeck);
+      expect(score, equals(5));
+    });
+    test('Obtener puntaje con arrangement card de 0 pts', () {
+      List<Card> miDeck = [
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.purple, bicho: Bugs.bee),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.pink, bicho: Bugs.beetle),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.yellow, bicho: Bugs.butterfly),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.pink, bicho: Bugs.bee),
+      ];
+      ArrangementCard arrangementC = ArrangementCard(tipoDeCarta: TypesOfCards.arrangement, flor: Flowers.poppy, col: Colors.orange, bicho: Bugs.moth);
+      int score = arrangementC.obtainScore(miDeck);
+      expect(score, equals(0));
+    });
+    test('Arrangement cards distingue solo las carteas de flores', () {
+      List<Card> miDeck = [
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.purple, bicho: Bugs.bee),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.pink, bicho: Bugs.beetle),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.yellow, bicho: Bugs.butterfly),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.pink, bicho: Bugs.bee),
+
+        ArrangementCard(tipoDeCarta: TypesOfCards.arrangement, flor: Flowers.poppy, col: Colors.orange, bicho: Bugs.moth),
+        ArrangementCard(tipoDeCarta: TypesOfCards.arrangement, flor: Flowers.poppy, col: Colors.orange, bicho: Bugs.moth),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.orange, bicho: Bugs.bee),
+      ];
+      ArrangementCard arrangementC = ArrangementCard(tipoDeCarta: TypesOfCards.arrangement, flor: Flowers.poppy, col: Colors.orange, bicho: Bugs.moth);
+      int score = arrangementC.obtainScore(miDeck);
+      expect(score, equals(1));
+    });
+    test('Arrangement card toma la carta que mas le conviene al jugador', () {
+      List<Card> miDeck = [
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.pink, bicho: Bugs.beetle),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.purple, bicho: Bugs.bee),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.orange, bicho: Bugs.moth),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.pink, bicho: Bugs.beetle),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.yellow, bicho: Bugs.butterfly),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.pink, bicho: Bugs.moth),
+      ];
+      ArrangementCard arrangementC = ArrangementCard(tipoDeCarta: TypesOfCards.arrangement, flor: Flowers.poppy, col: Colors.orange, bicho: Bugs.moth);
+      int score = arrangementC.obtainScore(miDeck);
+      expect(score, equals(5));
+    });
+    test('Arrangement card toma la carta que mas le conviene al jugador (Prueba 2)', () {
+      List<Card> miDeck = [
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.white, bicho: Bugs.beetle),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.pink, bicho: Bugs.bee),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.white, bicho: Bugs.butterfly),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.white, bicho: Bugs.bee),
+      ];
+      ArrangementCard arrangementC = ArrangementCard(tipoDeCarta: TypesOfCards.arrangement, flor: Flowers.tulip, col: Colors.pink, bicho: Bugs.bee);
+      int score = arrangementC.obtainScore(miDeck);
+      expect(score, equals(5));
+    });
+  });
+
   group('Puntaje final: ', () {
     test('Obtener puntaje de 1 con desire cards', () {
       List<Card> miDeck = [
@@ -536,6 +602,8 @@ void main() {
       game._deck = miDeck;
       expect(game.obtainScore(), equals(9));
     });
+
+    
 
   });
   
@@ -905,10 +973,118 @@ class FlowerCard extends GardenCard{
 
 class ArrangementCard extends GardenCard{
 
+  final List<int> points = [1,3,5];
+
   ArrangementCard({required super.tipoDeCarta, required Flowers flor,required Colors col, required Bugs bicho}){
     _flower = flor;
     _color = col;
     _bug = bicho;
+  }
+  
+  int obtainScore2(List<Card> miDeck) {
+    int counter = 0;
+    List<Card> tempCards = miDeck.toList();
+
+      for (var element in tempCards) {
+        if (element.typeOfCard != TypesOfCards.flower) continue;
+        element = element as FlowerCard;
+        if (element._bug == _bug){
+          tempCards.remove(element);
+          counter++;
+          break;
+        }
+      }
+    
+    for (var element in tempCards) {
+        if (element.typeOfCard != TypesOfCards.flower) continue;
+        element = element as FlowerCard;
+        if (element._flower == _flower){
+          tempCards.remove(element);
+          counter++;
+          break;
+        }
+    }
+
+    for (var element in tempCards) {
+        if (element.typeOfCard != TypesOfCards.flower) continue;
+        element = element as FlowerCard;
+        if (element._color == _color){
+          tempCards.remove(element);
+          counter++;
+          break;
+        }
+    }
+    if (counter == 0) return 0;
+    return points[counter-1];
+  }
+  int obtainScore(List<Card> miDeck) {
+    int counter = 0;
+    List<Card> tempCards = miDeck.toList();
+    Map map = {};
+
+      for (var element in tempCards) {
+        if (element.typeOfCard != TypesOfCards.flower) continue;
+        element = element as FlowerCard;
+        if (element._bug == _bug){
+          if (!map.containsKey(element)) {
+            map[element] = 1;
+          } else {
+            map[element] += 1;
+          }
+          if (element._flower == _flower){
+            map[element] += 1;
+          }
+          if (element._color == _color){
+            map[element] += 1;
+          }
+        }
+      }
+      List sortedValues = map.values.toList()..sort();
+      if (sortedValues.isNotEmpty) {
+        int leastValuableValue = sortedValues.first;
+        var key = map.keys.firstWhere((k)
+              => map[k] == leastValuableValue, orElse: () => null);
+        tempCards.remove(key);
+        counter++;
+        map = {};
+      }
+      
+      
+    for (var element in tempCards) {
+        if (element.typeOfCard != TypesOfCards.flower) continue;
+        element = element as FlowerCard;
+        if (element._flower == _flower){
+          if (!map.containsKey(element)) {
+            map[element] = 1;
+          } else {
+            map[element] += 1;
+          }
+          if (element._color == _color){
+            map[element] += 1;
+          }
+        }
+    }
+    sortedValues = map.values.toList()..sort();
+      if (sortedValues.isNotEmpty) {
+        int leastValuableValue = sortedValues.first;
+        var key = map.keys.firstWhere((k)
+              => map[k] == leastValuableValue, orElse: () => null);
+        tempCards.remove(key);
+        counter++;
+        map = {};
+      }
+
+    for (var element in tempCards) {
+        if (element.typeOfCard != TypesOfCards.flower) continue;
+        element = element as FlowerCard;
+        if (element._color == _color){
+          tempCards.remove(element);
+          counter++;
+          break;
+        }
+    }
+    if (counter == 0) return 0;
+    return points[counter-1];
   }
   
   
