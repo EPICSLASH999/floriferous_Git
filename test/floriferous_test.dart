@@ -603,7 +603,9 @@ void main() {
       expect(game.obtainScore(), equals(9));
     });
 
-    
+    test('Obtener puntaje con arrangement cards', () {
+      
+    });
 
   });
   

@@ -1,0 +1,9 @@
+floriferous
+------------
+
+- Arrangement automatico por cada carta dentro del _deck
+- Carta te con bool perhaps
+- Cada 2 piedras un punto al final
+- Cuervo.
+    -El no agarra desire cards
+    - El acumula piedras cada dia 
