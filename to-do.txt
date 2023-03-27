@@ -1,4 +1,4 @@
-floriferous
+Floriferous
 ------------
 
 - A CORREGIR:
@@ -6,8 +6,13 @@ Bounty Cards deben eliminar el requisito cumplido de alguna forma, para que no b
 Método que se autollame?
 
 - Cuervo.
-    -El no agarra desire cards
+    - Si cuervo tiene 4 o mas piedras...
+    - Poder darle piedras al cuervo para no dar carta
+    -El no agarra desire cards al tener 4 o mas piedras
     - El acumula piedras cada dia 
+    - Si se usa tasa de te el cuervo no hace nada en ese turno
 
 
--Dia 2 empeiza de derecha a izquierda
+-Dia 2 empieza de derecha a izquierda
+
+- Que el tablero diga cuando se completó Bounty Card

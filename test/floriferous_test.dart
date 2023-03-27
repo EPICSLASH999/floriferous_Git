@@ -643,11 +643,6 @@ void main() {
         FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.white, bicho: Bugs.butterfly),
         FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.white, bicho: Bugs.bee),
       ];
-      List <BountyCard> myBountyCards = [
-        BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Bugs.ladybug, requerimiento3: Bugs.butterfly),
-        BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Flowers.tulip, requerimiento3: Flowers.daisy),
-        BountyCard(requerimiento1: Bugs.beetle, requerimiento2: Bugs.ladybug, requerimiento3: Bugs.bee)
-      ];
 
       BountyCard bountyC = BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Flowers.tulip, requerimiento3: Flowers.daisy);
       bountyC.checkIfCompleated(miDeck, 1);
@@ -845,7 +840,7 @@ void main() {
       game.takeCard(2);
       game.takeCard(3);
       game.takeCard(2);
-      game.imprimirTablero();
+      //game.imprimirTablero();
       expect(game.day, equals(1));
     });
     test('Tomar una tarjeta con piedra la da al jugador', () {
@@ -853,7 +848,7 @@ void main() {
       game.takeCard(1);
       game.takeCard(2);
       game.takeCard(2);
-      //game.imprimirTablero();
+      game.imprimirTablero();
       expect(game._stones, equals(1));
     });
     test('Si se usa carta de te es "true"', () {
@@ -868,24 +863,42 @@ void main() {
       CrowCard crowC = CrowCard(renglon: 3, reemplazo: CrowReplacements.stone, numeroDePiedras: 2);
       game.crowActs(crowC);
       bool didHappen = (game.row3.elementAt(0)._isThere == false) && (game.row3.elementAt(0)._stonesInSpace == 2);
-      game.imprimirTablero();
+      //game.imprimirTablero();
       expect(didHappen, equals(true));
     });
     test('Cuervo reemplaza carta desire con otra', () {
       Game game = Game();
       DesireCard c1 = game.row3.first;
       CrowCard crowC = CrowCard(renglon: 3, reemplazo: CrowReplacements.card);
-      game.imprimirTablero();
+      //game.imprimirTablero();
       game.crowActs(crowC);
       DesireCard c2 = game.row3.first;
-      game.imprimirTablero();
+      //game.imprimirTablero();
       expect(c1 == c2, equals(false));
     });
-    test('Que pasa al tomar cartas que is there = false y dejo piedras el cuervo', () {
-      
+    test('Que pasa al tomar cartas que isThere==false y dejo piedras el cuervo', () {
+      Game game = Game();
+      CrowCard crowC = CrowCard(renglon: 3, reemplazo: CrowReplacements.stone, numeroDePiedras: 2);
+      game.crowActs(crowC);
+      game.takeCard(3);
+      //game.imprimirTablero();
+      expect(game._stones, equals(2));
     });
-    test('Cuando cuervo reemplaza carta queda UpsideDown', () {
-      
+    test('Cuando cuervo reemplaza carta ren3 queda UpsideDown', () {
+      Game game = Game();
+      CrowCard crowC = CrowCard(renglon: 3, reemplazo: CrowReplacements.card, numeroDePiedras: 2);
+      //game.imprimirTablero();
+      game.crowActs(crowC);
+      //game.imprimirTablero();
+      expect(game.row3[0]._isUpsidedown, equals(true));
+    });
+    test('Cuando cuervo reemplaza carta ren2 queda UpsideDown', () {
+      Game game = Game();
+      CrowCard crowC = CrowCard(renglon: 2, reemplazo: CrowReplacements.card, numeroDePiedras: 2);
+      //game.imprimirTablero();
+      game.crowActs(crowC);
+      //game.imprimirTablero();
+      expect(game.row2[0]._isUpsidedown, equals(true));
     });
   });
   
@@ -1024,18 +1037,25 @@ class Game{
     if (_gameOver) return;
     switch (row){
       case 1: GardenCard card = row1.elementAt(column-1);
-              _deck.add(card);
-              card._isThere = false;
+              if (card._isThere){
+                _deck.add(card);
+                card._isThere = false; // probar si funciona esto, sino reemplazar por "row1.elementAt..."
+              }
               if (card.hasStone) _stones += card._stonesInSpace;
         break;
       case 2: GardenCard card = row2.elementAt(column-1);
-              _deck.add(card);
-              card._isThere = false;
+              if (card._isThere){
+                _deck.add(card);
+                card._isThere = false; 
+              }
               if (card.hasStone) _stones += card._stonesInSpace;
         break;
       case 3: DesireCard card = row3.elementAt(column-1);
-              _deck.add(card);
-              card._isThere = false;
+              if (card._isThere){
+                _deck.add(card);
+                card._isThere = false; 
+              }
+              if (card.hasStone) _stones += card._stonesInSpace;
         break;
     }
     nextTurn();
@@ -1066,12 +1086,15 @@ class Game{
       case CrowReplacements.stone:
         switch (crowC._replaceRowAt){
           case 1: row1.elementAt(column-1)._isThere = false;
+                  row1.elementAt(column-1).hasStone = true;
                   row1.elementAt(column-1)._stonesInSpace = crowC._numberOfStones;
             break;
           case 2: row2.elementAt(column-1)._isThere = false;
+                  row2.elementAt(column-1).hasStone = true;
                   row2.elementAt(column-1)._stonesInSpace = crowC._numberOfStones;
             break;
           case 3: row3.elementAt(column-1)._isThere = false;
+                  row3.elementAt(column-1).hasStone = true;
                   row3.elementAt(column-1)._stonesInSpace = crowC._numberOfStones;
             break;
         }
@@ -1079,10 +1102,13 @@ class Game{
       case CrowReplacements.card: 
         switch (crowC._replaceRowAt){
           case 1: row1[column-1] = drawGardenCard();
+                  row1[column-1]._isUpsidedown = true;
             break;
           case 2: row2[column-1] = drawGardenCard();
+                  row2[column-1]._isUpsidedown = true;
             break;
           case 3: row3[column-1] = drawDesireCard();
+                  row3[column-1]._isUpsidedown = true;
             break;
         }
         break;
@@ -1211,8 +1237,6 @@ class Game{
   List<CrowCard> getCrowCards(){
     return _crowCards;
   }
-  
-  
   
 }
 /* ----------------------------- END OF GAME ---------------------------------- */
@@ -1347,6 +1371,8 @@ class Card extends Equatable{
   bool _isThere = true;
   int _stonesInSpace = 0;
 
+  bool hasStone = false;
+
   Card({required TypesOfCards tipoDeCarta}){
     _typeOfCard = tipoDeCarta;
   }
@@ -1363,7 +1389,6 @@ class GardenCard extends Card{
   Colors get color => _color;
   Bugs get bug => _bug;
 
-  bool hasStone = false;
 
   // ignore: empty_constructor_bodies
   GardenCard({required super.tipoDeCarta}){
