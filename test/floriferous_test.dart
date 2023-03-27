@@ -3,6 +3,8 @@
 //import 'dart:html';
 //import 'dart:math';
 
+import 'dart:math';
+
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 //import 'package:floriferous/floriferous.dart';
@@ -808,6 +810,31 @@ void main() {
     
     
   });
+  group('Jugabilidad', () {
+    test('Tomar tarjeta de columa 1 renglon 1', () {
+      Game game = Game();
+      //game.imprimirTablero();
+      game.takeCard(1);
+      //game.imprimirTablero();
+      Card c1 = game._deck.elementAt(0);
+      Card c2 = game.row1.elementAt(0);
+
+      expect(c1 == c2, equals(true));
+
+    });
+    test('Tarjeta tomada dice que esta tomada', () {
+      Game game = Game();
+      //game.imprimirTablero();
+      game.takeCard(1);
+      //game.imprimirTablero();
+      
+
+      expect(game.row1.elementAt(0)._isThere, equals(false));
+
+    });
+  });
+  
+  
   group('Tablero Grafico: ', () {
     test('Imprimir BountyCards Row', () {
       Game game = Game();
@@ -817,6 +844,19 @@ void main() {
       Game game = Game();
       game.imprimirTablero();
     });
+    test('Despues de 5 turnos se vuelve a generar el tablero', () {
+      Game game = Game();
+      game.imprimirTablero();
+      game.nextTurn(); game.imprimirTablero();
+      game.nextTurn(); game.imprimirTablero();
+      game.nextTurn(); game.imprimirTablero();
+      game.nextTurn(); game.imprimirTablero();
+      game.nextTurn(); game.imprimirTablero();
+      expect(game.column, equals(1));
+    
+    });
+    
+  
   });
 
 
@@ -879,9 +919,9 @@ class Game{
     row1.elementAt(1).TurnCard();
     row1.elementAt(3).TurnCard();
 
-    row2.elementAt(0).hasStone = true;
-    row2.elementAt(2).hasStone = true;
-    row2.elementAt(4).hasStone = true;
+    row2.elementAt(0).hasStone = true; row2.elementAt(0)._stonesInSpace = 1;
+    row2.elementAt(2).hasStone = true; row2.elementAt(2)._stonesInSpace = 1;
+    row2.elementAt(4).hasStone = true; row2.elementAt(4)._stonesInSpace = 1;
   }
   void generateDesireRow() {
     row3 = drawDesireCards(5).toList();
@@ -922,8 +962,24 @@ class Game{
     return card;
   }
 
-  // TURSN & DAYS
+  // TAKE CARD (AS A PLAYER)
+  void takeCard(int row){
+    switch (row){
+      case 1: _deck.add(row1.elementAt(column-1));
+              row1.elementAt(column-1)._isThere = false;
+        break;
+      case 2: _deck.add(row2.elementAt(column-1));
+              row2.elementAt(column-1)._isThere = false;
+        break;
+      case 3: _deck.add(row3.elementAt(column-1));
+              row3.elementAt(column-1)._isThere = false;
+        break;
+    }
+  }
+
+  // TURNS & DAYS
   void nextTurn(){
+    if (_gameOver) return;
     column++;
     if (column > 5) endOfDay(_deck);
   }
@@ -933,6 +989,7 @@ class Game{
     for (var element in _bountyCards) {
       element.checkIfCompleated(myDeck, day);
     }
+    generateDay();
     if (day > 3) gameOver();
   }
 
@@ -988,6 +1045,8 @@ class Game{
     printDesireCardsZone();
     print('');
     print('Column: $column');
+    print('---------------------------------');
+    print(_deck);
 
   }
 
@@ -1022,7 +1081,7 @@ class Game{
   List<String> createGardenRow(List<GardenCard> row){
     List<String> line = [];
     for (var element in row) {
-      line.add('${element._flower.toString().split('.').last}/${element._color.toString().split('.').last}/${element._bug.toString().split('.').last}');
+      line.add('${element.typeOfCard.toString().split('.').last.toUpperCase()}/${element._flower.toString().split('.').last}/${element._color.toString().split('.').last}/${element._bug.toString().split('.').last}/isTher?:${element._isThere.toString()}/UpsDwn?:${element._isUpsidedown.toString()}/Sts:${element._stonesInSpace.toString()}');
     }
     return line;
   }
