@@ -476,7 +476,6 @@ void main() {
     });
  
   });
-  
   group('Puntaje ArrangementCards', () {
     test('Obtener puntaje SOLO con arrangement card', () {
       List<Card> miDeck = [
@@ -542,9 +541,131 @@ void main() {
       expect(score, equals(5));
     });
   });
+  group('Puntajes de BountyCards', () {
+    test('Puntaje de bountycard en dia 0 es 0', () {
+      List<Card> miDeck = [
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.white, bicho: Bugs.bee),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.pink, bicho: Bugs.ladybug),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.white, bicho: Bugs.butterfly),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.white, bicho: Bugs.bee),
+      ];
+      BountyCard bountyC = BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Bugs.ladybug, requerimiento3: Bugs.butterfly);
+      //BountyCard bountyC = BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Flowers.tulip, requerimiento3: Flowers.daisy);
+      bountyC.checkIfCompleated(miDeck, 0);
+      
+      expect(bountyC.obtainScore(), equals(0));
+    });
+    test('Puntaje de bountycard en dia 1 es 5', () {
+      List<Card> miDeck = [
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.white, bicho: Bugs.bee),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.pink, bicho: Bugs.ladybug),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.white, bicho: Bugs.butterfly),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.white, bicho: Bugs.bee),
+      ];
+      BountyCard bountyC = BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Bugs.ladybug, requerimiento3: Bugs.butterfly);
+      //BountyCard bountyC = BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Flowers.tulip, requerimiento3: Flowers.daisy);
+      bountyC.checkIfCompleated(miDeck, 1);
+      
+      expect(bountyC.obtainScore(), equals(5));
+    });
+    test('Puntaje de bountycard en dia 2 es 3', () {
+      List<Card> miDeck = [
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.white, bicho: Bugs.bee),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.pink, bicho: Bugs.ladybug),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.white, bicho: Bugs.butterfly),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.white, bicho: Bugs.bee),
+      ];
+      BountyCard bountyC = BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Bugs.ladybug, requerimiento3: Bugs.butterfly);
+      //BountyCard bountyC = BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Flowers.tulip, requerimiento3: Flowers.daisy);
+      bountyC.checkIfCompleated(miDeck, 2);
+      
+      expect(bountyC.obtainScore(), equals(3));
+    });
+    test('Puntaje de bountycard en dia 3 es 2', () {
+      List<Card> miDeck = [
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.white, bicho: Bugs.bee),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.pink, bicho: Bugs.ladybug),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.white, bicho: Bugs.butterfly),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.white, bicho: Bugs.bee),
+      ];
+      BountyCard bountyC = BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Bugs.ladybug, requerimiento3: Bugs.butterfly);
+      //BountyCard bountyC = BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Flowers.tulip, requerimiento3: Flowers.daisy);
+      bountyC.checkIfCompleated(miDeck, 3);
+      
+      expect(bountyC.obtainScore(), equals(2));
+    });
+
+
+  });
+  group('Final de dia: ', () {
+    test('Al terminar el dia es "Dia 2"', () {
+      Game game = Game();
+      game.endOfDay(List.empty());
+      expect(game.day, equals(2));
+    });
+    test('Comprobar si se llena una bounty card', () {
+      List<Card> miDeck = [
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.white, bicho: Bugs.bee),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.pink, bicho: Bugs.ladybug),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.white, bicho: Bugs.butterfly),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.white, bicho: Bugs.bee),
+      ];
+      BountyCard bountyC = BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Bugs.ladybug, requerimiento3: Bugs.butterfly);
+      //BountyCard bountyC = BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Flowers.tulip, requerimiento3: Flowers.daisy);
+      bountyC.checkIfCompleated(miDeck, 1);
+      bool compleated = bountyC.isCompleated;
+      expect(compleated, equals(true));
+    });
+    test('Comprobar si se llena alguna bounty card', () {
+      List<Card> miDeck = [
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.white, bicho: Bugs.beetle),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.pink, bicho: Bugs.ladybug),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.white, bicho: Bugs.butterfly),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.white, bicho: Bugs.bee),
+      ];
+      List <BountyCard> myBountyCards = [
+        BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Bugs.ladybug, requerimiento3: Bugs.butterfly),
+        BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Flowers.tulip, requerimiento3: Flowers.daisy),
+        BountyCard(requerimiento1: Bugs.beetle, requerimiento2: Bugs.ladybug, requerimiento3: Bugs.bee)
+      ];
+      Game game = Game();
+      game._bountyCards = myBountyCards.toList();
+      game.endOfDay(miDeck);
+      bool isAtLeastOneCompleated = game._bountyCards.elementAt(1).isCompleated || game._bountyCards.elementAt(1).isCompleated || game._bountyCards.elementAt(2).isCompleated;
+      expect(isAtLeastOneCompleated, equals(true));
+    });
+    test('Comprobar que No se llene una bountycard que ya cumplio un requisito', () {
+      List<Card> miDeck = [
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.white, bicho: Bugs.beetle),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.pink, bicho: Bugs.ladybug),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.white, bicho: Bugs.butterfly),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.white, bicho: Bugs.bee),
+      ];
+      List <BountyCard> myBountyCards = [
+        BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Bugs.ladybug, requerimiento3: Bugs.butterfly),
+        BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Flowers.tulip, requerimiento3: Flowers.daisy),
+        BountyCard(requerimiento1: Bugs.beetle, requerimiento2: Bugs.ladybug, requerimiento3: Bugs.bee)
+      ];
+
+      BountyCard bountyC = BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Flowers.tulip, requerimiento3: Flowers.daisy);
+      bountyC.checkIfCompleated(miDeck, 1);
+      bool compleated = bountyC.isCompleated;
+      expect(compleated, equals(false));
+    });
+    test('Despues de los 3 dias es "gameover"', () {
+      Game game = Game();
+      game.endOfDay(gardenCards);
+      game.endOfDay(gardenCards);
+      game.endOfDay(gardenCards);
+      bool isGameOver = game._gameOver;
+      expect(isGameOver, equals(true));
+    });
+
+
+  });
 
   group('Puntaje final: ', () {
-    test('Obtener puntaje de 1 con desire cards', () {
+    test('Obtener puntaje de 3 con desire cards', () {
       List<Card> miDeck = [
       FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.pink),
       FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.purple, bicho: Bugs.bee),
@@ -560,9 +681,9 @@ void main() {
     ];
     Game game = Game();
     game._deck = miDeck;
-    expect(game.obtainScore(), equals(3));
+    expect(game.obtainDeckScore(), equals(3));
     });
-    test('Obtener puntaje de 2 con desire cards', () {
+    test('Obtener puntaje de 5 con desire cards', () {
       List<Card> miDeck = [
         FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.pink),
         FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.purple, bicho: Bugs.bee),
@@ -580,7 +701,7 @@ void main() {
       ];
       Game game = Game();
       game._deck = miDeck;
-      expect(game.obtainScore(), equals(5));
+      expect(game.obtainDeckScore(), equals(5));
     });
     test('Obtener puntaje de 9 con desire cards', () {
       List<Card> miDeck = [
@@ -600,7 +721,7 @@ void main() {
       ];
       Game game = Game();
       game._deck = miDeck;
-      expect(game.obtainScore(), equals(9));
+      expect(game.obtainDeckScore(), equals(9));
     });
     test('Obtener puntaje con arrangement cards', () {
       List<Card> miDeck = [
@@ -618,7 +739,7 @@ void main() {
     ];
     Game game = Game();
     game._deck = miDeck;
-    expect(game.obtainScore(), equals(5));
+    expect(game.obtainDeckScore(), equals(5));
     });
     test('Obtener puntaje con arrangement cards y desire cards', () {
       List<Card> miDeck = [
@@ -636,8 +757,38 @@ void main() {
     ];
     Game game = Game();
     game._deck = miDeck;
-    expect(game.obtainScore(), equals(10));
+    expect(game.obtainDeckScore(), equals(10));
     });
+    test('Si al final queda la carta de te son 2 puntos', () {
+      Game game = Game();
+      expect(game.obtainCupOfTeaCardScore(), equals(2));
+    });
+    test('Obtener puntaje de todas bounty Cards completadas dia 1 es 15', () {
+      List<Card> miDeck = [
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.white, bicho: Bugs.beetle),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.pink, bicho: Bugs.ladybug),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.white, bicho: Bugs.butterfly),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.white, bicho: Bugs.bee),
+      ];
+      List <BountyCard> myBountyCards = [
+        BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Bugs.ladybug, requerimiento3: Bugs.butterfly),
+        BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Flowers.tulip, requerimiento3: Flowers.daisy),
+        BountyCard(requerimiento1: Bugs.beetle, requerimiento2: Bugs.ladybug, requerimiento3: Bugs.bee)
+      ];
+      Game game = Game();
+      for (var element in myBountyCards) {
+        element.compleatedAtDay(1);
+      }
+      game._bountyCards = myBountyCards.toList();
+      expect(game.obtainBountyCardsScore(), equals(15));
+
+    });
+    test('5 piedras son 2 pts', () {
+      Game game = Game();
+      game._stones = 5;
+      expect(game.obtainStonesScore(), equals(2));
+    });
+  
   });
   
   group('Turns: ', () {
@@ -671,7 +822,7 @@ void main() {
 }
 /* -------------------------------- GAME -------------------------------------- */
 class Game{
-  late final List<BountyCard> _bountyCards;
+  List<BountyCard> _bountyCards = [];
   List<GardenCard> _gardenCards = [];
   List<DesireCard> _desireCards = [];
   List<CrowCard> _crowCards = [];
@@ -687,6 +838,12 @@ class Game{
 
   int day = 1;
   int column = 1;
+
+  bool _usedCupOfTeaCard = false;
+
+  int _stones = 0;
+
+  bool _gameOver = false;
 
   Game(){
     _gardenCards = shuffleGardenCards(gardenCards.toList()).toList();
@@ -764,27 +921,60 @@ class Game{
     return card;
   }
 
+  // TURSN & DAYS
   void nextTurn(){
     column++;
-    if (column > 5){
-      column = 1;
-      day++;
+    if (column > 5) endOfDay(_deck);
+  }
+  void endOfDay(List<Card> myDeck) {
+    day++;
+    column = 1;
+    for (var element in _bountyCards) {
+      element.checkIfCompleated(myDeck, day);
     }
+    if (day > 3) gameOver();
+  }
+
+  // END OF GAME
+  void gameOver(){
+    _gameOver = true;
   }
 
   // OBTAIN SCORE
-  int obtainScore(){
+  int obtainFinalScore(){
+    _finalScore += obtainDeckScore();
+    _finalScore += obtainBountyCardsScore();
+    _finalScore += obtainCupOfTeaCardScore();
+    _finalScore += obtainStonesScore();
+    return _finalScore;
+  }
+  int obtainDeckScore(){
+    int score = 0;
     for (var element in _deck) {
       if (element.typeOfCard == TypesOfCards.desire){
         element = element as DesireCard;
-        _finalScore += element.obtainScore(_deck);
+        score += element.obtainScore(_deck);
       }
       if (element.typeOfCard == TypesOfCards.arrangement){
         element = element as ArrangementCard;
-        _finalScore += element.obtainScore(_deck);
+        score += element.obtainScore(_deck);
       }
     }
-    return _finalScore;
+    return score;
+  }
+  int obtainCupOfTeaCardScore(){
+    if (!_usedCupOfTeaCard) return 2;
+    return 0;
+  }
+  int obtainBountyCardsScore() {
+    int score = 0;
+    for (var element in _bountyCards) {
+      score += element.obtainScore();
+    }
+    return score;
+  }
+  int obtainStonesScore(){
+    return (_stones/2).floor();
   }
 
  /* ------ TABLERO GRAFICO ------ */
@@ -826,6 +1016,9 @@ class Game{
   List<CrowCard> getCrowCards(){
     return _crowCards;
   }
+  
+  
+  
   
 }
 /* ----------------------------- END OF GAME ---------------------------------- */
@@ -949,7 +1142,7 @@ List<CrowCard> crowCards = [
 ];
 
 // CLASSES
-class Card{
+class Card extends Equatable{
 
   late final TypesOfCards _typeOfCard;
   TypesOfCards get typeOfCard => _typeOfCard;
@@ -963,12 +1156,11 @@ class Card{
   Card({required TypesOfCards tipoDeCarta}){
     _typeOfCard = tipoDeCarta;
   }
+  @override
+  List<Object?> get props => [];
 }
 
 class GardenCard extends Card{
-
-  
-
   late final Flowers _flower;
   late final Colors _color;
   late final Bugs _bug; 
@@ -988,8 +1180,8 @@ class GardenCard extends Card{
     _isUpsidedown = !_isUpsidedown;
   }
 
-  //@override
-  //List<Object?> get props => [_flower, _color, _bug];
+  @override
+  List<Object?> get props => [_flower, _color, _bug];
 
 }
 
@@ -1064,12 +1256,8 @@ class ArrangementCard extends GardenCard{
           } else {
             map[element] += 1;
           }
-          if (element._flower == _flower){
-            map[element] += 1;
-          }
-          if (element._color == _color){
-            map[element] += 1;
-          }
+          if (element._flower == _flower) map[element] += 1;
+          if (element._color == _color) map[element] += 1;
         }
       }
       List sortedValues = map.values.toList()..sort();
@@ -1092,9 +1280,7 @@ class ArrangementCard extends GardenCard{
           } else {
             map[element] += 1;
           }
-          if (element._color == _color){
-            map[element] += 1;
-          }
+          if (element._color == _color) map[element] += 1;
         }
     }
     sortedValues = map.values.toList()..sort();
@@ -1123,10 +1309,6 @@ class ArrangementCard extends GardenCard{
   
 }
 
-class CupOfTeaCard{
-
-}
-
 class BountyCard extends Equatable{
   // Equatable is for its "parameters" to be seen when print
 
@@ -1137,8 +1319,10 @@ class BountyCard extends Equatable{
   bool _isCompleated = false;
   bool get isCompleated  => _isCompleated;
 
-  late final int _wasCompleatedAtDay;
+  int _wasCompleatedAtDay = 0;
   int get wasCompleatedAtDay => _wasCompleatedAtDay;
+
+  List points = [0,5,3,2];
 
   BountyCard({required Enum requerimiento1, required Enum requerimiento2, required Enum requerimiento3}) {
     requirement1 = requerimiento1;
@@ -1146,13 +1330,197 @@ class BountyCard extends Equatable{
     requirement3 = requerimiento3;
   }
 
+  void checkIfCompleated4(List<Card> deck, int day) {
+    int counter = 0;
+    List<Card> tempCards = deck.toList();
+    List list = [requirement1, requirement2, requirement3];
+
+    for (var i = 0; i < 3; i++) {
+      for (var element in tempCards) {
+        if (element.typeOfCard != TypesOfCards.flower) continue;
+        FlowerCard? c = checkIfMeetsRequirements(element, list[i]);
+        if(c != null) {
+          counter++;
+          tempCards.remove(c);
+          break;
+        }
+      }
+    }
+    if (counter == 3) {
+      compleatedAtDay(day);
+    }
+  }
+  void checkIfCompleated3(List<Card> deck, int day){
+    int counter = 0;
+    List<Card> tempCards = deck.toList();
+    List list = [requirement1, requirement2, requirement3];
+    Map map = {};
+
+    for (var i = 0; i < 3; i++) {
+      for (var element in tempCards) {
+        if (element.typeOfCard != TypesOfCards.flower) continue;
+        element = element as FlowerCard;
+        if ((element._bug == list[0]) || (element._bug == list[1]) || (element._bug == list[2])){
+          if (!map.containsKey(element)) {
+            map[element] = 1;
+          } else {
+            map[element] += 1;
+          }
+        }
+        if ((element._flower == list[0]) || (element._flower == list[1]) || (element._flower == list[2])){
+          if (!map.containsKey(element)) {
+            map[element] = 1;
+          } else {
+            map[element] += 1;
+          }
+        }
+      }
+      print(map);
+      List sortedValues = map.values.toList()..sort();
+      if (sortedValues.isNotEmpty) {
+        int leastValuableValue = sortedValues.first;
+        var key = map.keys.firstWhere((k)
+              => map[k] == leastValuableValue, orElse: () => null);
+        tempCards.remove(key);
+        counter++;
+        map = {};
+      }
+    }
+      
+      /* 
+      for (var element in tempCards) {
+        if (element.typeOfCard != TypesOfCards.flower) continue;
+        element = element as FlowerCard;
+        if ((element._bug == list[0]) || (element._bug == list[1]) || (element._bug == list[2])){
+          if (!map.containsKey(element)) {
+            map[element] = 1;
+          } else {
+            map[element] += 1;
+          }
+        }
+        if ((element._flower == list[0]) || (element._flower == list[1]) || (element._flower == list[2])){
+          if (!map.containsKey(element)) {
+            map[element] = 1;
+          } else {
+            map[element] += 1;
+          }
+        }
+      }
+      print(map);
+      sortedValues = map.values.toList()..sort();
+      if (sortedValues.isNotEmpty) {
+        int leastValuableValue = sortedValues.first;
+        var key = map.keys.firstWhere((k)
+              => map[k] == leastValuableValue, orElse: () => null);
+        tempCards.remove(key);
+        counter++;
+        map = {};
+      }
+      
+      //
+      for (var element in tempCards) {
+        if (element.typeOfCard != TypesOfCards.flower) continue;
+        element = element as FlowerCard;
+        if ((element._bug == list[0]) || (element._bug == list[1]) || (element._bug == list[2])){
+          if (!map.containsKey(element)) {
+            map[element] = 1;
+          } else {
+            map[element] += 1;
+          }
+        }
+        if ((element._flower == list[0]) || (element._flower == list[1]) || (element._flower == list[2])){
+          if (!map.containsKey(element)) {
+            map[element] = 1;
+          } else {
+            map[element] += 1;
+          }
+        }
+      }
+      print(map);
+      sortedValues = map.values.toList()..sort();
+      if (sortedValues.isNotEmpty) {
+        int leastValuableValue = sortedValues.first;
+        var key = map.keys.firstWhere((k)
+              => map[k] == leastValuableValue, orElse: () => null);
+        tempCards.remove(key);
+        counter++;
+        map = {};
+      }*/
+
+      if (counter == 3) {
+      _isCompleated = true;
+      compleatedAtDay(day);
+    }
+      
+  }
+  void checkIfCompleated(List<Card> deck, int day){
+    int counter = 0;
+    List<Card> tempCards = deck.toList();
+    List requirementsList = [requirement1, requirement2, requirement3];
+    Map map = {};
+
+    for (var i = 0; i < 3; i++) {
+      for (var element in tempCards) {
+        if (element.typeOfCard != TypesOfCards.flower) continue;
+        element = element as FlowerCard;
+        if ((element._bug == requirementsList[0]) || (element._bug == requirementsList[1]) || (element._bug == requirementsList[2])){
+          if (!map.containsKey(element)) {
+            map[element] = 1;
+          } else {
+            map[element] += 1;
+          }
+        }
+        if ((element._flower == requirementsList[0]) || (element._flower == requirementsList[1]) || (element._flower == requirementsList[2])){
+          if (!map.containsKey(element)) {
+            map[element] = 1;
+          } else {
+            map[element] += 1;
+          }
+        }
+      }
+    
+      //print(map);
+      List sortedValues = map.values.toList()..sort();
+      if (sortedValues.isNotEmpty) {
+        int leastValuableValue = sortedValues.first;
+        var key = map.keys.firstWhere((k)
+              => map[k] == leastValuableValue, orElse: () => null);
+        tempCards.remove(key);
+        //print(key);
+        counter++;
+        map = {};
+      }
+    
+      }
+      
+      if (counter == 3) {
+      _isCompleated = true;
+      compleatedAtDay(day);
+    }
+      
+  }
+  
+
+  FlowerCard? checkIfMeetsRequirements(Card element, Enum requirement) {
+    element = element as FlowerCard;
+    if ((element._bug == requirement) || (element._flower == requirement)){
+      return element;
+    }
+    FlowerCard? c;
+    return c;
+  }
+
   void compleatedAtDay(int day){
+    _isCompleated = true;
     _wasCompleatedAtDay = day;
+  }
+
+  int obtainScore(){
+    return points[wasCompleatedAtDay];
   }
 
   @override
   List<Object?> get props => [requirement1, requirement2, requirement3];
-
 }
 
 class DesireCard extends Card{

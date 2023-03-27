@@ -1,10 +1,10 @@
 floriferous
 ------------
 
-- Checar si se completa "Bounty Card" al final dia
+- A CORREGIR:
+Bounty Cards deben eliminar el requisito cumplido de alguna forma, para que no busque el mismo requisito en otras cartas.
+Método que se autollame?
 
-- Carta te con bool perhaps
-- Cada 2 piedras un punto al final
 - Cuervo.
     -El no agarra desire cards
     - El acumula piedras cada dia 
