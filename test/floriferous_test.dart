@@ -848,7 +848,7 @@ void main() {
       game.takeCard(1);
       game.takeCard(2);
       game.takeCard(2);
-      game.imprimirTablero();
+      //game.imprimirTablero();
       expect(game._stones, equals(1));
     });
     test('Si se usa carta de te es "true"', () {
@@ -983,12 +983,12 @@ class Game{
   }
   void setCardsOfGardenRows(){
 
-    row1.elementAt(1).TurnCard();
-    row1.elementAt(3).TurnCard();
+    row1[1].TurnCard();
+    row1[3].TurnCard();
 
-    row2.elementAt(0).hasStone = true; row2.elementAt(0)._stonesInSpace = 1;
-    row2.elementAt(2).hasStone = true; row2.elementAt(2)._stonesInSpace = 1;
-    row2.elementAt(4).hasStone = true; row2.elementAt(4)._stonesInSpace = 1;
+    row2[0].hasStone = true; row2[0]._stonesInSpace = 1;
+    row2[2].hasStone = true; row2[2]._stonesInSpace = 1;
+    row2[4].hasStone = true; row2[4]._stonesInSpace = 1;
   }
   void generateDesireRow() {
     row3 = drawDesireCards(5).toList();

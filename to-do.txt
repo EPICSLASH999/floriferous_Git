@@ -5,7 +5,14 @@ Floriferous
 Bounty Cards deben eliminar el requisito cumplido de alguna forma, para que no busque el mismo requisito en otras cartas.
 Método que se autollame?
 
+-BUG:
+    Grupo de test de "Jugabilidad".
+    Test --> "Tomar una tarjeta con piedra la da al jugador"
+    Bug: al imprimir ese tablero de test, las piedras y el UpDown se posicionan casi al azar.
+
 - Cuervo.
+    -Que cuervo actue por si mismo despues de turno del jugador
+    - Que cuervo actue por si mismo a excepcion de cuando se acaba el dia, y primero se revisa el bounty y luego se da carta si piedras >=4
     - Si cuervo tiene 4 o mas piedras...
     - Poder darle piedras al cuervo para no dar carta
     -El no agarra desire cards al tener 4 o mas piedras
