@@ -862,7 +862,32 @@ void main() {
       expect(game._usedCupOfTeaCard, equals(true));
     });
   });
-  
+  group('Jugabilidad del cuervo', () {
+    test('Cuervo reemplaza carta y deja 2 piedras', () {
+      Game game = Game();
+      CrowCard crowC = CrowCard(renglon: 3, reemplazo: CrowReplacements.stone, numeroDePiedras: 2);
+      game.crowActs(crowC);
+      bool didHappen = (game.row3.elementAt(0)._isThere == false) && (game.row3.elementAt(0)._stonesInSpace == 2);
+      game.imprimirTablero();
+      expect(didHappen, equals(true));
+    });
+    test('Cuervo reemplaza carta desire con otra', () {
+      Game game = Game();
+      DesireCard c1 = game.row3.first;
+      CrowCard crowC = CrowCard(renglon: 3, reemplazo: CrowReplacements.card);
+      game.imprimirTablero();
+      game.crowActs(crowC);
+      DesireCard c2 = game.row3.first;
+      game.imprimirTablero();
+      expect(c1 == c2, equals(false));
+    });
+    test('Que pasa al tomar cartas que is there = false y dejo piedras el cuervo', () {
+      
+    });
+    test('Cuando cuervo reemplaza carta queda UpsideDown', () {
+      
+    });
+  });
   
   group('Tablero Grafico: ', () {
     test('Imprimir BountyCards Row', () {
@@ -970,6 +995,9 @@ class Game{
     return tempCards;
   }
   DesireCard drawDesireCard(){
+    if (_desireCards.isEmpty){
+      _desireCards = shuffleDesireCards(desireCards).toList();
+    }
     DesireCard card = _desireCards.elementAt(_desireCards.length-1);
     _desireCards.removeAt(_desireCards.length-1);
     return card;
@@ -1030,6 +1058,35 @@ class Game{
     }
     generateDay();
     if (day > 3) gameOver();
+  }
+
+  // DEVIL CROW
+  void crowActs(CrowCard crowC) {
+    switch(crowC._replaceWith){
+      case CrowReplacements.stone:
+        switch (crowC._replaceRowAt){
+          case 1: row1.elementAt(column-1)._isThere = false;
+                  row1.elementAt(column-1)._stonesInSpace = crowC._numberOfStones;
+            break;
+          case 2: row2.elementAt(column-1)._isThere = false;
+                  row2.elementAt(column-1)._stonesInSpace = crowC._numberOfStones;
+            break;
+          case 3: row3.elementAt(column-1)._isThere = false;
+                  row3.elementAt(column-1)._stonesInSpace = crowC._numberOfStones;
+            break;
+        }
+        break;
+      case CrowReplacements.card: 
+        switch (crowC._replaceRowAt){
+          case 1: row1[column-1] = drawGardenCard();
+            break;
+          case 2: row2[column-1] = drawGardenCard();
+            break;
+          case 3: row3[column-1] = drawDesireCard();
+            break;
+        }
+        break;
+    }
   }
 
   // END OF GAME
@@ -1130,7 +1187,7 @@ class Game{
   List<String> createDesireRow(List<DesireCard> row){
     List<String> line = [];
     for (var element in row) {
-      line.add('${element.points.toString()}/${element.typeOfDesire.toString().split('.').last}/${element.requirement.toString()}');
+      line.add('${element.points.toString()}/${element.typeOfDesire.toString().split('.').last}/${element.requirement.toString()}/isTher?${element._isThere.toString()}/UpDwn?${element.isUpsidedown.toString()}/Sts:${element._stonesInSpace.toString()}');
     }
     return line;
   }
@@ -1154,6 +1211,8 @@ class Game{
   List<CrowCard> getCrowCards(){
     return _crowCards;
   }
+  
+  
   
 }
 /* ----------------------------- END OF GAME ---------------------------------- */
