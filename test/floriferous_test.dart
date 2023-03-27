@@ -663,7 +663,6 @@ void main() {
 
 
   });
-
   group('Puntaje final: ', () {
     test('Obtener puntaje de 3 con desire cards', () {
       List<Card> miDeck = [
@@ -790,7 +789,6 @@ void main() {
     });
   
   });
-  
   group('Turns: ', () {
     
     test('Despues de turno es columna 2', () {
@@ -810,9 +808,12 @@ void main() {
     
     
   });
-  
   group('Tablero Grafico: ', () {
     test('Imprimir BountyCards Row', () {
+      Game game = Game();
+      game.printBountyCardsZone();
+    });
+    test('Imprimir Todo Row', () {
       Game game = Game();
       game.imprimirTablero();
     });
@@ -849,12 +850,12 @@ class Game{
     _gardenCards = shuffleGardenCards(gardenCards.toList()).toList();
     _desireCards = shuffleDesireCards(desireCards.toList()).toList();
     _crowCards = shuffleCrowCards(crowCards.toList()).toList();
+    generateBountyRow();
 
     generateDay();
   }
 
   void generateDay() {
-    generateBountyRow();
     generateGardenRows();
     setCardsOfGardenRows();
     generateDesireRow();
@@ -980,6 +981,14 @@ class Game{
  /* ------ TABLERO GRAFICO ------ */
   void imprimirTablero(){
     printBountyCardsZone();
+    print('DAY: $day');
+    print('');
+    printGardenCardsZone();
+    print('');
+    printDesireCardsZone();
+    print('');
+    print('Column: $column');
+
   }
 
   void printBountyCardsZone(){
@@ -997,6 +1006,34 @@ class Game{
     print(message);
     print(line2);
   }
+  void printGardenCardsZone(){
+    List<GardenCard> row1 = this.row1;
+    List<GardenCard> row2 = this.row2;
+    List<DesireCard> row3 = this.row3;
+
+    print(createGardenRow(row1));
+    print(createGardenRow(row2));
+    
+  }
+  void printDesireCardsZone(){
+    print(createDesireRow(row3));
+  }
+
+  List<String> createGardenRow(List<GardenCard> row){
+    List<String> line = [];
+    for (var element in row) {
+      line.add('${element._flower.toString().split('.').last}/${element._color.toString().split('.').last}/${element._bug.toString().split('.').last}');
+    }
+    return line;
+  }
+  List<String> createDesireRow(List<DesireCard> row){
+    List<String> line = [];
+    for (var element in row) {
+      line.add('${element.points.toString()}/${element.typeOfDesire.toString().split('.').last}/${element.requirement.toString()}');
+    }
+    return line;
+  }
+  
  /* ----------------------------- */
 
   List<GardenCard> getRowsByColumn(){
