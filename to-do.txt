@@ -8,3 +8,6 @@ Método que se autollame?
 - Cuervo.
     -El no agarra desire cards
     - El acumula piedras cada dia 
+
+
+-Dia 2 empeiza de derecha a izquierda

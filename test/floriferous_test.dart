@@ -810,7 +810,7 @@ void main() {
     
     
   });
-  group('Jugabilidad', () {
+  group('Jugabilidad:', () {
     test('Tomar tarjeta de columa 1 renglon 1', () {
       Game game = Game();
       //game.imprimirTablero();
@@ -831,6 +831,35 @@ void main() {
 
       expect(game.row1.elementAt(0)._isThere, equals(false));
 
+    });
+    test('Tarjeta tomada cambia a siguiente columna', () {
+      Game game = Game();
+      //game.imprimirTablero();
+      game.takeCard(1);
+      //game.imprimirTablero();
+      expect(game.column, equals(2));
+    });
+    test('Jugado un dia (casi) completo', () {
+      Game game = Game();
+      game.takeCard(1);
+      game.takeCard(2);
+      game.takeCard(3);
+      game.takeCard(2);
+      game.imprimirTablero();
+      expect(game.day, equals(1));
+    });
+    test('Tomar una tarjeta con piedra la da al jugador', () {
+      Game game = Game();
+      game.takeCard(1);
+      game.takeCard(2);
+      game.takeCard(2);
+      //game.imprimirTablero();
+      expect(game._stones, equals(1));
+    });
+    test('Si se usa carta de te es "true"', () {
+      Game game = Game();
+      game.useCupOfTea();
+      expect(game._usedCupOfTeaCard, equals(true));
     });
   });
   
@@ -964,22 +993,32 @@ class Game{
 
   // TAKE CARD (AS A PLAYER)
   void takeCard(int row){
+    if (_gameOver) return;
     switch (row){
-      case 1: _deck.add(row1.elementAt(column-1));
-              row1.elementAt(column-1)._isThere = false;
+      case 1: GardenCard card = row1.elementAt(column-1);
+              _deck.add(card);
+              card._isThere = false;
+              if (card.hasStone) _stones += card._stonesInSpace;
         break;
-      case 2: _deck.add(row2.elementAt(column-1));
-              row2.elementAt(column-1)._isThere = false;
+      case 2: GardenCard card = row2.elementAt(column-1);
+              _deck.add(card);
+              card._isThere = false;
+              if (card.hasStone) _stones += card._stonesInSpace;
         break;
-      case 3: _deck.add(row3.elementAt(column-1));
-              row3.elementAt(column-1)._isThere = false;
+      case 3: DesireCard card = row3.elementAt(column-1);
+              _deck.add(card);
+              card._isThere = false;
         break;
     }
+    nextTurn();
+
+  }
+  void useCupOfTea(){
+    _usedCupOfTeaCard = true;
   }
 
   // TURNS & DAYS
   void nextTurn(){
-    if (_gameOver) return;
     column++;
     if (column > 5) endOfDay(_deck);
   }
@@ -1044,6 +1083,9 @@ class Game{
     print('');
     printDesireCardsZone();
     print('');
+    print('Stones: $_stones');
+    print('UsedTeaCard: $_usedCupOfTeaCard');;
+    print('');
     print('Column: $column');
     print('---------------------------------');
     print(_deck);
@@ -1081,7 +1123,7 @@ class Game{
   List<String> createGardenRow(List<GardenCard> row){
     List<String> line = [];
     for (var element in row) {
-      line.add('${element.typeOfCard.toString().split('.').last.toUpperCase()}/${element._flower.toString().split('.').last}/${element._color.toString().split('.').last}/${element._bug.toString().split('.').last}/isTher?:${element._isThere.toString()}/UpsDwn?:${element._isUpsidedown.toString()}/Sts:${element._stonesInSpace.toString()}');
+      line.add('${element.typeOfCard.toString().split('.').last.toUpperCase()}/${element._flower.toString().split('.').last}/${element._color.toString().split('.').last}/${element._bug.toString().split('.').last}/isTher?${element._isThere.toString()}/UpDwn?${element._isUpsidedown.toString()}/Sts:${element._stonesInSpace.toString()}');
     }
     return line;
   }
@@ -1112,9 +1154,6 @@ class Game{
   List<CrowCard> getCrowCards(){
     return _crowCards;
   }
-  
-  
-  
   
 }
 /* ----------------------------- END OF GAME ---------------------------------- */
@@ -1775,7 +1814,8 @@ class DesireCard extends Card{
     return sortedValues.length;
   }
   
-
+  @override
+  List<Object?> get props => [points, typeOfDesire, requirement];
 }
 
 class CrowCard extends Equatable{
