@@ -3,7 +3,8 @@
 //import 'dart:html';
 //import 'dart:math';
 
-import 'dart:math';
+import 'dart:io';
+//import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
@@ -760,12 +761,7 @@ void main() {
       expect(game.obtainCupOfTeaCardScore(), equals(2));
     });
     test('Obtener puntaje de todas bounty Cards completadas dia 1 es 15', () {
-      List<Card> miDeck = [
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.white, bicho: Bugs.beetle),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.pink, bicho: Bugs.ladybug),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.white, bicho: Bugs.butterfly),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.white, bicho: Bugs.bee),
-      ];
+      
       List <BountyCard> myBountyCards = [
         BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Bugs.ladybug, requerimiento3: Bugs.butterfly),
         BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Flowers.tulip, requerimiento3: Flowers.daisy),
@@ -914,7 +910,7 @@ void main() {
       //game.imprimirTablero();
       expect(game.row2[0]._isUpsidedown, equals(true));
     });
-    test('Si cuervo tiene 4 o mas piedras se debe pagar carta', () {
+    test('Cuervo puede quitar carta', () {
       List<Card> miDeck = [
       FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.pink),
       FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.purple, bicho: Bugs.bee),
@@ -930,8 +926,36 @@ void main() {
     ];
       Game game = Game();
       game._deck = miDeck.toList();
-      game.crowTakesCard(miDeck.elementAt(0) as GardenCard);
+      int d1 = game._deck.length;
+      game.crowTakesCard(1);
+      int d2 = game._deck.length;
+      //game.imprimirTablero();
+      expect(d1 == d2, equals(false));
+    });
+    test('Si cuervo tiene 4 o mas piedras se debe pagar carta', () {
+      List<Card> miDeck = [
+      FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.pink),
+      FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.purple, bicho: Bugs.bee),
+      FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.orange, bicho: Bugs.butterfly),
+      FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.white, bicho: Bugs.beetle),
+      FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.yellow, bicho: Bugs.ladybug),
+      FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.pink, bicho: Bugs.moth),
+
+      //ArrangementCard(tipoDeCarta: TypesOfCards.arrangement, flor: Flowers.poppy, col: Colors.orange, bicho: Bugs.moth),
+
+      //(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.simple, requerimiento: Bugs.bee, puntos: [3]),
+      //DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.same, requerimiento: Bugs.indifferent, puntos: [0,2,4,7,10]),
+    ];
+      /*Game game = Game();
+      game._deck = miDeck.toList();
       game.imprimirTablero();
+      game.crow._stones = 4;
+      game.endOfDay(miDeck);
+      game.imprimirTablero();*/
+    });
+    test('Si se usa tasa de te cuervo no actua ese turno', () {
+      //Game game = Game();
+      //game.cupOfTeaOrCrow();
     });
     test('Cuervo solo acepta GardenCards (NO desire)', () {
       
@@ -1132,7 +1156,9 @@ class Game{
   }
   void nextColumn(){
     column++;
-    if (column <= 5) crowActs(drawCrowCard());
+    if (column <= 5) {
+      cupOfTeaOrCrow();
+    }
     if (column > 5) endOfDay(_deck);
   }
   void endOfDay(List<Card> myDeck) {
@@ -1142,10 +1168,21 @@ class Game{
       element.checkIfCompleated(myDeck, day);
     }
     if (crow.howManyStonesHas() >= 4){
-      crowStealsCard();
+      crowActionAtEndOfDay();
     }
     generateDay();
     if (day > 3) gameOver();
+  }
+  void cupOfTeaOrCrow(){
+    if (!_usedCupOfTeaCard){
+      printMessage('Do you want to use Cup of Tea? Y/N');
+      String response = obtainResponse('String');
+      if (response == 'Y'){
+        useCupOfTea();
+        return;
+      }
+    }
+    crowActs(drawCrowCard());
   }
 
   // DEVIL CROW
@@ -1184,11 +1221,42 @@ class Game{
         break;
     }
   }
-  void crowStealsCard(){
-    //crowTakeCard(card);
+  void obtainCardToSteal(){
+    printMessage('You have to pay to the crow:');
+    String positionOfCard = obtainResponse('Int');
+    
+    int posOfCard = int.parse(positionOfCard);
+    crowTakesCard(posOfCard);
   }
-  void crowTakesCard(GardenCard card){
-    _deck.remove(card);
+  void crowTakesCard(int positionOfCard){
+    _deck.removeAt(positionOfCard-1);
+  }
+  void payToCrow(int stones){
+    crow.subtractStones(stones);
+  }
+  void crowActionAtEndOfDay(){
+    print('Do you want to pay stones to crow? Y/N');
+    String? response = stdin.readLineSync();
+    response ??= 'N';
+    response = response.toUpperCase();
+    if (response == 'Y'){
+      getStonesToPayCrow();
+    }
+    if (crow._stones >= 4){
+      obtainCardToSteal();
+    }
+    
+  }
+  void getStonesToPayCrow(){
+    int stones = 0;
+    String? response = stdin.readLineSync();
+    response ??= '0';
+    stones = int.parse(response);
+    if (stones > _stones){
+      stones = 0;
+    }
+
+    payToCrow(stones);
   }
 
   // END OF GAME
@@ -1244,11 +1312,11 @@ class Game{
     print('');
     print('Stones: $_stones');
     print('Stones (Crow): ${crow.howManyStonesHas()}');
-    print('UsedTeaCard: $_usedCupOfTeaCard');;
+    print('UsedTeaCard: $_usedCupOfTeaCard');
     print('');
     print('Column: $column');
     print('---------------------------------');
-    print(_deck);
+    printDeckCardsZone();
 
   }
 
@@ -1278,6 +1346,9 @@ class Game{
   }
   void printDesireCardsZone(){
     print(createDesireRow(row3));
+  }
+  void printDeckCardsZone(){
+    print(createDeckRow(_deck));
   }
 
   List<String> createGardenRow(List<GardenCard> row){
@@ -1313,7 +1384,15 @@ class Game{
     }
     return line;
   }
-  
+  List<String> createDeckRow(List<Card> row){
+    List<String> line = [];
+    for (var element in _deck) {
+      element = element as GardenCard;
+      line.add('${element.typeOfCard.toString().split('.').last.toUpperCase()}:${element._flower.toString().split('.').last}/${element._color.toString().split('.').last}/${element._bug.toString().split('.').last}');
+    }
+    return line;
+  }
+
  /* ----------------------------- */
 
   List<GardenCard> getRowsByColumn(){
@@ -1334,6 +1413,18 @@ class Game{
     return _crowCards;
   }
   
+  /* MISC FUNCTIONS */
+  void printMessage(String message){
+    print(message);
+  }
+  String obtainResponse(String typeOfValue){
+    String? response = stdin.readLineSync();
+    String nullResponse = 'N';
+    if (typeOfValue == 'Int') nullResponse = '1';
+    response ??= nullResponse;
+    return response;
+  }
+
 }
 
 class Crow{
