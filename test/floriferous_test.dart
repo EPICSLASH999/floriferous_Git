@@ -8,6 +8,7 @@ import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
+//import 'package:floriferous/cards.dart';
 //import 'package:floriferous/floriferous.dart';
 import 'package:test/test.dart';
 
@@ -32,11 +33,11 @@ void main() {
     });
     test('La primera carta de gardenCards es color "Orange"', () {
       GardenCard card = gardenCards.elementAt(0);
-      expect(card._color, equals(Colors.orange));
+      expect(card.color, equals(Colors.orange));
     });
     test('La primera carta de gardenCards es tipo "Flower"', () {
       GardenCard card = gardenCards.elementAt(0);
-      expect(card._typeOfCard, equals(TypesOfCards.flower));
+      expect(card.typeOfCard, equals(TypesOfCards.flower));
     });
     test('Cast as FlowerCard from GardenCard', () {
       FlowerCard card = gardenCards.elementAt(0) as FlowerCard;
@@ -140,9 +141,9 @@ void main() {
     });
     test('En Row 1... Cards 2 y 4 estan volteadas', () {
       Game game = Game();
-      bool volteada = (game.row1.elementAt(1)._isUpsidedown && game.row1.elementAt(3)._isUpsidedown);
-      //print('${game.row1.elementAt(0)._isUpsidedown} ${game.row1.elementAt(1)._isUpsidedown} ${game.row1.elementAt(2)._isUpsidedown} '+
-      //'${game.row1.elementAt(3)._isUpsidedown} ${game.row1.elementAt(4)._isUpsidedown}');
+      bool volteada = (game.row1.elementAt(1).isUpsidedown && game.row1.elementAt(3).isUpsidedown);
+      //print('${game.row1.elementAt(0).isUpsidedown} ${game.row1.elementAt(1).isUpsidedown} ${game.row1.elementAt(2).isUpsidedown} '+
+      //'${game.row1.elementAt(3).isUpsidedown} ${game.row1.elementAt(4).isUpsidedown}');
       expect(volteada, equals(true));
     });
     test('En Row2... Cards 1,3 y 5 tienen piedra', () {
@@ -185,9 +186,9 @@ void main() {
     });
     test('Esta bocaabajo una DesireCard', () {
       Game game = Game();
-      //print(game.row3.elementAt(0)._isUpsidedown);
+      //print(game.row3.elementAt(0).isUpsidedown);
       game.row3.elementAt(0)._isUpsidedown = true;
-      expect(game.row3.elementAt(0)._isUpsidedown, equals(true));
+      expect(game.row3.elementAt(0).isUpsidedown, equals(true));
     });
   });
   group('Puntajes Desire Simples: ', () {   
@@ -900,7 +901,7 @@ void main() {
       //game.imprimirTablero();
       game.crowActs(crowC);
       //game.imprimirTablero();
-      expect(game.row3[0]._isUpsidedown, equals(true));
+      expect(game.row3[0].isUpsidedown, equals(true));
     });
     test('Cuando cuervo reemplaza carta ren2 queda UpsideDown', () {
       Game game = Game();
@@ -908,7 +909,7 @@ void main() {
       //game.imprimirTablero();
       game.crowActs(crowC);
       //game.imprimirTablero();
-      expect(game.row2[0]._isUpsidedown, equals(true));
+      expect(game.row2[0].isUpsidedown, equals(true));
     });
     test('Cuervo puede quitar carta', () {
       List<Card> miDeck = [
@@ -1173,16 +1174,19 @@ class Game{
     if (column > 5) endOfDay(_deck);
   }
   void endOfDay(List<Card> myDeck) {
-    day++;
-    column = 1;
     for (var element in _bountyCards) {
       element.checkIfCompleated(myDeck, day);
     }
     if (crow.howManyStonesHas() >= 4){
       crowActionAtEndOfDay();
     }
+    day++;
+    column = 1;
+    if (day > 3) {
+      gameOver();
+      return;
+    }
     generateDay();
-    if (day > 3) gameOver();
   }
   void cupOfTeaOrCrow(){
     if (!_usedCupOfTeaCard){
@@ -1305,9 +1309,13 @@ class Game{
   // OBTAIN SCORE
   int obtainFinalScore(){
     _finalScore += obtainDeckScore();
+    print('Score of Arrangement & Desire: ${obtainDeckScore()}');
     _finalScore += obtainBountyCardsScore();
+    print('Score of BountyCards: ${obtainBountyCardsScore()}');
     _finalScore += obtainCupOfTeaCardScore();
+    print('Score of Cup Of Tea: ${obtainCupOfTeaCardScore()}');
     _finalScore += obtainStonesScore();
+    print('Score of stones: ${obtainStonesScore()}');
     return _finalScore;
   }
   int obtainDeckScore(){
@@ -1413,8 +1421,8 @@ class Game{
 
     List<String> line = [];
     for (var element in row2) {
-      String l = '${element.typeOfCard.toString().split('.').last.toUpperCase()}:${element._flower.toString().split('.').last}/${element._color.toString().split('.').last}/${element._bug.toString().split('.').last}';
-      if (element._isUpsidedown) l = '//';
+      String l = '${element.typeOfCard.toString().split('.').last.toUpperCase()}:${element._flower.toString().split('.').last}/${element.color.toString().split('.').last}/${element._bug.toString().split('.').last}';
+      if (element.isUpsidedown) l = '//';
       if (!element._isThere) l = '---';
       if (element.hasStone){
         String stones = '*' * element._stonesInSpace;
@@ -1440,7 +1448,7 @@ class Game{
       String l = '';
       
       l ='${element.points.toString()}/${element.typeOfDesire.toString().split('.').last}/${element.requirement.toString()}';
-      if (element._isUpsidedown) l = '//';
+      if (element.isUpsidedown) l = '//';
       if (!element._isThere) l = '---';
       if (element.hasStone){
         String stones = '*' * element._stonesInSpace;
@@ -1453,13 +1461,13 @@ class Game{
   List<String> createDeckRow(List<Card> row){
     List<String> line = [];
     for (var element in _deck) {
-      if (element._typeOfCard != TypesOfCards.desire){
+      if (element.typeOfCard != TypesOfCards.desire){
         element = element as GardenCard;
-        line.add('${element.typeOfCard.toString().split('.').last.toUpperCase()}:${element._flower.toString().split('.').last}/${element._color.toString().split('.').last}/${element._bug.toString().split('.').last}');
+        line.add('${element.typeOfCard.toString().split('.').last.toUpperCase()}:${element._flower.toString().split('.').last}/${element.color.toString().split('.').last}/${element._bug.toString().split('.').last}');
       }
-      if (element._typeOfCard == TypesOfCards.desire){
+      if (element.typeOfCard == TypesOfCards.desire){
         element = element as DesireCard;
-        line.add('${element.points.toString()}/${element.typeOfDesire.toString().split('.').last}/${element.requirement.toString()}');
+        line.add('${element.typeOfCard.toString().split('.').last.toUpperCase()}:${element.points.toString()}/${element.typeOfDesire.toString().split('.').last}/${element.requirement.toString()}');
       }
     }
     return line;
@@ -1515,10 +1523,11 @@ class Crow{
 }
 /* ----------------------------- END OF GAME ---------------------------------- */
 
-
 /* ---------------------------------------------------------------------------- */
 /* ----------------------------------- CARDS ---------------------------------- */
 // ENUMS
+
+
 enum Flowers {daisy, lily, mum, poppy, tulip, indifferent}
 enum Colors {white, yellow, orange, pink, purple, indifferent}
 enum Bugs {bee, beetle, butterfly, ladybug, moth, none, indifferent}
@@ -1946,7 +1955,7 @@ class BountyCard extends Equatable{
     }
       
   }
-  void checkIfCompleated(List<Card> deck, int day){
+  void checkIfCompleated2(List<Card> deck, int day){
     int counter = 0;
     List<Card> tempCards = deck.toList();
     List requirementsList = [requirement1, requirement2, requirement3];
@@ -1992,7 +2001,147 @@ class BountyCard extends Equatable{
     }
       
   }
-  
+  void checkIfCompleated(List<Card> deck, int day){
+    List<String> requirements = [requirement1.toString(),requirement2.toString(),requirement3.toString()];
+    requirements.sort();
+    //print(requirements);
+    int counter = 0;
+    List<Card> tempCards = deck.toList();
+    //List requirementsList = [requirement1, requirement2, requirement3];
+    Map map = {};
+
+    for (var element in tempCards) {
+      if (element.typeOfCard != TypesOfCards.flower) continue;
+      element = element as FlowerCard;
+      //print(requirements[0]);
+      if (requirements[0].split('.').first == 'Bugs'){
+        //print(element._bug.toString() == requirements[0]);
+        if ((element._bug.toString() == requirements[0])){
+            
+          if (!map.containsKey(element)) {
+            map[element] = 1;
+          } else {
+            map[element] += 1;
+          }
+          if (requirements[1].split('.').first != 'Bugs'){
+            if (requirements[1] == element._flower.toString()) map[element] += 1;
+          }
+          if (requirements[2].split('.').first != 'Bugs'){
+            if (requirements[2] == element._flower.toString()) map[element] += 1;
+          }
+        }
+      } else {
+        if (element._flower.toString() == requirements[0]){
+          if (!map.containsKey(element)) {
+            map[element] = 1;
+          } else {
+            map[element] += 1;
+          }
+        }
+      }
+    }
+    
+    //print(map);
+    List sortedValues = map.values.toList()..sort();
+    if (sortedValues.isNotEmpty) {
+      int leastValuableValue = sortedValues.first;
+      var key = map.keys.firstWhere((k)
+            => map[k] == leastValuableValue, orElse: () => null);
+      tempCards.remove(key);
+      //print(key);
+      counter++;
+      map = {};
+    }
+
+    /* SECOND CHECK */
+    for (var element in tempCards) {
+      if (element.typeOfCard != TypesOfCards.flower) continue;
+      element = element as FlowerCard;
+      if (requirements[1].split('.').first == 'Bugs'){
+        if ((element._bug.toString() == requirements[1])){
+          if (!map.containsKey(element)) {
+            map[element] = 1;
+          } else {
+            map[element] += 1;
+          }
+          if (requirements[2].split('.').first != 'Bugs'){
+            if (requirements[2] == element._flower.toString()) map[element] += 1;
+          }
+
+        }
+       
+      } else {
+        if (element._flower.toString() == requirements[1]){
+          if (!map.containsKey(element)) {
+            map[element] = 1;
+          } else {
+            map[element] += 1;
+          }
+        }
+        
+      }
+        
+    }
+    
+    //print(map);
+    sortedValues = map.values.toList()..sort();
+    if (sortedValues.isNotEmpty) {
+      int leastValuableValue = sortedValues.first;
+      var key = map.keys.firstWhere((k)
+            => map[k] == leastValuableValue, orElse: () => null);
+      tempCards.remove(key);
+      //print(key);
+      counter++;
+      map = {};
+    }
+
+    /* THIRD CHECK */
+    for (var element in tempCards) {
+      if (element.typeOfCard != TypesOfCards.flower) continue;
+      element = element as FlowerCard;
+      if (requirements[2].split('.').first == 'Bugs'){
+        if ((element._bug.toString() == requirements[2])){
+          if (!map.containsKey(element)) {
+            map[element] = 1;
+          } else {
+            map[element] += 1;
+          }
+
+        }
+       
+      } else {
+        if (element._flower.toString() == requirements[2]){
+          if (!map.containsKey(element)) {
+            map[element] = 1;
+          } else {
+            map[element] += 1;
+          }
+        }
+      }
+    }
+    
+    //print(map);
+    sortedValues = map.values.toList()..sort();
+    if (sortedValues.isNotEmpty) {
+      int leastValuableValue = sortedValues.first;
+      var key = map.keys.firstWhere((k)
+            => map[k] == leastValuableValue, orElse: () => null);
+      tempCards.remove(key);
+      //print(key);
+      counter++;
+      map = {};
+    }
+
+
+
+
+    // Final piece of code "return"
+    if (counter == 3) {
+    _isCompleated = true;
+    compleatedAtDay(day);
+    }
+      
+  }
 
   FlowerCard? checkIfMeetsRequirements(Card element, Enum requirement) {
     element = element as FlowerCard;
