@@ -1160,7 +1160,6 @@ class Game{
 
   // TURNS & DAYS
   void takeTurn(){
-    imprimirTablero();
     printMessage('Which card shall thou take?');
     String response = obtainResponse('Int');
     int numericResponse = int.parse(response);
@@ -1248,7 +1247,7 @@ class Game{
       return;
     }
     printMessage('You have to pay to the crow a card from the following list:');
-    print(tempList);
+    print(createDeckRow(tempList));
     String positionOfCard = obtainResponse('Int');
     int posOfCard = int.parse(positionOfCard);
     if (posOfCard > tempList.length) posOfCard = 1;
@@ -1265,6 +1264,7 @@ class Game{
   }
   void payToCrow(int stones){
     crow.subtractStones(stones);
+    _stones -= stones;
   }
   void crowActionAtEndOfDay(){
     print('Do you want to pay stones to crow? Y/N');
@@ -1280,6 +1280,7 @@ class Game{
     
   }
   void getStonesToPayCrow(){
+    printMessage('How many stones shall thou pay?');
     int stones = 0;
     String? response = stdin.readLineSync();
     response ??= '0';
@@ -1294,11 +1295,13 @@ class Game{
   // START OF GAME
   void startGame(){
     while (!_gameOver){
+      imprimirTablero();
       takeTurn();
     }
   }
   // END OF GAME
   void gameOver(){
+    imprimirTablero();
     printMessage('**************** GAME OVER ****************');
     _gameOver = true;
     obtainFinalScore();
@@ -1357,7 +1360,7 @@ class Game{
  /* ------ TABLERO GRAFICO ------ */
   void imprimirTablero(){
     printBountyCardsZone();
-    print('DAY: $day');
+    if (day <= 3) print('DAY: $day');
     print('');
     printGardenCardsZone();
     print('');
@@ -1370,7 +1373,7 @@ class Game{
     List<int> vals = [5,4,3,2,1];
     int colToPrint = column;
     if (day == 2) colToPrint = vals[column-1];
-    print('Column: $colToPrint');
+    if (day <= 3) print('Column: $colToPrint');
     print('------------------------------- MY DECK -------------------------------');
     printDeckCardsZone();
     print('-----------------------------------------------------------------------');
