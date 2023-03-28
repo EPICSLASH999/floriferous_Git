@@ -1,24 +1,18 @@
 Floriferous
 ------------
 
-- A CORREGIR:
-Bounty Cards deben eliminar el requisito cumplido de alguna forma, para que no busque el mismo requisito en otras cartas.
-Método que se autollame?
-
 -BUG:
     Grupo de test de "Jugabilidad".
     Test --> "Tomar una tarjeta con piedra la da al jugador"
     Bug: al imprimir ese tablero de test, las piedras y el UpDown se posicionan casi al azar.
 
 
-
-- Dependiendo del puntaje, es "Lazy" y asi
-
-
 TESTS
-- Crow not toma desire cards
+- Crow no toma desire cards
 - Al final se hace la sumatoria de puntos
 
  -- YA PARA JUGAR --
 En game.crowStealsCard();
 //String? positionOfCard = stdin.readLineSync();
+
+Print list of cards to give to crow better.
