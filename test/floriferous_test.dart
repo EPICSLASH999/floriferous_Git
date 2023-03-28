@@ -651,14 +651,7 @@ void main() {
       bool compleated = bountyC.isCompleated;
       expect(compleated, equals(false));
     });
-    test('Despues de los 3 dias es "gameover"', () {
-      Game game = Game();
-      game.endOfDay(gardenCards);
-      game.endOfDay(gardenCards);
-      game.endOfDay(gardenCards);
-      bool isGameOver = game._gameOver;
-      expect(isGameOver, equals(true));
-    });
+    
 
 
   });
@@ -783,7 +776,7 @@ void main() {
     });
   
   });
-  group('Turns: ', () {
+  group('Turns & Days: ', () {
     
     test('Despues de turno es columna 2', () {
       Game game = Game();
@@ -799,7 +792,14 @@ void main() {
       game.nextColumn();
       expect(game.column, equals(1));
     });
-    
+    test('Despues de los 3 dias es "gameover"', () {
+      Game game = Game();
+      game.endOfDay(gardenCards);
+      game.endOfDay(gardenCards);
+      game.endOfDay(gardenCards);
+      bool isGameOver = game._gameOver;
+      expect(isGameOver, equals(true));
+    });
     
   });
   group('Jugabilidad:', () {
@@ -2002,6 +2002,7 @@ class BountyCard extends Equatable{
       
   }
   void checkIfCompleated(List<Card> deck, int day){
+    if (isCompleated) return;
     List<String> requirements = [requirement1.toString(),requirement2.toString(),requirement3.toString()];
     requirements.sort();
     //print(requirements);
