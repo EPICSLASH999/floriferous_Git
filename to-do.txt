@@ -11,16 +11,19 @@ Método que se autollame?
     Bug: al imprimir ese tablero de test, las piedras y el UpDown se posicionan casi al azar.
 
 - Cuervo.
-    
     - El acumula piedras cada dia 
-
-    - Checar si se tiene el numero de piedras para darle al cuervo
 
 
 -Dia 2 empieza de derecha a izquierda
 
 - Que el tablero diga cuando se completó Bounty Card
 
+- Dependiendo del puntaje, es "Lazy" y asi
+
+
+TESTS
+- Crow not toma desire cards
+- Al final se hace la sumatoria de puntos
 
  -- YA PARA JUGAR --
 En game.crowStealsCard();

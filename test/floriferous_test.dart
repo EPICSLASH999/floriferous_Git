@@ -861,7 +861,7 @@ void main() {
     test('Despues de turno jugador es turno del cuervo', () {
       Game game = Game();
       game.imprimirTablero();
-      game.takeTurn(1);
+      game.takeTurn();
       game.imprimirTablero();
       
     });
@@ -957,9 +957,7 @@ void main() {
       //Game game = Game();
       //game.cupOfTeaOrCrow();
     });
-    test('Cuervo solo acepta GardenCards (NO desire)', () {
-      
-    });
+    
   });
   
   group('Tablero Grafico: ', () {
@@ -1110,9 +1108,12 @@ class Game{
     if (_gameOver) return;
     switch (row){
       case 1: GardenCard card = row1.elementAt(column-1);
+              if (!card._isThere && card.hasStone){
+                crow.subtractStones(card._stonesInSpace);
+              }
               if (card._isThere){
                 _deck.add(card);
-                card._isThere = false; // probar si funciona esto, sino reemplazar por "row1.elementAt..."
+                card._isThere = false; // probar si funciona esto, sino reemplazar por "row1.elementAt(column-1)._isThere = false"
               }
               if (card.hasStone) {
                 _stones += card._stonesInSpace;
@@ -1151,8 +1152,12 @@ class Game{
   }
 
   // TURNS & DAYS
-  void takeTurn(int row){
-    takeCard(row);
+  void takeTurn(){
+    imprimirTablero();
+    printMessage('Which card shall thou take?');
+    String response = obtainResponse('Int');
+    int numericResponse = int.parse(response);
+    takeCard(numericResponse);
   }
   void nextColumn(){
     column++;
@@ -1187,7 +1192,7 @@ class Game{
 
   // DEVIL CROW
   void crowActs(CrowCard crowC) {
-    print(crowC);
+    //print(crowC);
     switch(crowC._replaceWith){
       case CrowReplacements.stone:
         switch (crowC._replaceRowAt){
@@ -1275,9 +1280,17 @@ class Game{
     payToCrow(stones);
   }
 
+  // START OF GAME
+  void startGame(){
+    while (!_gameOver){
+      takeTurn();
+    }
+  }
   // END OF GAME
   void gameOver(){
+    printMessage('**************** GAME OVER ****************');
     _gameOver = true;
+    printMessage('--> FINAL SCORE: $finalScore');
   }
 
   // OBTAIN SCORE
@@ -1403,8 +1416,14 @@ class Game{
   List<String> createDeckRow(List<Card> row){
     List<String> line = [];
     for (var element in _deck) {
-      element = element as GardenCard;
-      line.add('${element.typeOfCard.toString().split('.').last.toUpperCase()}:${element._flower.toString().split('.').last}/${element._color.toString().split('.').last}/${element._bug.toString().split('.').last}');
+      if (element._typeOfCard != TypesOfCards.desire){
+        element = element as GardenCard;
+        line.add('${element.typeOfCard.toString().split('.').last.toUpperCase()}:${element._flower.toString().split('.').last}/${element._color.toString().split('.').last}/${element._bug.toString().split('.').last}');
+      }
+      if (element._typeOfCard == TypesOfCards.desire){
+        element = element as DesireCard;
+        line.add('${element.points.toString()}/${element.typeOfDesire.toString().split('.').last}/${element.requirement.toString()}');
+      }
     }
     return line;
   }
