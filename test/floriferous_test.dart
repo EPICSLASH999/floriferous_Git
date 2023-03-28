@@ -927,7 +927,7 @@ void main() {
       Game game = Game();
       game._deck = miDeck.toList();
       int d1 = game._deck.length;
-      game.crowTakesCard(1);
+      game.crowTakesCardAtPosition(1);
       int d2 = game._deck.length;
       //game.imprimirTablero();
       expect(d1 == d2, equals(false));
@@ -1221,15 +1221,31 @@ class Game{
         break;
     }
   }
-  void obtainCardToSteal(){
-    printMessage('You have to pay to the crow:');
+  void obtainCardToSteal(){ 
+    printMessage('You have to pay to the crow a card from the following list:');
+    List<GardenCard> tempList = [];
+    for (var element in _deck) {
+      if (element.typeOfCard != TypesOfCards.desire){
+        tempList.add(element as GardenCard);
+      }
+    }
+    if (tempList.isEmpty){
+      printMessage('No GardenCards to give. Crow does not take nothing...');
+      return;
+    }
     String positionOfCard = obtainResponse('Int');
-    
     int posOfCard = int.parse(positionOfCard);
-    crowTakesCard(posOfCard);
+    if (posOfCard > tempList.length) posOfCard = 1;
+
+    crowTakesCard(tempList.elementAt(posOfCard-1));
+    //_deck.remove(tempList.elementAt(posOfCard-1));
+    //crowTakesCardAtPosition(posOfCard);
   }
-  void crowTakesCard(int positionOfCard){
+  void crowTakesCardAtPosition(int positionOfCard){
     _deck.removeAt(positionOfCard-1);
+  }
+  void crowTakesCard(Card card){
+    _deck.remove(card);
   }
   void payToCrow(int stones){
     crow.subtractStones(stones);

@@ -12,7 +12,6 @@ Método que se autollame?
 
 - Cuervo.
     
-    - El no agarra desire cards
     - El acumula piedras cada dia 
 
     - Checar si se tiene el numero de piedras para darle al cuervo
