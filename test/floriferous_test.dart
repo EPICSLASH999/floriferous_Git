@@ -1122,6 +1122,9 @@ class Game{
               }
         break;
       case 2: GardenCard card = row2.elementAt(column-1);
+              if (!card._isThere && card.hasStone){
+                crow.subtractStones(card._stonesInSpace);
+              }
               if (card._isThere){
                 _deck.add(card);
                 card._isThere = false; 
@@ -1133,6 +1136,9 @@ class Game{
               }
         break;
       case 3: DesireCard card = row3.elementAt(column-1);
+              if (!card._isThere && card.hasStone){
+                crow.subtractStones(card._stonesInSpace);
+              }
               if (card._isThere){
                 _deck.add(card);
                 card._isThere = false; 
@@ -1181,7 +1187,7 @@ class Game{
   void cupOfTeaOrCrow(){
     if (!_usedCupOfTeaCard){
       printMessage('Do you want to use Cup of Tea? Y/N');
-      String response = obtainResponse('String');
+      String response = obtainResponse('String').toUpperCase();
       if (response == 'Y'){
         useCupOfTea();
         return;
@@ -1227,7 +1233,6 @@ class Game{
     }
   }
   void obtainCardToSteal(){ 
-    printMessage('You have to pay to the crow a card from the following list:');
     List<GardenCard> tempList = [];
     for (var element in _deck) {
       if (element.typeOfCard != TypesOfCards.desire){
@@ -1238,6 +1243,8 @@ class Game{
       printMessage('No GardenCards to give. Crow does not take nothing...');
       return;
     }
+    printMessage('You have to pay to the crow a card from the following list:');
+    print(tempList);
     String positionOfCard = obtainResponse('Int');
     int posOfCard = int.parse(positionOfCard);
     if (posOfCard > tempList.length) posOfCard = 1;
@@ -1290,6 +1297,7 @@ class Game{
   void gameOver(){
     printMessage('**************** GAME OVER ****************');
     _gameOver = true;
+    obtainFinalScore();
     printMessage('--> FINAL SCORE: $finalScore');
   }
 
@@ -1343,17 +1351,22 @@ class Game{
     print('Stones (Crow): ${crow.howManyStonesHas()}');
     print('UsedTeaCard: $_usedCupOfTeaCard');
     print('');
-    print('Column: $column');
-    print('---------------------------------');
+    List<int> vals = [5,4,3,2,1];
+    int colToPrint = column;
+    if (day == 2) colToPrint = vals[column-1];
+    print('Column: $colToPrint');
+    print('------------------------------- MY DECK -------------------------------');
     printDeckCardsZone();
+    print('-----------------------------------------------------------------------');
+    print('');
 
   }
 
   void printBountyCardsZone(){
     // ignore: prefer_interpolation_to_compose_strings
-    String message = ('|| ${_bountyCards.elementAt(0).requirement1.name} ${_bountyCards.elementAt(0).requirement2.name} ${_bountyCards.elementAt(0).requirement3.name} || '+
-          ' ${_bountyCards.elementAt(1).requirement1.name} ${_bountyCards.elementAt(1).requirement2.name} ${_bountyCards.elementAt(1).requirement3.name} ' +
-         ' || ${_bountyCards.elementAt(2).requirement1.name} ${_bountyCards.elementAt(2).requirement2.name} ${_bountyCards.elementAt(2).requirement3.name} ||');
+    String message = ('|| ${_bountyCards.elementAt(0).requirement1.name} ${_bountyCards.elementAt(0).requirement2.name} ${_bountyCards.elementAt(0).requirement3.name} (${_bountyCards.elementAt(0).wasCompleatedAtDay}) || '+
+          ' ${_bountyCards.elementAt(1).requirement1.name} ${_bountyCards.elementAt(1).requirement2.name} ${_bountyCards.elementAt(1).requirement3.name} (${_bountyCards.elementAt(1).wasCompleatedAtDay})' +
+         ' || ${_bountyCards.elementAt(2).requirement1.name} ${_bountyCards.elementAt(2).requirement2.name} ${_bountyCards.elementAt(2).requirement3.name} (${_bountyCards.elementAt(2).wasCompleatedAtDay}) ||');
 
     String title = ' BOUNTY CARDS ';
 
@@ -1381,8 +1394,17 @@ class Game{
   }
 
   List<String> createGardenRow(List<GardenCard> row){
+    List<GardenCard> row2 = row.toList();
+    if (day == 2)
+    {
+      row2.clear();
+      for (int x = row.length-1; x > -1; x--) {
+        row2.add(row[x]);
+      } 
+    }
+
     List<String> line = [];
-    for (var element in row) {
+    for (var element in row2) {
       String l = '${element.typeOfCard.toString().split('.').last.toUpperCase()}:${element._flower.toString().split('.').last}/${element._color.toString().split('.').last}/${element._bug.toString().split('.').last}';
       if (element._isUpsidedown) l = '//';
       if (!element._isThere) l = '---';
@@ -1396,15 +1418,22 @@ class Game{
     return line;
   }
   List<String> createDesireRow(List<DesireCard> row){
+    List<DesireCard> row2 = row.toList();
+    if (day == 2)
+    {
+      row2.clear();
+      for (int x = row.length-1; x > -1; x--) {
+        row2.add(row[x]);
+      } 
+    }
+
     List<String> line = [];
-    for (var element in row) {
+    for (var element in row2) {
       String l = '';
       
       l ='${element.points.toString()}/${element.typeOfDesire.toString().split('.').last}/${element.requirement.toString()}';
+      if (element._isUpsidedown) l = '//';
       if (!element._isThere) l = '---';
-      if (element._isUpsidedown){
-        l = '//';
-      }
       if (element.hasStone){
         String stones = '*' * element._stonesInSpace;
         l += '($stones)';

@@ -10,13 +10,7 @@ Método que se autollame?
     Test --> "Tomar una tarjeta con piedra la da al jugador"
     Bug: al imprimir ese tablero de test, las piedras y el UpDown se posicionan casi al azar.
 
-- Cuervo.
-    - El acumula piedras cada dia 
 
-
--Dia 2 empieza de derecha a izquierda
-
-- Que el tablero diga cuando se completó Bounty Card
 
 - Dependiendo del puntaje, es "Lazy" y asi
 
