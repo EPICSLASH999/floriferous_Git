@@ -23,3 +23,5 @@ Método que se autollame?
 -Dia 2 empieza de derecha a izquierda
 
 - Que el tablero diga cuando se completó Bounty Card
+- Que tablero muestre "*" dependiendo de si hay piedras y cuantas hay.
+    Y que si no esta la carta, haya solamente "//"

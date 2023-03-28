@@ -881,7 +881,7 @@ void main() {
       CrowCard crowC = CrowCard(renglon: 3, reemplazo: CrowReplacements.stone, numeroDePiedras: 2);
       game.crowActs(crowC);
       game.takeCard(3);
-      //game.imprimirTablero();
+      game.imprimirTablero();
       expect(game._stones, equals(2));
     });
     test('Cuando cuervo reemplaza carta ren3 queda UpsideDown', () {
@@ -922,7 +922,18 @@ void main() {
       expect(game.column, equals(1));
     
     });
-    
+    test('Cartas tomadas ahora aparecen con "()" y "*" por num de piedras', () {
+      Game game = Game();
+      game.takeCard(1);
+      game.takeCard(2);
+      game.imprimirTablero();
+    });
+    test('Cartas volteadas ahora aparecen con "//"', () {
+      Game game = Game();
+      CrowCard crowC = CrowCard(renglon: 3, reemplazo: CrowReplacements.stone, numeroDePiedras: 2);
+      game.crowActs(crowC);
+      game.imprimirTablero();
+    });
   
   });
 
@@ -1206,14 +1217,37 @@ class Game{
   List<String> createGardenRow(List<GardenCard> row){
     List<String> line = [];
     for (var element in row) {
-      line.add('${element.typeOfCard.toString().split('.').last.toUpperCase()}/${element._flower.toString().split('.').last}/${element._color.toString().split('.').last}/${element._bug.toString().split('.').last}/isTher?${element._isThere.toString()}/UpDwn?${element._isUpsidedown.toString()}/Sts:${element._stonesInSpace.toString()}');
+      String l = '';
+      if (element._isThere){
+        l = '${element.typeOfCard.toString().split('.').last.toUpperCase()}/${element._flower.toString().split('.').last}/${element._color.toString().split('.').last}/${element._bug.toString().split('.').last}';
+      } 
+      if (element._isUpsidedown){
+        l = '//';
+      }
+      if (element.hasStone){
+        String stones = '*' * element._stonesInSpace;
+         l += '($stones)';
+      }
+      line.add(l);
+      
     }
     return line;
   }
   List<String> createDesireRow(List<DesireCard> row){
     List<String> line = [];
     for (var element in row) {
-      line.add('${element.points.toString()}/${element.typeOfDesire.toString().split('.').last}/${element.requirement.toString()}/isTher?${element._isThere.toString()}/UpDwn?${element.isUpsidedown.toString()}/Sts:${element._stonesInSpace.toString()}');
+      String l = '';
+      if (element._isThere){
+        line.add('${element.points.toString()}/${element.typeOfDesire.toString().split('.').last}/${element.requirement.toString()}');
+      }
+      if (element._isUpsidedown){
+        l = '//';
+      }
+      if (element.hasStone){
+        String stones = '*' * element._stonesInSpace;
+         l += '($stones)';
+      }
+      line.add(l);
     }
     return line;
   }
