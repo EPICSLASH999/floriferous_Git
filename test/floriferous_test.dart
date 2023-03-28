@@ -916,6 +916,11 @@ void main() {
       //game.imprimirTablero();
       expect(game.row2[0]._isUpsidedown, equals(true));
     });
+    test('Si cuervo tiene 4 o mas piedras se debe pagar carta', () {
+      Game game = Game();
+      game.takeTurn(1);
+      game.imprimirTablero();
+    });
   });
   
   group('Tablero Grafico: ', () {
@@ -979,6 +984,8 @@ class Game{
   int _stones = 0;
 
   bool _gameOver = false;
+
+  Crow crow = Crow();
 
   Game(){
     _gardenCards = shuffleGardenCards(gardenCards.toList()).toList();
@@ -1142,6 +1149,7 @@ class Game{
                   row3.elementAt(column-1)._stonesInSpace = crowC._numberOfStones;
             break;
         }
+        crow.addStones(crowC._numberOfStones);
         break;
       case CrowReplacements.card: 
         switch (crowC._replaceRowAt){
@@ -1211,6 +1219,7 @@ class Game{
     printDesireCardsZone();
     print('');
     print('Stones: $_stones');
+    print('Stones (Crow): ${crow.howManyStonesHas()}');
     print('UsedTeaCard: $_usedCupOfTeaCard');;
     print('');
     print('Column: $column');
@@ -1303,6 +1312,21 @@ class Game{
     return _crowCards;
   }
   
+}
+
+class Crow{
+  int _stones = 0;
+
+  int howManyStonesHas(){
+    return _stones;
+  }
+  void addStones(int s){
+    _stones += s;
+  }
+  void subtractStones(int s){
+    _stones -= s;
+  }
+
 }
 /* ----------------------------- END OF GAME ---------------------------------- */
 

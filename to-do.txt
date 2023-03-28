@@ -17,6 +17,7 @@ Método que se autollame?
     -El no agarra desire cards al tener 4 o mas piedras
     - El acumula piedras cada dia 
     - Si se usa tasa de te el cuervo no hace nada en ese turno
+    - Opcion de Pagar piedras
 
 
 -Dia 2 empieza de derecha a izquierda
