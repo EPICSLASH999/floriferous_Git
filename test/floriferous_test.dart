@@ -845,8 +845,6 @@ void main() {
     });
     test('Tomar una tarjeta con piedra la da al jugador', () {
       Game game = Game();
-      game.takeCard(1);
-      game.takeCard(2);
       game.takeCard(2);
       //game.imprimirTablero();
       expect(game._stones, equals(1));
@@ -897,7 +895,7 @@ void main() {
       CrowCard crowC = CrowCard(renglon: 3, reemplazo: CrowReplacements.stone, numeroDePiedras: 2);
       game.crowActs(crowC);
       game.takeCard(3);
-      game.imprimirTablero();
+      //game.imprimirTablero();
       expect(game._stones, equals(2));
     });
     test('Cuando cuervo reemplaza carta ren3 queda UpsideDown', () {
@@ -917,9 +915,26 @@ void main() {
       expect(game.row2[0]._isUpsidedown, equals(true));
     });
     test('Si cuervo tiene 4 o mas piedras se debe pagar carta', () {
+      List<Card> miDeck = [
+      FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.pink),
+      FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.purple, bicho: Bugs.bee),
+      FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.orange, bicho: Bugs.butterfly),
+      FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.white, bicho: Bugs.beetle),
+      FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.yellow, bicho: Bugs.ladybug),
+      FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.pink, bicho: Bugs.moth),
+
+      //ArrangementCard(tipoDeCarta: TypesOfCards.arrangement, flor: Flowers.poppy, col: Colors.orange, bicho: Bugs.moth),
+
+      //(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.simple, requerimiento: Bugs.bee, puntos: [3]),
+      //DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.same, requerimiento: Bugs.indifferent, puntos: [0,2,4,7,10]),
+    ];
       Game game = Game();
-      game.takeTurn(1);
+      game._deck = miDeck.toList();
+      game.crowTakesCard(miDeck.elementAt(0) as GardenCard);
       game.imprimirTablero();
+    });
+    test('Cuervo solo acepta GardenCards (NO desire)', () {
+      
     });
   });
   
@@ -1114,7 +1129,6 @@ class Game{
   // TURNS & DAYS
   void takeTurn(int row){
     takeCard(row);
-    nextColumn();
   }
   void nextColumn(){
     column++;
@@ -1127,12 +1141,16 @@ class Game{
     for (var element in _bountyCards) {
       element.checkIfCompleated(myDeck, day);
     }
+    if (crow.howManyStonesHas() >= 4){
+      crowStealsCard();
+    }
     generateDay();
     if (day > 3) gameOver();
   }
 
   // DEVIL CROW
   void crowActs(CrowCard crowC) {
+    print(crowC);
     switch(crowC._replaceWith){
       case CrowReplacements.stone:
         switch (crowC._replaceRowAt){
@@ -1165,6 +1183,12 @@ class Game{
         }
         break;
     }
+  }
+  void crowStealsCard(){
+    //crowTakeCard(card);
+  }
+  void crowTakesCard(GardenCard card){
+    _deck.remove(card);
   }
 
   // END OF GAME
@@ -1259,11 +1283,9 @@ class Game{
   List<String> createGardenRow(List<GardenCard> row){
     List<String> line = [];
     for (var element in row) {
-      String l = '${element.typeOfCard.toString().split('.').last.toUpperCase()}/${element._flower.toString().split('.').last}/${element._color.toString().split('.').last}/${element._bug.toString().split('.').last}';
+      String l = '${element.typeOfCard.toString().split('.').last.toUpperCase()}:${element._flower.toString().split('.').last}/${element._color.toString().split('.').last}/${element._bug.toString().split('.').last}';
+      if (element._isUpsidedown) l = '//';
       if (!element._isThere) l = '---';
-      if (element._isUpsidedown){
-        l = '//';
-      }
       if (element.hasStone){
         String stones = '*' * element._stonesInSpace;
          l += '($stones)';
