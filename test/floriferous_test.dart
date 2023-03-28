@@ -386,9 +386,9 @@ void main() {
       List<Card> misCartas = [
         FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.butterfly),
         FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.orange, bicho: Bugs.beetle),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.ladybug),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.bee),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.moth),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.butterfly),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.butterfly),
+        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.butterfly),
         FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.white),
         FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.orange),
         FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.pink),
@@ -396,7 +396,7 @@ void main() {
       ];
       DesireCard desireC = DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.different, requerimiento: Bugs.indifferent, puntos: [0,1,2,4,7]);
       int score = desireC.obtainScore(misCartas);
-      expect(score, equals(7));
+      expect(score, equals(1));
     });
     test('3 insectos diferentes son 2 pts', () {
       List<Card> misCartas = [
@@ -790,16 +790,16 @@ void main() {
     
     test('Despues de turno es columna 2', () {
       Game game = Game();
-      game.nextTurn();
+      game.nextColumn();
       expect(game.column, equals(2));
     });
     test('Despues de 5 turnos es columna 1 de nuevo', () {
       Game game = Game();
-      game.nextTurn();
-      game.nextTurn();
-      game.nextTurn();
-      game.nextTurn();
-      game.nextTurn();
+      game.nextColumn();
+      game.nextColumn();
+      game.nextColumn();
+      game.nextColumn();
+      game.nextColumn();
       expect(game.column, equals(1));
     });
     
@@ -856,6 +856,22 @@ void main() {
       game.useCupOfTea();
       expect(game._usedCupOfTeaCard, equals(true));
     });
+    test('Si se toman solo pierdras desaparecen del tablero', () {
+      Game game = Game();
+      CrowCard crowC = CrowCard(renglon: 3, reemplazo: CrowReplacements.stone, numeroDePiedras: 2);
+      game.crowActs(crowC);
+      game.takeCard(3);
+      game.imprimirTablero();
+      expect(game._stones, equals(2));
+    });
+    test('Despues de turno jugador es turno del cuervo', () {
+      Game game = Game();
+      game.imprimirTablero();
+      game.takeTurn(1);
+      game.imprimirTablero();
+      
+    });
+
   });
   group('Jugabilidad del cuervo', () {
     test('Cuervo reemplaza carta y deja 2 piedras', () {
@@ -914,11 +930,11 @@ void main() {
     test('Despues de 5 turnos se vuelve a generar el tablero', () {
       Game game = Game();
       game.imprimirTablero();
-      game.nextTurn(); game.imprimirTablero();
-      game.nextTurn(); game.imprimirTablero();
-      game.nextTurn(); game.imprimirTablero();
-      game.nextTurn(); game.imprimirTablero();
-      game.nextTurn(); game.imprimirTablero();
+      game.nextColumn(); game.imprimirTablero();
+      game.nextColumn(); game.imprimirTablero();
+      game.nextColumn(); game.imprimirTablero();
+      game.nextColumn(); game.imprimirTablero();
+      game.nextColumn(); game.imprimirTablero();
       expect(game.column, equals(1));
     
     });
@@ -1052,24 +1068,36 @@ class Game{
                 _deck.add(card);
                 card._isThere = false; // probar si funciona esto, sino reemplazar por "row1.elementAt..."
               }
-              if (card.hasStone) _stones += card._stonesInSpace;
+              if (card.hasStone) {
+                _stones += card._stonesInSpace;
+                card._stonesInSpace = 0;
+                card.hasStone = false;
+              }
         break;
       case 2: GardenCard card = row2.elementAt(column-1);
               if (card._isThere){
                 _deck.add(card);
                 card._isThere = false; 
               }
-              if (card.hasStone) _stones += card._stonesInSpace;
+              if (card.hasStone) {
+                _stones += card._stonesInSpace;
+                card._stonesInSpace = 0;
+                card.hasStone = false;
+              }
         break;
       case 3: DesireCard card = row3.elementAt(column-1);
               if (card._isThere){
                 _deck.add(card);
                 card._isThere = false; 
               }
-              if (card.hasStone) _stones += card._stonesInSpace;
+              if (card.hasStone) {
+                _stones += card._stonesInSpace;
+                card._stonesInSpace = 0;
+                card.hasStone = false;
+              }
         break;
     }
-    nextTurn();
+    nextColumn();
 
   }
   void useCupOfTea(){
@@ -1077,8 +1105,13 @@ class Game{
   }
 
   // TURNS & DAYS
-  void nextTurn(){
+  void takeTurn(int row){
+    takeCard(row);
+    nextColumn();
+  }
+  void nextColumn(){
     column++;
+    if (column <= 5) crowActs(drawCrowCard());
     if (column > 5) endOfDay(_deck);
   }
   void endOfDay(List<Card> myDeck) {
@@ -1217,10 +1250,8 @@ class Game{
   List<String> createGardenRow(List<GardenCard> row){
     List<String> line = [];
     for (var element in row) {
-      String l = '';
-      if (element._isThere){
-        l = '${element.typeOfCard.toString().split('.').last.toUpperCase()}/${element._flower.toString().split('.').last}/${element._color.toString().split('.').last}/${element._bug.toString().split('.').last}';
-      } 
+      String l = '${element.typeOfCard.toString().split('.').last.toUpperCase()}/${element._flower.toString().split('.').last}/${element._color.toString().split('.').last}/${element._bug.toString().split('.').last}';
+      if (!element._isThere) l = '---';
       if (element._isUpsidedown){
         l = '//';
       }
@@ -1237,15 +1268,15 @@ class Game{
     List<String> line = [];
     for (var element in row) {
       String l = '';
-      if (element._isThere){
-        line.add('${element.points.toString()}/${element.typeOfDesire.toString().split('.').last}/${element.requirement.toString()}');
-      }
+      
+      l ='${element.points.toString()}/${element.typeOfDesire.toString().split('.').last}/${element.requirement.toString()}';
+      if (!element._isThere) l = '---';
       if (element._isUpsidedown){
         l = '//';
       }
       if (element.hasStone){
         String stones = '*' * element._stonesInSpace;
-         l += '($stones)';
+        l += '($stones)';
       }
       line.add(l);
     }

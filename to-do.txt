@@ -11,7 +11,6 @@ Método que se autollame?
     Bug: al imprimir ese tablero de test, las piedras y el UpDown se posicionan casi al azar.
 
 - Cuervo.
-    -Que cuervo actue por si mismo despues de turno del jugador
     - Que cuervo actue por si mismo a excepcion de cuando se acaba el dia, y primero se revisa el bounty y luego se da carta si piedras >=4
     - Si cuervo tiene 4 o mas piedras...
     - Poder darle piedras al cuervo para no dar carta
@@ -23,5 +22,3 @@ Método que se autollame?
 -Dia 2 empieza de derecha a izquierda
 
 - Que el tablero diga cuando se completó Bounty Card
-- Que tablero muestre "*" dependiendo de si hay piedras y cuantas hay.
-    Y que si no esta la carta, haya solamente "//"
