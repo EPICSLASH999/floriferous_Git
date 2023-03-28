@@ -1299,6 +1299,7 @@ class Game{
     _gameOver = true;
     obtainFinalScore();
     printMessage('--> FINAL SCORE: $finalScore');
+    printMessage('--> Your Mood: ${obtainScoringMood()}');
   }
 
   // OBTAIN SCORE
@@ -1337,7 +1338,14 @@ class Game{
   int obtainStonesScore(){
     return (_stones/2).floor();
   }
-
+  String obtainScoringMood(){
+    if (_finalScore < 21) return 'Anxious';
+    if (_finalScore>= 21 && _finalScore <= 26) return 'Chill';
+    if (_finalScore >= 27 && _finalScore <= 32) return 'Cool as a Cucumber';
+    if (_finalScore >= 33 && _finalScore <= 38) return 'Really Relaxed';
+    if (_finalScore >= 39 && _finalScore <= 44) return 'Utter Zen';
+    return 'Nirvana';
+  }
  /* ------ TABLERO GRAFICO ------ */
   void imprimirTablero(){
     printBountyCardsZone();
