@@ -1,18 +1,6 @@
-//import 'dart:developer';
-//import 'dart:ffi';
-//import 'dart:html';
-//import 'dart:math';
-
-//import 'dart:math';
-
-//import 'package:collection/collection.dart';
-//import 'package:equatable/equatable.dart';
-import 'package:floriferous/gameboard.dart';
 import 'package:floriferous/cards.dart';
 import 'package:floriferous/floriferous.dart';
-//import 'package:floriferous/floriferous.dart';
 import 'package:test/test.dart';
-
 
 
 void main() {
@@ -324,9 +312,7 @@ void main() {
   group('Jugabilidad:', () {
     test('Tomar tarjeta de columa 1 renglon 1', () {
       Game game = Game();
-      //game.imprimirTablero();
       game.takeCard(1);
-      //game.imprimirTablero();
       Card c1 = game.deck.elementAt(0);
       Card c2 = game.row1.elementAt(0);
 
@@ -345,17 +331,16 @@ void main() {
     });
     test('Tarjeta tomada cambia a siguiente columna', () {
       Game game = Game();
-      //game.imprimirTablero();
       game.takeCard(1);
-      //game.imprimirTablero();
+      game.nextColumn();
       expect(game.column, equals(2));
     });
-    test('Jugado un dia (casi) completo', () {
+    test('Tomar 4 cartas sigue siendo dia 1', () {
       Game game = Game();
-      game.takeCard(1);
-      game.takeCard(2);
-      game.takeCard(3);
-      game.takeCard(2);
+      game.takeCard(1); game.nextColumn();
+      game.takeCard(2); game.nextColumn();
+      game.takeCard(3); game.nextColumn();
+      game.takeCard(2); game.nextColumn();
       //game.imprimirTablero();
       expect(game.day, equals(1));
     });
@@ -370,24 +355,23 @@ void main() {
       game.useCupOfTea();
       expect(game.usedCupOfTeaCard, equals(true));
     });
-    test('Si se toman solo pierdras desaparecen del tablero', () {
+    test('Si se toman solo pierdras desaparecen del tablero y se suman', () {
       Game game = Game();
       CrowCard crowC = CrowCard(renglon: 3, reemplazo: CrowReplacements.stone, numeroDePiedras: 2);
       game.crowActs(crowC);
       game.takeCard(3);
-      game.printGameboard();
       expect(game.stones, equals(2));
     });
     test('Despues de turno jugador es turno del cuervo', () {
       Game game = Game();
-      game.printGameboard();
-      game.takeTurn();
-      game.printGameboard();
+      game.useCupOfTea();
+      game.endOfTurn();
+      //game.printGameboard();
       
     });
 
   });
-  group('Jugabilidad del cuervo', () {
+  group('Jugabilidad del cuervo:', () {
     test('Cuervo reemplaza carta y deja 2 piedras', () {
       Game game = Game();
       CrowCard crowC = CrowCard(renglon: 3, reemplazo: CrowReplacements.stone, numeroDePiedras: 2);
@@ -438,50 +422,22 @@ void main() {
       FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.white, bicho: Bugs.beetle),
       FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.yellow, bicho: Bugs.ladybug),
       FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.pink, bicho: Bugs.moth),
-
-      //ArrangementCard(tipoDeCarta: TypesOfCards.arrangement, flor: Flowers.poppy, col: Colors.orange, bicho: Bugs.moth),
-
-      //(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.simple, requerimiento: Bugs.bee, puntos: [3]),
-      //DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.same, requerimiento: Bugs.indifferent, puntos: [0,2,4,7,10]),
     ];
       Game game = Game();
       game.setDeck(miDeck.toList());
       int d1 = game.deck.length;
       game.crowTakesCardAtPosition(1);
       int d2 = game.deck.length;
-      //game.imprimirTablero();
       expect(d1 == d2, equals(false));
     });
     test('Si cuervo tiene 4 o mas piedras se debe pagar carta', () {
-      List<Card> miDeck = [
-      FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.pink),
-      FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.purple, bicho: Bugs.bee),
-      FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.orange, bicho: Bugs.butterfly),
-      FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.white, bicho: Bugs.beetle),
-      FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.yellow, bicho: Bugs.ladybug),
-      FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.pink, bicho: Bugs.moth),
-
-      //ArrangementCard(tipoDeCarta: TypesOfCards.arrangement, flor: Flowers.poppy, col: Colors.orange, bicho: Bugs.moth),
-
-      //(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.simple, requerimiento: Bugs.bee, puntos: [3]),
-      //DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.same, requerimiento: Bugs.indifferent, puntos: [0,2,4,7,10]),
-    ];
-      /*Game game = Game();
-      game._deck = miDeck.toList();
-      game.imprimirTablero();
-      game.crow._stones = 4;
-      game.endOfDay(miDeck);
-      game.imprimirTablero();*/
+      Game game = Game();
+      game.crow.addStones(4);
+      expect(game.crowHasEnoughStonesToTakeACard(), equals(true));
     });
-    test('Si se usa tasa de te cuervo no actua ese turno', () {
-      //Game game = Game();
-      //game.cupOfTeaOrCrow();
-    });
+    
     
   });
   
-  
-
-
 }
 

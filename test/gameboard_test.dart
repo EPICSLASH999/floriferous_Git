@@ -17,7 +17,7 @@ void main() {
     test('Despues de 5 turnos se vuelve a generar el tablero', () {
       Game game = Game();
       game.column = 5;
-      game.nextColumn();
+      game.endOfTurn();
       game.printGameboard();
       expect(game.column, equals(1));
     

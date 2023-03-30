@@ -138,7 +138,7 @@ class Card extends Equatable{
   int _stonesInSpace = 0;
   int get stonesInSpace => _stonesInSpace;
 
-  bool hasStone = false;
+  bool get hasStone => !(_stonesInSpace == 0);
 
   Card({required TypesOfCards tipoDeCarta}){
     _typeOfCard = tipoDeCarta;

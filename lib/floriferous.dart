@@ -2,6 +2,9 @@ import 'dart:io';
 import 'gameboard.dart';
 import 'cards.dart';
 
+enum TypesOfValues {string, int}
+
+// CLASS CROW
 class Crow{
   int _stones = 0;
 
@@ -17,6 +20,7 @@ class Crow{
 
 }
 
+// CLASS GAME
 class Game{
   List<BountyCard> _bountyCards = [];
   List<GardenCard> _gardenCards = [];
@@ -42,6 +46,7 @@ class Game{
   int day = 1;
   final int maxDays = 3;
   int column = 1;
+  final maxColumns = 5;
 
   bool _usedCupOfTeaCard = false;
   bool get usedCupOfTeaCard => _usedCupOfTeaCard;
@@ -70,16 +75,7 @@ class Game{
       takeTurn();
     }
   }
-  // END OF GAME
-  void gameOver(){
-    printGameboard();
-    printMessage('**************** GAME OVER ****************');
-    _isGameOver = true;
-    obtainFinalScore();
-    printMessage('--> FINAL SCORE: $finalScore');
-    printMessage('--> Your Mood: "${obtainScoringMood()}"');
-  }
-
+  
   // SET GAME'S LISTS OF CARDS FROM THERE TO PICK
   void setGardenCards(List<GardenCard> cards){
     _gardenCards = cards.toList();
@@ -93,11 +89,7 @@ class Game{
   void setBountyCards(List<BountyCard> cards){
     _bountyCards = cards.toList();
   }
-  void setDeck(List<Card> cards){
-    // This method is for test only
-    _deck = cards.toList();
-  }
-
+ 
   // DAYS
   void generateDay() {
     generateGardenRows();
@@ -108,7 +100,7 @@ class Game{
     for (var element in _bountyCards) {
       element.checkIfCompleated(myDeck, day);
     }
-    if (crow.howManyStonesHas() >= 4){
+    if (crowHasEnoughStonesToTakeACard()){
       crowActionAtEndOfDay();
     }
     day++;
@@ -119,6 +111,7 @@ class Game{
     }
     generateDay();
   }
+
   
   // GENERATE ROWS 
   List<BountyCard> obtainThreeBountyCards() {
@@ -134,13 +127,12 @@ class Game{
     row2 = drawGardenCards(5).toList();
   }
   void setCardsOfGardenRows(){
-
     row1[1].turnCard();
     row1[3].turnCard();
 
-    row2[0].hasStone = true; row2[0].setStonesInSpace(1);
-    row2[2].hasStone = true; row2[2].setStonesInSpace(1);
-    row2[4].hasStone = true; row2[4].setStonesInSpace(1);
+    row2[0].setStonesInSpace(1);
+    row2[2].setStonesInSpace(1);
+    row2[4].setStonesInSpace(1);
   }
   void generateDesireRow() {
     row3 = drawDesireCards(5).toList();
@@ -175,10 +167,8 @@ class Game{
     return tempCards;
   }
   CrowCard drawCrowCard() {
-    if (_crowCards.isEmpty){
-      _crowCards = shuffleCrowCards(ListsOfCards().crowCards.toList()).toList();
-    }
-
+    if (_crowCards.isEmpty) _crowCards = shuffleCrowCards(ListsOfCards().crowCards.toList()).toList();
+    
     CrowCard card = _crowCards.elementAt(_crowCards.length-1);
     _crowCards.removeAt(_crowCards.length-1);
     return card;
@@ -187,21 +177,25 @@ class Game{
   // TURNS
   void takeTurn(){
     printMessage('Which card shall thou take?');
-    String response = obtainResponse('Int');
-    int numericResponse = int.parse(response);
+    List<String> validAnswers = fillListOfNumbers(1, 3);
+    int numericResponse = obtainSpecificNumericResponse(validAnswers);
     takeCard(numericResponse);
+    endOfTurn();
+  }
+  void endOfTurn(){
+    nextColumn();
+    if (column <= maxColumns) {
+      cupOfTeaOrCrow();
+    }
+    if (column > maxColumns) endOfDay(_deck);
   }
   void nextColumn(){
     column++;
-    if (column <= 5) {
-      cupOfTeaOrCrow();
-    }
-    if (column > 5) endOfDay(_deck);
   }
   void cupOfTeaOrCrow(){
     if (!_usedCupOfTeaCard){
       printMessage('Do you want to use Cup of Tea? Y/N');
-      String response = obtainResponse('String').toUpperCase();
+      String response = obtainResponse().toUpperCase();
       if (response == 'Y'){
         useCupOfTea();
         return;
@@ -220,12 +214,11 @@ class Game{
               }
               if (card.isThere){
                 _deck.add(card);
-                card.setIsThere(false); // probar si funciona esto, sino reemplazar por "row1.elementAt(column-1)._isThere = false"
+                card.setIsThere(false); // si NO funciona esto, reemplazar por "row1.elementAt(column-1)._isThere = false"
               }
               if (card.hasStone) {
                 _stones += card.stonesInSpace;
                 card.setStonesInSpace(0);
-                card.hasStone = false;
               }
         break;
       case 2: GardenCard card = row2.elementAt(column-1);
@@ -239,7 +232,6 @@ class Game{
               if (card.hasStone) {
                 _stones += card.stonesInSpace;
                 card.setStonesInSpace(0);
-                card.hasStone = false;
               }
         break;
       case 3: DesireCard card = row3.elementAt(column-1);
@@ -253,11 +245,9 @@ class Game{
               if (card.hasStone) {
                 _stones += card.stonesInSpace;
                 card.setStonesInSpace(0);
-                card.hasStone = false;
               }
         break;
     }
-    nextColumn();
 
   }
   void useCupOfTea(){
@@ -274,15 +264,12 @@ class Game{
       case CrowReplacements.stone:
         switch (crowC.replaceRowAt){
           case 1: row1.elementAt(column-1).setIsThere(false);
-                  row1.elementAt(column-1).hasStone = true;
                   row1.elementAt(column-1).setStonesInSpace(crowC.numberOfStones);
             break;
           case 2: row2.elementAt(column-1).setIsThere(false);
-                  row2.elementAt(column-1).hasStone = true;
                   row2.elementAt(column-1).setStonesInSpace(crowC.numberOfStones);
             break;
           case 3: row3.elementAt(column-1).setIsThere(false);
-                  row3.elementAt(column-1).hasStone = true;
                   row3.elementAt(column-1).setStonesInSpace(crowC.numberOfStones);
             break;
         }
@@ -303,6 +290,24 @@ class Game{
         break;
     }
   }
+  void crowActionAtEndOfDay(){
+    print('Do you want to pay stones to crow? Y/N');
+    String? response = stdin.readLineSync();
+    response ??= 'N';
+    response = response.toUpperCase();
+    if (response == 'Y') getStonesToPayCrow();
+    if (crow._stones >= 4) obtainCardToSteal();
+  }
+  void getStonesToPayCrow(){
+    printMessage('How many stones shall thou pay?');
+    List<String> validAnswers = fillListOfNumbers(0, _stones);
+    int numericResponse = obtainSpecificNumericResponse(validAnswers);
+    payToCrow(numericResponse);
+  }
+  void payToCrow(int stones){
+    crow.subtractStones(stones);
+    _stones -= stones;
+  }
   void obtainCardToSteal(){ 
     List<GardenCard> tempList = [];
     for (var element in _deck) {
@@ -317,54 +322,30 @@ class Game{
     printMessage('You have to pay to the crow a card from the following list:');
     Gameboard t = Gameboard(this);
     print(t.createDeckRow(tempList));
-    String positionOfCard = obtainResponse('Int');
-    int posOfCard = int.parse(positionOfCard);
-    if (posOfCard > tempList.length) posOfCard = 1;
 
-    crowTakesCard(tempList.elementAt(posOfCard-1));
-    //_deck.remove(tempList.elementAt(posOfCard-1));
-    //crowTakesCardAtPosition(posOfCard);
-  }
-  void crowTakesCardAtPosition(int positionOfCard){
-    _deck.removeAt(positionOfCard-1);
+    List<String> validAnswers = fillListOfNumbers(1, tempList.length);
+    int numericResponse = obtainSpecificNumericResponse(validAnswers);
+
+    crowTakesCard(tempList.elementAt(numericResponse-1));
   }
   void crowTakesCard(Card card){
     _deck.remove(card);
-  }
-  void payToCrow(int stones){
-    crow.subtractStones(stones);
-    _stones -= stones;
-  }
-  void crowActionAtEndOfDay(){
-    print('Do you want to pay stones to crow? Y/N');
-    String? response = stdin.readLineSync();
-    response ??= 'N';
-    response = response.toUpperCase();
-    if (response == 'Y'){
-      getStonesToPayCrow();
-    }
-    if (crow._stones >= 4){
-      obtainCardToSteal();
-    }
-    
-  }
-  void getStonesToPayCrow(){
-    printMessage('How many stones shall thou pay?');
-    int stones = 0;
-    String? response = stdin.readLineSync();
-    response ??= '0';
-    stones = int.parse(response);
-    if (stones > _stones){
-      stones = 0;
-    }
-
-    payToCrow(stones);
   }
 
   // SHOW GRAPHIC GAMEBOARD
   void printGameboard(){
     Gameboard t = Gameboard(this);
     t.printBoard();
+  }
+
+// END OF GAME
+  void gameOver(){
+    printGameboard();
+    printMessage('**************** GAME OVER ****************');
+    _isGameOver = true;
+    obtainFinalScore();
+    printMessage('--> FINAL SCORE: $finalScore');
+    printMessage('--> Your Mood: "${obtainScoringMood()}"');
   }
 
   // OBTAIN SCORE
@@ -413,7 +394,7 @@ class Game{
   }
   String obtainScoringMood(){
     if (_finalScore < 21) return 'Anxious';
-    if (_finalScore>= 21 && _finalScore <= 26) return 'Chill';
+    if (_finalScore >= 21 && _finalScore <= 26) return 'Chill';
     if (_finalScore >= 27 && _finalScore <= 32) return 'Cool as a Cucumber';
     if (_finalScore >= 33 && _finalScore <= 38) return 'Really Relaxed';
     if (_finalScore >= 39 && _finalScore <= 44) return 'Utter Zen';
@@ -424,20 +405,44 @@ class Game{
   void printMessage(String message){
     print(message);
   }
-  String obtainResponse(String typeOfValue){
+  String obtainResponse(){
     String? response = stdin.readLineSync();
-    String nullResponse = 'N';
-    if (typeOfValue == 'Int') nullResponse = '1';
-    response ??= nullResponse;
+    response ??= 'N';
     return response;
   }
-
+  List<String> fillListOfNumbers(int minNumber, int maxNumber){
+    List<String> myList = [];
+    for (var i = minNumber; i <= maxNumber; i++) {
+      myList.add(i.toString());
+    }
+    return myList;
+  }
+  int obtainSpecificNumericResponse(List<String> validAnswers) {
+    int numericResponse = 1;
+    do{
+      String response = obtainResponse();
+      if (validAnswers.contains(response)) {
+        numericResponse = int.parse(response);
+        break;
+      }
+      printMessage("The answer must be in the range from ${validAnswers[0]}-${validAnswers[validAnswers.length-1]}!");
+    } while(true);
+    return numericResponse;
+  }
+  bool crowHasEnoughStonesToTakeACard() => crow.howManyStonesHas() >= 4;
+  
   // ONLY FOR TESTS
   void setStones(int stones){
     // This is for tests only
     _stones = stones;
   }
-  
+  void setDeck(List<Card> cards){
+    // This method is for test only
+    _deck = cards.toList();
+  }
+  void crowTakesCardAtPosition(int positionOfCard){
+    _deck.removeAt(positionOfCard-1);
+  }
 }
 
 

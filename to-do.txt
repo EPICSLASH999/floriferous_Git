@@ -7,20 +7,5 @@ Floriferous
     Bug: al imprimir ese tablero de test, las piedras y el UpDown se posicionan casi al azar.
 
 
-TESTS
-- Crow no toma desire cards
-- Al final se hace la sumatoria de puntos
-
- -- YA PARA JUGAR --
-En game.crowStealsCard();
-//String? positionOfCard = stdin.readLineSync();
-
-
 -TO - DO 
-    -TypeOfValue {string, int}
-    -Mejor ciclo para elegir carta "numero"
-    -Si se da enter al ingresar numero da error.
-
     -Cambiar Bugs.none a null
-    -Primero checar bounty cards y luego pagar al cuervo
-    -Olores de código
