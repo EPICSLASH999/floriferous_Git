@@ -1,4 +1,5 @@
 import 'package:chalkdart/chalk.dart';
+import 'package:chalkdart/chalk_x11.dart';
 import 'package:floriferous/cards.dart';
 import 'package:floriferous/floriferous.dart';
 
@@ -15,7 +16,9 @@ class Gameboard {
 
   
   void printBoard(){
-    print(chalk.yellow.onBlue('Hello world!'));
+    //print(chalk.yellow('Hello world!'));
+    //String yel = chalk.yellow('Yellow');
+    //print(yel);
 
     printBountyCardsZone();
     if (game.day <= game.maxDays) print('DAY: ${game.day}');
@@ -87,7 +90,7 @@ class Gameboard {
     List<String> line = [];
     for (var element in row2) {
       String l = obtainValuesOfCardToPrintInGameboard(element);
-      line.add(normalizeSpacevalue(l));
+      line.add(normalizeSpaceValue(l));
     }
     return line;
   }
@@ -99,7 +102,7 @@ class Gameboard {
     List<String> line = [];
     for (var element in row2) {
       String l = obtainValuesOfCardToPrintInGameboard(element);
-      line.add(normalizeSpacevalue(l));
+      line.add(normalizeSpaceValue(l));
     }
     return line;
   }
@@ -122,7 +125,7 @@ class Gameboard {
     for (int i = 0; i < row.length; i++) { 
       String l = '';
       if (i == (game.obtainColumn()-1)) l = '           #';
-      l = normalizeSpacevalue(l);
+      l = normalizeSpaceValue(l);
       list.add(l);
     }
     return list;
@@ -151,13 +154,15 @@ class Gameboard {
         if (!card.isThere) l = isNotThereCard;
         if (card.hasStone){
           String stones = stone * card.stonesInSpace;
-          l += '($stones)';
+          l += ' ($stones)';
         }
       break;
       default: card = card as GardenCard;
         String typeOfCard = card.typeOfCard.toString().split('.').last.substring(0, 1).toUpperCase();
         String flower = card.flower.toString().split('.').last;
-        String color = '/${card.color.toString().split('.').last}';
+        String c1 = card.color.toString().split('.').last;
+        String c2 = colorValue(card.color);
+        String color = '/$c2';
         String bug = card.bug.toString().split('.').last;
         bug = (bug == Bugs.none.toString().split('.').last)? '' : '/$bug';
 
@@ -166,7 +171,7 @@ class Gameboard {
         if (!card.isThere) l = isNotThereCard;
         if (card.hasStone){
           String stones = stone * card.stonesInSpace;
-          l += '($stones)';
+          l += ' ($stones)';
         }
       break;
     }
@@ -198,14 +203,28 @@ class Gameboard {
     return l;
   }
   
-  String normalizeSpacevalue(String value){
+  String normalizeSpaceValue(String value){
     String header = 'L:';
     String largestFlower = Flowers.daisy.toString().split('.').last;
     String largestColor = Colors.orange.toString().split('.').last;
     String largestBug = Bugs.butterfly.toString().split('.').last;
-    int largestSize = ('$header:$largestFlower/$largestColor/$largestBug(**)').length;
+    int largestSize = ('$header:$largestFlower/$largestColor/$largestBug (**)').length;
 
-    int leftSpace = largestSize - value.length;
+    
+    int diff = 0;
+    if (value.contains(':')){
+      List<String> l = value.split('/');
+      String c = l[1];
+      l = c.split(' ');
+      c = l[0];
+       diff = obtainDifferenceOfBeingColored(c);
+       //print(diff);
+    }
+    //int difference = obtainDifferenceOfBeingColored(l[1]);
+
+    
+    //diff = obtainDifferenceOfBeingColored()
+    int leftSpace = largestSize - value.length + diff;
     if (leftSpace < 0 ) leftSpace = 0;
     String extraSpace = ' ' * leftSpace;
 
@@ -219,4 +238,33 @@ class Gameboard {
     }
     print(line);
   }
+
+  String colorValue(Enum color){
+    String coloredResponse = '';
+    switch(color){
+      case Colors.yellow: coloredResponse = chalk.yellow(color.toString().split('.').last);
+        break;
+      case Colors.orange: coloredResponse = chalk.orange(color.toString().split('.').last);
+        break;
+      case Colors.pink: coloredResponse = chalk.pink(color.toString().split('.').last);
+        break;
+      case Colors.purple: coloredResponse = chalk.purple(color.toString().split('.').last);
+        break;
+      case Colors.white: coloredResponse = chalk.wheat(color.toString().split('.').last);
+        break;
+    }
+    //print('$coloredResponse / ${coloredResponse.length}');
+    return coloredResponse;
+  }
+  int obtainDifferenceOfBeingColored(String color){
+    //print(chalk.reset(color));
+    int diff = 0;
+    if (color == chalk.yellow('yellow')) diff = 16 - 'yellow'.length;
+    if (color == chalk.orange('orange')) diff = 28 - 'orange'.length;
+    if (color == chalk.purple('purple')) diff = 28 - 'purple'.length;
+    if (color == chalk.wheat('white')) diff = 29 - 'white'.length;
+    if (color == chalk.pink('pink')) diff = 28 - 'pink'.length;
+    return diff;
+  }
+
 }
