@@ -10,6 +10,7 @@ Floriferous
 -TO - DO 
     -Cambiar Bugs.none a null
 
+    -State range of responses from start
     -Colores a Colors.values al imprimir.
-    -Rellenar con " ".
+    -Make .exe
     

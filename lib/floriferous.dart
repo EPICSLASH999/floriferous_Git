@@ -118,7 +118,6 @@ class Game{
     generateDay();
   }
 
-  
   // GENERATE ROWS 
   List<BountyCard> obtainThreeBountyCards() {
     List<BountyCard> shuffledBCards = shuffleBountyCards(ListsOfCards().bountyCards.toList()).toList();
@@ -330,7 +329,7 @@ class Game{
     }
     printMessage('You have to pay to the crow a card from the following list:');
     Gameboard t = Gameboard(this);
-    print(t.createDeckRow(tempList));
+    print(t.createRowToGiveToCrowACard(tempList));
 
     List<String> validAnswers = fillListOfNumbers(1, tempList.length);
     int numericResponse = obtainSpecificNumericResponse(validAnswers);
@@ -444,7 +443,13 @@ class Game{
     } while(true);
     return numericResponse;
   }
-  
+  int obtainColumn(){
+    List<int> vals = [5,4,3,2,1];
+    int col = column;
+    if (day % 2 == 0) col = vals[column-1];
+    return col;
+  }
+
   // ONLY FOR TESTS
   void setStones(int stones){
     // This is for tests only

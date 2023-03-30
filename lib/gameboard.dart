@@ -16,23 +16,18 @@ class Gameboard {
   void printBoard(){
     printBountyCardsZone();
     if (game.day <= game.maxDays) print('DAY: ${game.day}');
-    print('----------------------------------------------------');
-    print('| Upside Down Card   |   Empty Slot    |   Stones  |');
-    print('|        //          |       ---       |     (*)   |');
-    print('----------------------------------------------------');
+    if (game.day <= game.maxDays) printSymbology();
     print('');
+    printHeaderRow();
     printGardenCardsZone();
-    print('');
     printDesireCardsZone();
+    printHeaderRow();
     print('');
     print('Stones: ${game.stones}');
     //print('Stones (Crow): ${game.crow.stones}');
     print('UsedTeaCard: ${game.usedCupOfTeaCard}');
     print('');
-    List<int> vals = [5,4,3,2,1];
-    int colToPrint = game.column;
-    if (game.day % 2 == 0) colToPrint = vals[game.column-1];
-    if (game.day <= game.maxDays) print('Column: $colToPrint');
+    if (game.day <= game.maxDays) print('Column: ${game.obtainColumn()}');
     print('------------------------------- MY DECK -------------------------------');
     printDeckCardsZone();
     print('-----------------------------------------------------------------------');
@@ -46,8 +41,9 @@ class Gameboard {
       String req1 = game.bountyCards.elementAt(i).requirement1.name.toUpperCase();
       String req2 = game.bountyCards.elementAt(i).requirement2.name.toUpperCase();
       String req3 = game.bountyCards.elementAt(i).requirement3.name.toUpperCase();
-      String bountyWasCompleatedAtDay = game.bountyCards.elementAt(i).wasCompleatedAtDay.toString();
-      message += '$req1 $req2 $req3 (Day:$bountyWasCompleatedAtDay) ||';
+      String bountyWasCompleatedAtDay = '(Day:${game.bountyCards.elementAt(i).wasCompleatedAtDay.toString()})';
+      if (game.bountyCards.elementAt(i).wasCompleatedAtDay == 0) bountyWasCompleatedAtDay = '';
+      message += '$req1 $req2 $req3 $bountyWasCompleatedAtDay ||';
     }
     String title = ' BOUNTY CARDS ';
     String line1 = '-' * ((message.length~/2) - title.length~/2);
@@ -61,14 +57,23 @@ class Gameboard {
     List<GardenCard> row1 = game.row1;
     List<GardenCard> row2 = game.row2;
 
-    print(createGardenRow(row1));
-    print(createGardenRow(row2));
+    printNormalizedRow(createGardenRow(row1), '|');
+    printNormalizedRow(createGardenRow(row2), '|');
   }
   void printDesireCardsZone(){
-    print(createDesireRow(game.row3));
+    printNormalizedRow(createDesireRow(game.row3), '|');
   }
   void printDeckCardsZone(){
     print(createDeckRow(game.deck));
+  }
+  void printHeaderRow(){
+    printNormalizedRow(createHeaderRow(game.row1), '');
+  }
+  void printSymbology(){
+    print('----------------------------------------------------');
+    print('| Upside Down Card   |   Empty Slot    |   Stones  |');
+    print('|        //          |       ---       |     (*)   |');
+    print('----------------------------------------------------');
   }
 
   List<String> createGardenRow(List<GardenCard> row){
@@ -78,7 +83,8 @@ class Gameboard {
 
     List<String> line = [];
     for (var element in row2) {
-      line.add(obtainValuesOfCardToPrintInGameboard(element));
+      String l = obtainValuesOfCardToPrintInGameboard(element);
+      line.add(normalizeSpacevalue(l));
     }
     return line;
   }
@@ -89,7 +95,8 @@ class Gameboard {
 
     List<String> line = [];
     for (var element in row2) {
-      line.add(obtainValuesOfCardToPrintInGameboard(element));
+      String l = obtainValuesOfCardToPrintInGameboard(element);
+      line.add(normalizeSpacevalue(l));
     }
     return line;
   }
@@ -103,9 +110,19 @@ class Gameboard {
   List<String> createRowToGiveToCrowACard(List<Card> row){
     List<String> line = [];
     for (int i = 0; i < row.length; i++) {
-      line.add('${obtainValuesOfCardToPrint(row[i])}($i)');
+      line.add('${obtainValuesOfCardToPrint(row[i])}(${i+1})');
     }
     return line;
+  }
+  List<String> createHeaderRow(List row){
+    List<String> list = [];
+    for (int i = 0; i < row.length; i++) { 
+      String l = '';
+      if (i == (game.obtainColumn()-1)) l = '           #';
+      l = normalizeSpacevalue(l);
+      list.add(l);
+    }
+    return list;
   }
 
   List<Card> flipOrderOfCards(List<Card> originalCards){
@@ -120,12 +137,13 @@ class Gameboard {
     String l = '';
     switch(card.typeOfCard){
       case TypesOfCards.desire: card = card as DesireCard;
-        String points = card.points.toString();
+        String points = card.points.toString().replaceAll(' ', '');
         String typeOfDesire = card.typeOfDesire.toString().split('.').last;
-        String requirement = card.requirement.toString();
+        String requirement = '/${card.requirement.toString()}';
         if (typeOfDesire != TypesOfDesire.simple.toString().split('.').last) requirement = requirement.split('.').first;
-        
-        l ='$points/$typeOfDesire/$requirement';
+        typeOfDesire = (typeOfDesire == TypesOfDesire.simple.toString().split('.').last)? '' : '/$typeOfDesire';
+
+        l ='$points$typeOfDesire$requirement';
         if (card.isUpsidedown) l = upsideDownCard;
         if (!card.isThere) l = isNotThereCard;
         if (card.hasStone){
@@ -136,11 +154,11 @@ class Gameboard {
       default: card = card as GardenCard;
         String typeOfCard = card.typeOfCard.toString().split('.').last.substring(0, 1).toUpperCase();
         String flower = card.flower.toString().split('.').last;
-        String color = card.color.toString().split('.').last;
+        String color = '/${card.color.toString().split('.').last}';
         String bug = card.bug.toString().split('.').last;
-        if (bug == Bugs.none.toString().split('.').last) bug = '';
+        bug = (bug == Bugs.none.toString().split('.').last)? '' : '/$bug';
 
-        l = '$typeOfCard:$flower/$color/$bug';
+        l = '$typeOfCard:$flower$color$bug';
         if (card.isUpsidedown) l = upsideDownCard;
         if (!card.isThere) l = isNotThereCard;
         if (card.hasStone){
@@ -177,4 +195,25 @@ class Gameboard {
     return l;
   }
   
+  String normalizeSpacevalue(String value){
+    String header = 'L:';
+    String largestFlower = Flowers.daisy.toString().split('.').last;
+    String largestColor = Colors.orange.toString().split('.').last;
+    String largestBug = Bugs.butterfly.toString().split('.').last;
+    int largestSize = ('$header:$largestFlower/$largestColor/$largestBug(**)').length;
+
+    int leftSpace = largestSize - value.length;
+    if (leftSpace < 0 ) leftSpace = 0;
+    String extraSpace = ' ' * leftSpace;
+
+    return (value + extraSpace);
+  }
+
+  void printNormalizedRow(List<String> row, String separator){
+    String line = separator;
+    for (var element in row) {
+      line += ' $element $separator';
+    }
+    print(line);
+  }
 }
