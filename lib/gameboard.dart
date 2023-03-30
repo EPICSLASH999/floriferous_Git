@@ -72,17 +72,15 @@ class Gameboard {
   }
 
   List<String> createGardenRow(List<GardenCard> row){
-    List<GardenCard> row2 = row.toList();
+    List<Card> row2 = row.toList();
     if (game.day % 2 == 0) // This affects 'even numbers' such as 2,4,6...
     {
-      row2.clear();
-      for (int x = row.length-1; x > -1; x--) {
-        row2.add(row[x]);
-      } 
+      row2 = flipOrderOfCards(row.toList());
     }
 
     List<String> line = [];
     for (var element in row2) {
+      element = element as GardenCard;
       String typeOfCard = element.typeOfCard.toString().split('.').last.substring(0, 1).toUpperCase();
       String flower = element.flower.toString().split('.').last;
       String color = element.color.toString().split('.').last;
@@ -102,17 +100,15 @@ class Gameboard {
     return line;
   }
   List<String> createDesireRow(List<DesireCard> row){
-    List<DesireCard> row2 = row.toList();
+    List<Card> row2 = row.toList();
     if (game.day % 2 == 0) // This affects 'even numbers' such as 2,4,6...
     {
-      row2.clear();
-      for (int x = row.length-1; x > -1; x--) {
-        row2.add(row[x]);
-      } 
+      row2 = flipOrderOfCards(row.toList());
     }
 
     List<String> line = [];
     for (var element in row2) {
+      element = element as DesireCard;
       String l = '';
       String points = element.points.toString();
       String typeOfDesire = element.typeOfDesire.toString().split('.').last;
@@ -133,33 +129,40 @@ class Gameboard {
   List<String> createDeckRow(List<Card> row){
     List<String> line = [];
     for (var element in row) {
-      if (element.typeOfCard != TypesOfCards.desire){
-        element = element as GardenCard;
+      switch (element.typeOfCard){
+        case TypesOfCards.desire: element = element as DesireCard;
+            String l = '';
+            String typeOfCard = element.typeOfCard.toString().split('.').last.substring(0, 1).toUpperCase();
+            String points = element.points.toString();
+            String typeOfDesire = element.typeOfDesire.toString().split('.').last;
+            String requirement = element.requirement.toString();
+            if (typeOfDesire != TypesOfDesire.simple.toString().split('.').last) requirement = requirement.split('.').first;
+            
+            l ='$typeOfCard:$points/$typeOfDesire/$requirement';
+            line.add(l);
+          break;
+        default: element = element as GardenCard;
+            String typeOfCard = element.typeOfCard.toString().split('.').last.substring(0, 1).toUpperCase();
+            String flower = element.flower.toString().split('.').last;
+            String color = element.color.toString().split('.').last;
+            String bug = element.bug.toString().split('.').last;
+            if (bug == Bugs.none.toString().split('.').last) bug = '';
 
-        String typeOfCard = element.typeOfCard.toString().split('.').last.substring(0, 1).toUpperCase();
-        String flower = element.flower.toString().split('.').last;
-        String color = element.color.toString().split('.').last;
-        String bug = element.bug.toString().split('.').last;
-        if (bug == Bugs.none.toString().split('.').last) bug = '';
-
-        String l = '$typeOfCard:$flower/$color/$bug';
-        line.add(l);
-      }
-      if (element.typeOfCard == TypesOfCards.desire){
-        element = element as DesireCard;
-
-        String l = '';
-        String typeOfCard = element.typeOfCard.toString().split('.').last.substring(0, 1).toUpperCase();
-        String points = element.points.toString();
-        String typeOfDesire = element.typeOfDesire.toString().split('.').last;
-        String requirement = element.requirement.toString();
-        if (typeOfDesire != TypesOfDesire.simple.toString().split('.').last) requirement = requirement.split('.').first;
-        
-        l ='$typeOfCard:$points/$typeOfDesire/$requirement';
-        line.add(l);
+            String l = '$typeOfCard:$flower/$color/$bug';
+            line.add(l);
+          break;
       }
     }
     return line;
   }
+
+  List<Card> flipOrderOfCards(List<Card> originalCards){
+    List<Card> newCards = [];
+    for (int x = originalCards.length-1; x > -1; x--) {
+      newCards.add(originalCards[x]);
+    } 
+    return newCards;
+  }
+
 
 }

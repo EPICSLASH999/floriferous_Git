@@ -432,10 +432,12 @@ class Game{
     return response;
   }
 
+  // ONLY FOR TESTS
   void setStones(int stones){
     // This is for tests only
     _stones = stones;
   }
+  
 }
 
 
