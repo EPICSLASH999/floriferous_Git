@@ -16,6 +16,10 @@ class Gameboard {
   void printBoard(){
     printBountyCardsZone();
     if (game.day <= game.maxDays) print('DAY: ${game.day}');
+    print('----------------------------------------------------');
+    print('| Upside Down Card   |   Empty Slot    |   Stones  |');
+    print('|        //          |       ---       |     (*)   |');
+    print('----------------------------------------------------');
     print('');
     printGardenCardsZone();
     print('');
@@ -37,13 +41,15 @@ class Gameboard {
   }
 
   void printBountyCardsZone(){
-    // ignore: prefer_interpolation_to_compose_strings
-    String message = ('|| ${game.bountyCards.elementAt(0).requirement1.name} ${game.bountyCards.elementAt(0).requirement2.name} ${game.bountyCards.elementAt(0).requirement3.name} (${game.bountyCards.elementAt(0).wasCompleatedAtDay}) || '+
-          ' ${game.bountyCards.elementAt(1).requirement1.name} ${game.bountyCards.elementAt(1).requirement2.name} ${game.bountyCards.elementAt(1).requirement3.name} (${game.bountyCards.elementAt(1).wasCompleatedAtDay})' +
-         ' || ${game.bountyCards.elementAt(2).requirement1.name} ${game.bountyCards.elementAt(2).requirement2.name} ${game.bountyCards.elementAt(2).requirement3.name} (${game.bountyCards.elementAt(2).wasCompleatedAtDay}) ||');
-
+    String message = '|| ';
+    for (var i = 0; i < game.bountyCards.length; i++) {
+      String req1 = game.bountyCards.elementAt(i).requirement1.name.toUpperCase();
+      String req2 = game.bountyCards.elementAt(i).requirement2.name.toUpperCase();
+      String req3 = game.bountyCards.elementAt(i).requirement3.name.toUpperCase();
+      String bountyWasCompleatedAtDay = game.bountyCards.elementAt(i).wasCompleatedAtDay.toString();
+      message += '$req1 $req2 $req3 (Day:$bountyWasCompleatedAtDay) ||';
+    }
     String title = ' BOUNTY CARDS ';
-
     String line1 = '-' * ((message.length~/2) - title.length~/2);
     String line2 = '-' * (message.length);
     

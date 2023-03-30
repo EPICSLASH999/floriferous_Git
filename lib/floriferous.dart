@@ -77,7 +77,7 @@ class Game{
     _isGameOver = true;
     obtainFinalScore();
     printMessage('--> FINAL SCORE: $finalScore');
-    printMessage('--> Your Mood: ${obtainScoringMood()}');
+    printMessage('--> Your Mood: "${obtainScoringMood()}"');
   }
 
   // SET GAME'S LISTS OF CARDS FROM THERE TO PICK
@@ -113,7 +113,7 @@ class Game{
     }
     day++;
     column = 1;
-    if (day > 3) {
+    if (day > maxDays) {
       gameOver();
       return;
     }
@@ -403,7 +403,8 @@ class Game{
   int obtainBountyCardsScore() {
     int score = 0;
     for (var element in _bountyCards) {
-      score += element.obtainScore();
+      int s = element.obtainScore();
+      score += s;
     }
     return score;
   }
