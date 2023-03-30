@@ -37,23 +37,14 @@ void main() {
     test('Primera carta de nueva lista de bounties es igual a index 0 de bountyCards', () {
       List<BountyCard> bounties = bountyCards.toList();
       BountyCard bCard = bounties.elementAt(0);
-      //print(bCard);
       expect(bCard, equals(bountyCards.elementAt(0)));
     });
     test('Bounties barajeadas no es igual a lista original', () {
       List<BountyCard> randomBounties = shuffleBountyCards(bountyCards.toList());
-
-      //print(randomBounties.elementAt(0));
-      //print(bountyCards.elementAt(0));
-
       expect(randomBounties.equals(bountyCards), equals(false));
     });
     test('GardenCards barajeadas no es igual a lista original', () {
       List<GardenCard> randomCards = shuffleGardenCards(gardenCards.toList());
-
-      //print(randomCards.elementAt(0));
-      //print(gardenCards.elementAt(0));
-
       expect(randomCards.equals(gardenCards), equals(false));
     });  
     test('DesireCards son 21', () {
@@ -68,8 +59,6 @@ void main() {
     });    
     test('CrowCards barajeadas no es igual a lista original', () {
       List<CrowCard> cards = shuffleCrowCards(crowCards.toList());
-      //print(cards.elementAt(0));
-      //print(crowCards.elementAt(0));
       expect(cards.equals(crowCards), equals(false));
     });
     
@@ -437,9 +426,7 @@ void main() {
         FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.white, bicho: Bugs.bee),
       ];
       BountyCard bountyC = BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Bugs.ladybug, requerimiento3: Bugs.butterfly);
-      //BountyCard bountyC = BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Flowers.tulip, requerimiento3: Flowers.daisy);
       bountyC.checkIfCompleated(miDeck, 0);
-      
       expect(bountyC.obtainScore(), equals(0));
     });
     test('Puntaje de bountycard en dia 1 es 5', () {
@@ -450,9 +437,7 @@ void main() {
         FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.white, bicho: Bugs.bee),
       ];
       BountyCard bountyC = BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Bugs.ladybug, requerimiento3: Bugs.butterfly);
-      //BountyCard bountyC = BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Flowers.tulip, requerimiento3: Flowers.daisy);
       bountyC.checkIfCompleated(miDeck, 1);
-      
       expect(bountyC.obtainScore(), equals(5));
     });
     test('Puntaje de bountycard en dia 2 es 3', () {
@@ -463,9 +448,7 @@ void main() {
         FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.white, bicho: Bugs.bee),
       ];
       BountyCard bountyC = BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Bugs.ladybug, requerimiento3: Bugs.butterfly);
-      //BountyCard bountyC = BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Flowers.tulip, requerimiento3: Flowers.daisy);
       bountyC.checkIfCompleated(miDeck, 2);
-      
       expect(bountyC.obtainScore(), equals(3));
     });
     test('Puntaje de bountycard en dia 3 es 2', () {
@@ -476,15 +459,11 @@ void main() {
         FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.white, bicho: Bugs.bee),
       ];
       BountyCard bountyC = BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Bugs.ladybug, requerimiento3: Bugs.butterfly);
-      //BountyCard bountyC = BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Flowers.tulip, requerimiento3: Flowers.daisy);
       bountyC.checkIfCompleated(miDeck, 3);
-      
       expect(bountyC.obtainScore(), equals(2));
     });
 
 
   });
   
-
-
 }

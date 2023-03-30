@@ -18,7 +18,6 @@ En game.crowStealsCard();
 
 -TO - DO 
     
-    -Separar imprimirTablero a funcion
     -Flower a F al imprimir tablero
     -Glosario para "//" --> Upside Down
     -Imprimir la accion del cuervo
