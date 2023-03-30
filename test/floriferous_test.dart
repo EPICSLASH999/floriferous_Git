@@ -119,8 +119,6 @@ void main() {
       expect(game.row3.elementAt(0).isUpsidedown, equals(true));
     });
   });
-  
-  
   group('Final de dia: ', () {
     test('Al terminar el dia es "Dia 2"', () {
       Game game = Game();

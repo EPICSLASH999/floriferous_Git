@@ -270,8 +270,7 @@ class BountyCard extends Equatable{
   late final Enum requirement2;
   late final Enum requirement3;
 
-  bool _isCompleated = false;
-  bool get isCompleated  => _isCompleated;
+  bool get isCompleated  => !(_wasCompleatedAtDay == 0);
 
   int _wasCompleatedAtDay = 0;
   int get wasCompleatedAtDay => _wasCompleatedAtDay;
@@ -286,22 +285,18 @@ class BountyCard extends Equatable{
 
   void checkIfCompleated(List<Card> deck, int day){
     if (isCompleated) return;
+    
     List<String> requirements = [requirement1.toString(),requirement2.toString(),requirement3.toString()];
     requirements.sort();
-    //print(requirements);
     int counter = 0;
     List<Card> tempCards = deck.toList();
-    //List requirementsList = [requirement1, requirement2, requirement3];
     Map map = {};
 
     for (var element in tempCards) {
       if (element.typeOfCard != TypesOfCards.flower) continue;
       element = element as FlowerCard;
-      //print(requirements[0]);
       if (requirements[0].split('.').first == 'Bugs'){
-        //print(element._bug.toString() == requirements[0]);
         if ((element._bug.toString() == requirements[0])){
-            
           if (!map.containsKey(element)) {
             map[element] = 1;
           } else {
@@ -325,14 +320,12 @@ class BountyCard extends Equatable{
       }
     }
     
-    //print(map);
     List sortedValues = map.values.toList()..sort();
     if (sortedValues.isNotEmpty) {
       int leastValuableValue = sortedValues.first;
       var key = map.keys.firstWhere((k)
             => map[k] == leastValuableValue, orElse: () => null);
       tempCards.remove(key);
-      //print(key);
       counter++;
       map = {};
     }
@@ -351,9 +344,7 @@ class BountyCard extends Equatable{
           if (requirements[2].split('.').first != 'Bugs'){
             if (requirements[2] == element._flower.toString()) map[element] += 1;
           }
-
         }
-       
       } else {
         if (element._flower.toString() == requirements[1]){
           if (!map.containsKey(element)) {
@@ -362,19 +353,15 @@ class BountyCard extends Equatable{
             map[element] += 1;
           }
         }
-        
       }
-        
     }
     
-    //print(map);
     sortedValues = map.values.toList()..sort();
     if (sortedValues.isNotEmpty) {
       int leastValuableValue = sortedValues.first;
       var key = map.keys.firstWhere((k)
             => map[k] == leastValuableValue, orElse: () => null);
       tempCards.remove(key);
-      //print(key);
       counter++;
       map = {};
     }
@@ -390,7 +377,6 @@ class BountyCard extends Equatable{
           } else {
             map[element] += 1;
           }
-
         }
        
       } else {
@@ -404,32 +390,24 @@ class BountyCard extends Equatable{
       }
     }
     
-    //print(map);
     sortedValues = map.values.toList()..sort();
     if (sortedValues.isNotEmpty) {
       int leastValuableValue = sortedValues.first;
       var key = map.keys.firstWhere((k)
             => map[k] == leastValuableValue, orElse: () => null);
       tempCards.remove(key);
-      //print(key);
       counter++;
       map = {};
     }
 
-
-
-
-    // Final piece of code "return"
+    // Final piece of code 
     if (counter == 3) {
-    _isCompleated = true;
-    compleatedAtDay(day);
+      compleatedAtDay(day);
     }
-      
   }
 
 
   void compleatedAtDay(int day){
-    _isCompleated = true;
     _wasCompleatedAtDay = day;
   }
 
@@ -458,11 +436,11 @@ class DesireCard extends Card{
     String type = typeOfDesire.toString().split('.').last;
     int score = 0;
     switch(type){
-      case 'simple': score += obtainSimpleScore(listOfCards);
+      case 'simple': score = obtainSimpleScore(listOfCards);
         break;
-      case 'same': score += obtainSameScore(listOfCards);
+      case 'same': score = obtainSameScore(listOfCards);
         break;
-      case 'different': score += obtainDifferentScore(listOfCards);
+      case 'different': score = obtainDifferentScore(listOfCards);
         break;
     }
     return score;
@@ -478,11 +456,7 @@ class DesireCard extends Card{
     int occurrences = maxOccurrence.values.first > occurrencesLimit? occurrencesLimit:maxOccurrence.values.first;
     if (occurrences <= 0) occurrences = 1;
 
-    //print(occurrences);
     int score = points[occurrences-1];
-    //print(maxOccurrence);
-    //print(maxOccurrence.keys.first);
-    //print(maxOccurrence.values.first);
     return score;
   }
   int obtainDifferentScore(List<Card> listOfCards){
@@ -560,7 +534,6 @@ class DesireCard extends Card{
     var map2 = {};
     map2[key] = popularValue;
 
-    //return key; //it was return Enum
     return map2;
   }
   int obtainDifferentOccurrences(List<Card> listOfCards){
@@ -624,7 +597,7 @@ class CrowCard extends Equatable{
 }
 
 
-// FUNCIONES
+// FUNCTIONS
 List<BountyCard> shuffleBountyCards(List<BountyCard> cards){
   cards.shuffle();
   return cards;

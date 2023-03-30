@@ -17,13 +17,15 @@ En game.crowStealsCard();
 
 
 -TO - DO 
-    -Pasar a clases
+    
     -Separar imprimirTablero a funcion
-
-    -Glosario para "//" --> Upside Down
-    -Mejor ciclo para elegir carta "numero"
-    -Cambiar Bugs.none a null
     -Flower a F al imprimir tablero
-    -Primero checar bounty cards y luego pagar al cuervo
+    -Glosario para "//" --> Upside Down
     -Imprimir la accion del cuervo
+
+    -Mejor ciclo para elegir carta "numero"
+    -Si se da enter al ingresar numero da error.
+
+    -Cambiar Bugs.none a null
+    -Primero checar bounty cards y luego pagar al cuervo
     -Olores de código
