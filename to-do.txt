@@ -9,3 +9,7 @@ Floriferous
 
 -TO - DO 
     -Cambiar Bugs.none a null
+
+    -Colores a Colors.values al imprimir.
+    -Rellenar con " ".
+    

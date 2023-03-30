@@ -433,7 +433,7 @@ void main() {
     test('Si cuervo tiene 4 o mas piedras se debe pagar carta', () {
       Game game = Game();
       game.crow.addStones(4);
-      expect(game.crowHasEnoughStonesToTakeACard(), equals(true));
+      expect(game.crow.crowHasEnoughStonesToTakeACard(), equals(true));
     });
     
     

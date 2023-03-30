@@ -26,7 +26,7 @@ class Gameboard {
     printDesireCardsZone();
     print('');
     print('Stones: ${game.stones}');
-    print('Stones (Crow): ${game.crow.howManyStonesHas()}');
+    //print('Stones (Crow): ${game.crow.stones}');
     print('UsedTeaCard: ${game.usedCupOfTeaCard}');
     print('');
     List<int> vals = [5,4,3,2,1];
@@ -74,84 +74,36 @@ class Gameboard {
   List<String> createGardenRow(List<GardenCard> row){
     List<Card> row2 = row.toList();
     if (game.day % 2 == 0) // This affects 'even numbers' such as 2,4,6...
-    {
-      row2 = flipOrderOfCards(row.toList());
-    }
+    {row2 = flipOrderOfCards(row.toList());}
 
     List<String> line = [];
     for (var element in row2) {
-      element = element as GardenCard;
-      String typeOfCard = element.typeOfCard.toString().split('.').last.substring(0, 1).toUpperCase();
-      String flower = element.flower.toString().split('.').last;
-      String color = element.color.toString().split('.').last;
-      String bug = element.bug.toString().split('.').last;
-      if (bug == Bugs.none.toString().split('.').last) bug = '';
-
-      String l = '$typeOfCard:$flower/$color/$bug';
-      if (element.isUpsidedown) l = upsideDownCard;
-      if (!element.isThere) l = isNotThereCard;
-      if (element.hasStone){
-        String stones = stone * element.stonesInSpace;
-         l += '($stones)';
-      }
-      line.add(l);
-      
+      line.add(obtainValuesOfCardToPrintInGameboard(element));
     }
     return line;
   }
   List<String> createDesireRow(List<DesireCard> row){
     List<Card> row2 = row.toList();
     if (game.day % 2 == 0) // This affects 'even numbers' such as 2,4,6...
-    {
-      row2 = flipOrderOfCards(row.toList());
-    }
+    {row2 = flipOrderOfCards(row.toList());}
 
     List<String> line = [];
     for (var element in row2) {
-      element = element as DesireCard;
-      String l = '';
-      String points = element.points.toString();
-      String typeOfDesire = element.typeOfDesire.toString().split('.').last;
-      String requirement = element.requirement.toString();
-      if (typeOfDesire != TypesOfDesire.simple.toString().split('.').last) requirement = requirement.split('.').first;
-      
-      l ='$points/$typeOfDesire/$requirement';
-      if (element.isUpsidedown) l = upsideDownCard;
-      if (!element.isThere) l = isNotThereCard;
-      if (element.hasStone){
-        String stones = stone * element.stonesInSpace;
-        l += '($stones)';
-      }
-      line.add(l);
+      line.add(obtainValuesOfCardToPrintInGameboard(element));
     }
     return line;
   }
   List<String> createDeckRow(List<Card> row){
     List<String> line = [];
     for (var element in row) {
-      switch (element.typeOfCard){
-        case TypesOfCards.desire: element = element as DesireCard;
-            String l = '';
-            String typeOfCard = element.typeOfCard.toString().split('.').last.substring(0, 1).toUpperCase();
-            String points = element.points.toString();
-            String typeOfDesire = element.typeOfDesire.toString().split('.').last;
-            String requirement = element.requirement.toString();
-            if (typeOfDesire != TypesOfDesire.simple.toString().split('.').last) requirement = requirement.split('.').first;
-            
-            l ='$typeOfCard:$points/$typeOfDesire/$requirement';
-            line.add(l);
-          break;
-        default: element = element as GardenCard;
-            String typeOfCard = element.typeOfCard.toString().split('.').last.substring(0, 1).toUpperCase();
-            String flower = element.flower.toString().split('.').last;
-            String color = element.color.toString().split('.').last;
-            String bug = element.bug.toString().split('.').last;
-            if (bug == Bugs.none.toString().split('.').last) bug = '';
-
-            String l = '$typeOfCard:$flower/$color/$bug';
-            line.add(l);
-          break;
-      }
+      line.add(obtainValuesOfCardToPrint(element));
+    }
+    return line;
+  }
+  List<String> createRowToGiveToCrowACard(List<Card> row){
+    List<String> line = [];
+    for (int i = 0; i < row.length; i++) {
+      line.add('${obtainValuesOfCardToPrint(row[i])}($i)');
     }
     return line;
   }
@@ -164,5 +116,65 @@ class Gameboard {
     return newCards;
   }
 
+  String obtainValuesOfCardToPrintInGameboard(Card card){
+    String l = '';
+    switch(card.typeOfCard){
+      case TypesOfCards.desire: card = card as DesireCard;
+        String points = card.points.toString();
+        String typeOfDesire = card.typeOfDesire.toString().split('.').last;
+        String requirement = card.requirement.toString();
+        if (typeOfDesire != TypesOfDesire.simple.toString().split('.').last) requirement = requirement.split('.').first;
+        
+        l ='$points/$typeOfDesire/$requirement';
+        if (card.isUpsidedown) l = upsideDownCard;
+        if (!card.isThere) l = isNotThereCard;
+        if (card.hasStone){
+          String stones = stone * card.stonesInSpace;
+          l += '($stones)';
+        }
+      break;
+      default: card = card as GardenCard;
+        String typeOfCard = card.typeOfCard.toString().split('.').last.substring(0, 1).toUpperCase();
+        String flower = card.flower.toString().split('.').last;
+        String color = card.color.toString().split('.').last;
+        String bug = card.bug.toString().split('.').last;
+        if (bug == Bugs.none.toString().split('.').last) bug = '';
 
+        l = '$typeOfCard:$flower/$color/$bug';
+        if (card.isUpsidedown) l = upsideDownCard;
+        if (!card.isThere) l = isNotThereCard;
+        if (card.hasStone){
+          String stones = stone * card.stonesInSpace;
+          l += '($stones)';
+        }
+      break;
+    }
+    return l;
+  }
+  String obtainValuesOfCardToPrint(Card card){
+    String l = '';
+    switch(card.typeOfCard){
+      case TypesOfCards.desire: card = card as DesireCard;
+
+        String typeOfCard = card.typeOfCard.toString().split('.').last.substring(0, 1).toUpperCase();
+        String points = card.points.toString();
+        String typeOfDesire = card.typeOfDesire.toString().split('.').last;
+        String requirement = card.requirement.toString();
+        if (typeOfDesire != TypesOfDesire.simple.toString().split('.').last) requirement = requirement.split('.').first;
+            
+        l ='$typeOfCard:$points/$typeOfDesire/$requirement';
+      break;
+      default: card = card as GardenCard;
+        String typeOfCard = card.typeOfCard.toString().split('.').last.substring(0, 1).toUpperCase();
+        String flower = card.flower.toString().split('.').last;
+        String color = card.color.toString().split('.').last;
+        String bug = card.bug.toString().split('.').last;
+        if (bug == Bugs.none.toString().split('.').last) bug = '';
+
+        l = '$typeOfCard:$flower/$color/$bug';
+      break;
+    }
+    return l;
+  }
+  
 }

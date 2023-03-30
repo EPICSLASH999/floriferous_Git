@@ -7,16 +7,20 @@ enum TypesOfValues {string, int}
 // CLASS CROW
 class Crow{
   int _stones = 0;
+  int get stones => _stones;
 
-  int howManyStonesHas(){
-    return _stones;
-  }
   void addStones(int s){
     _stones += s;
   }
   void subtractStones(int s){
     _stones -= s;
   }
+  void resetStones(){
+    _stones = 0;
+  }
+
+  bool crowHasEnoughStonesToTakeACard() => _stones >= 4;
+  
 
 }
 
@@ -100,7 +104,9 @@ class Game{
     for (var element in _bountyCards) {
       element.checkIfCompleated(myDeck, day);
     }
-    if (crowHasEnoughStonesToTakeACard()){
+    
+    printMessage('>>>Crow has ${crow.stones} stones.');
+    if (crow.crowHasEnoughStonesToTakeACard()){
       crowActionAtEndOfDay();
     }
     day++;
@@ -215,6 +221,7 @@ class Game{
               if (card.isThere){
                 _deck.add(card);
                 card.setIsThere(false); // si NO funciona esto, reemplazar por "row1.elementAt(column-1)._isThere = false"
+                printMessage('>>>Card taken: ${Gameboard(this).obtainValuesOfCardToPrint(card)}');
               }
               if (card.hasStone) {
                 _stones += card.stonesInSpace;
@@ -227,7 +234,8 @@ class Game{
               }
               if (card.isThere){
                 _deck.add(card);
-                card.setIsThere(false); 
+                card.setIsThere(false);
+                printMessage('>>>Card taken: ${Gameboard(this).obtainValuesOfCardToPrint(card)}'); 
               }
               if (card.hasStone) {
                 _stones += card.stonesInSpace;
@@ -240,7 +248,8 @@ class Game{
               }
               if (card.isThere){
                 _deck.add(card);
-                card.setIsThere(false); 
+                card.setIsThere(false);
+                printMessage('>>>Card taken: ${Gameboard(this).obtainValuesOfCardToPrint(card)}'); 
               }
               if (card.hasStone) {
                 _stones += card.stonesInSpace;
@@ -259,7 +268,7 @@ class Game{
     String crowReplacement = crowC.replaceWith.toString().split('.').last;
     String crowStones = '';
     if (crowReplacement == CrowReplacements.stone.toString().split('.').last) crowStones = '(${crowC.numberOfStones.toString()})';
-    print('-->Crow: Replaces(${crowC.replaceRowAt}) with $crowReplacement$crowStones');
+    print('>>>Crow: Replaces(${crowC.replaceRowAt}) with $crowReplacement$crowStones');
     switch(crowC.replaceWith){
       case CrowReplacements.stone:
         switch (crowC.replaceRowAt){
@@ -296,7 +305,7 @@ class Game{
     response ??= 'N';
     response = response.toUpperCase();
     if (response == 'Y') getStonesToPayCrow();
-    if (crow._stones >= 4) obtainCardToSteal();
+    if (crow.crowHasEnoughStonesToTakeACard()) obtainCardToSteal();
   }
   void getStonesToPayCrow(){
     printMessage('How many stones shall thou pay?');
@@ -327,6 +336,8 @@ class Game{
     int numericResponse = obtainSpecificNumericResponse(validAnswers);
 
     crowTakesCard(tempList.elementAt(numericResponse-1));
+    
+    crow.resetStones();
   }
   void crowTakesCard(Card card){
     _deck.remove(card);
@@ -346,6 +357,10 @@ class Game{
     obtainFinalScore();
     printMessage('--> FINAL SCORE: $finalScore');
     printMessage('--> Your Mood: "${obtainScoringMood()}"');
+    print('');
+    print('');
+    printMessage('Press enter to exit...');
+    obtainResponse();
   }
 
   // OBTAIN SCORE
@@ -429,7 +444,6 @@ class Game{
     } while(true);
     return numericResponse;
   }
-  bool crowHasEnoughStonesToTakeACard() => crow.howManyStonesHas() >= 4;
   
   // ONLY FOR TESTS
   void setStones(int stones){
