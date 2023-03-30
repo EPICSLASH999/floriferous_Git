@@ -27,7 +27,7 @@ class Gameboard {
     print('');
     List<int> vals = [5,4,3,2,1];
     int colToPrint = game.column;
-    if (game.day == 2) colToPrint = vals[game.column-1];
+    if (game.day % 2 == 0) colToPrint = vals[game.column-1];
     if (game.day <= game.maxDays) print('Column: $colToPrint');
     print('------------------------------- MY DECK -------------------------------');
     printDeckCardsZone();
@@ -129,11 +129,28 @@ class Gameboard {
     for (var element in row) {
       if (element.typeOfCard != TypesOfCards.desire){
         element = element as GardenCard;
-        line.add('${element.typeOfCard.toString().split('.').last.toUpperCase().substring(0, 1)}:${element.flower.toString().split('.').last}/${element.color.toString().split('.').last}/${element.bug.toString().split('.').last}');
+
+        String typeOfCard = element.typeOfCard.toString().split('.').last.substring(0, 1).toUpperCase();
+        String flower = element.flower.toString().split('.').last;
+        String color = element.color.toString().split('.').last;
+        String bug = element.bug.toString().split('.').last;
+        if (bug == Bugs.none.toString().split('.').last) bug = '';
+
+        String l = '$typeOfCard:$flower/$color/$bug';
+        line.add(l);
       }
       if (element.typeOfCard == TypesOfCards.desire){
         element = element as DesireCard;
-        line.add('${element.typeOfCard.toString().split('.').last.toUpperCase().substring(0, 1)}:${element.points.toString()}/${element.typeOfDesire.toString().split('.').last}/${element.requirement.toString()}');
+
+        String l = '';
+        String typeOfCard = element.typeOfCard.toString().split('.').last.substring(0, 1).toUpperCase();
+        String points = element.points.toString();
+        String typeOfDesire = element.typeOfDesire.toString().split('.').last;
+        String requirement = element.requirement.toString();
+        if (typeOfDesire != TypesOfDesire.simple.toString().split('.').last) requirement = requirement.split('.').first;
+        
+        l ='$typeOfCard:$points/$typeOfDesire/$requirement';
+        line.add(l);
       }
     }
     return line;

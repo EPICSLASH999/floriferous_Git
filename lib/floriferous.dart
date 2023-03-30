@@ -266,7 +266,10 @@ class Game{
 
   // DEVIL CROW
   void crowActs(CrowCard crowC) {
-    //print(crowC);
+    String crowReplacement = crowC.replaceWith.toString().split('.').last;
+    String crowStones = '';
+    if (crowReplacement == CrowReplacements.stone.toString().split('.').last) crowStones = '(${crowC.numberOfStones.toString()})';
+    print('-->Crow: Replaces(${crowC.replaceRowAt}) with $crowReplacement$crowStones');
     switch(crowC.replaceWith){
       case CrowReplacements.stone:
         switch (crowC.replaceRowAt){
