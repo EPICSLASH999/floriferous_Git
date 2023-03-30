@@ -5,61 +5,61 @@ import 'package:test/test.dart';
 void main() {
   group('Cards: ', () {
     test('Tamaño de cards = 55', () {
-    expect(gardenCards.length, equals(55));
+    expect(ListsOfCards().gardenCards.length, equals(55));
   });
     test('Tarjeta de Flores es tipo "Flower"', () {
       FlowerCard card = FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.daisy, col: Colors.orange);
       expect(card.typeOfCard, equals(TypesOfCards.flower));
     });
     test('Requerimiento1 de BountyCard1 es "tulip"', () {
-      BountyCard bounty = bountyCards.elementAt(0);
+      BountyCard bounty = ListsOfCards().bountyCards.elementAt(0);
       expect(bounty.requirement1, equals(Flowers.tulip));
     });
     test('Tamaño de bountyCards es 9', () {
-      expect(bountyCards.length, equals(9));
+      expect(ListsOfCards().bountyCards.length, equals(9));
     });
     test('La primera carta de gardenCards es color "Orange"', () {
-      GardenCard card = gardenCards.elementAt(0);
+      GardenCard card = ListsOfCards().gardenCards.elementAt(0);
       expect(card.color, equals(Colors.orange));
     });
     test('La primera carta de gardenCards es tipo "Flower"', () {
-      GardenCard card = gardenCards.elementAt(0);
+      GardenCard card = ListsOfCards().gardenCards.elementAt(0);
       expect(card.typeOfCard, equals(TypesOfCards.flower));
     });
     test('Cast as FlowerCard from GardenCard', () {
-      FlowerCard card = gardenCards.elementAt(0) as FlowerCard;
+      FlowerCard card = ListsOfCards().gardenCards.elementAt(0) as FlowerCard;
       expect(card, equals(isA<FlowerCard>()));
     });
     test('Las cartas no tienen piedra por "omisión"', () {
-      FlowerCard card = gardenCards.elementAt(0) as FlowerCard;
+      FlowerCard card = ListsOfCards().gardenCards.elementAt(0) as FlowerCard;
       expect(card.hasStone, equals(false));
     });
     test('Primera carta de nueva lista de bounties es igual a index 0 de bountyCards', () {
-      List<BountyCard> bounties = bountyCards.toList();
+      List<BountyCard> bounties = ListsOfCards().bountyCards.toList();
       BountyCard bCard = bounties.elementAt(0);
-      expect(bCard, equals(bountyCards.elementAt(0)));
+      expect(bCard, equals(ListsOfCards().bountyCards.elementAt(0)));
     });
     test('Bounties barajeadas no es igual a lista original', () {
-      List<BountyCard> randomBounties = shuffleBountyCards(bountyCards.toList());
-      expect(randomBounties.equals(bountyCards), equals(false));
+      List<BountyCard> randomBounties = shuffleBountyCards(ListsOfCards().bountyCards.toList());
+      expect(randomBounties.equals(ListsOfCards().bountyCards), equals(false));
     });
     test('GardenCards barajeadas no es igual a lista original', () {
-      List<GardenCard> randomCards = shuffleGardenCards(gardenCards.toList());
-      expect(randomCards.equals(gardenCards), equals(false));
+      List<GardenCard> randomCards = shuffleGardenCards(ListsOfCards().gardenCards.toList());
+      expect(randomCards.equals(ListsOfCards().gardenCards), equals(false));
     });  
     test('DesireCards son 21', () {
-      expect(desireCards.length, equals(21));
+      expect(ListsOfCards().desireCards.length, equals(21));
     });
     test('DesireCard 1 es tipo Simple', () {
-      DesireCard card = desireCards.elementAt(0);
+      DesireCard card = ListsOfCards().desireCards.elementAt(0);
       expect(card.typeOfDesire, TypesOfDesire.simple);
     });
     test('CrowCards son 9', () {
-      expect(crowCards.length, equals(9));
+      expect(ListsOfCards().crowCards.length, equals(9));
     });    
     test('CrowCards barajeadas no es igual a lista original', () {
-      List<CrowCard> cards = shuffleCrowCards(crowCards.toList());
-      expect(cards.equals(crowCards), equals(false));
+      List<CrowCard> cards = shuffleCrowCards(ListsOfCards().crowCards.toList());
+      expect(cards.equals(ListsOfCards().crowCards), equals(false));
     });
     
   });
@@ -78,7 +78,7 @@ void main() {
         FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.pink),
         FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.yellow)
       ];
-      DesireCard desireC = desireCards.elementAt(2);
+      DesireCard desireC = ListsOfCards().desireCards.elementAt(2);
       int score = desireC.obtainScore(misCartas);
       expect(score, equals(6));
     });
@@ -158,7 +158,7 @@ void main() {
         FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.pink),
         FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.yellow)
       ];
-      DesireCard desireC = desireCards.elementAt(1);
+      DesireCard desireC = ListsOfCards().desireCards.elementAt(1);
       expect(desireC.obtainMaxSameOccurence(misCartas).keys.first, equals(Flowers.mum));
     });
     test('Obtener que color aparece más', () {
@@ -170,7 +170,7 @@ void main() {
         FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.moth),
         FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.white),
       ];
-      DesireCard desireC = desireCards.elementAt(2);
+      DesireCard desireC = ListsOfCards().desireCards.elementAt(2);
       expect(desireC.obtainMaxSameOccurence(misCartas).keys.first, equals(Colors.pink));
     });
     test('Obtener que insecto aparece más', () {
@@ -190,7 +190,7 @@ void main() {
         FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.pink),
         FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.yellow, bicho: Bugs.moth)
       ];
-      DesireCard desireC = desireCards.elementAt(0);
+      DesireCard desireC = ListsOfCards().desireCards.elementAt(0);
       expect(desireC.obtainMaxSameOccurence(misCartas).keys.first, equals(Bugs.moth));
     });   
     test('Mayormente 3 flores amarillas son 2 puntos', () {

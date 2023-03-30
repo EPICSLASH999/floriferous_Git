@@ -4,12 +4,18 @@ import 'package:floriferous/floriferous.dart';
 class Gameboard {
   late final Game game;
 
+  // SYMBOLOGY
+  String upsideDownCard = '//';
+  String isNotThereCard = '---';
+  String stone = '*';
+
+  // Constructor
   Gameboard(this.game);
 
-  /* ------ TABLERO GRAFICO ------ */
+  
   void printBoard(){
     printBountyCardsZone();
-    if (game.day <= game.maxDays) print('DAY: $game.day');
+    if (game.day <= game.maxDays) print('DAY: ${game.day}');
     print('');
     printGardenCardsZone();
     print('');
@@ -51,7 +57,6 @@ class Gameboard {
 
     print(createGardenRow(row1));
     print(createGardenRow(row2));
-    
   }
   void printDesireCardsZone(){
     print(createDesireRow(game.row3));
@@ -62,7 +67,7 @@ class Gameboard {
 
   List<String> createGardenRow(List<GardenCard> row){
     List<GardenCard> row2 = row.toList();
-    if (game.day == 2)
+    if (game.day % 2 == 0) // This affects 'even numbers' such as 2,4,6...
     {
       row2.clear();
       for (int x = row.length-1; x > -1; x--) {
@@ -72,11 +77,17 @@ class Gameboard {
 
     List<String> line = [];
     for (var element in row2) {
-      String l = '${element.typeOfCard.toString().split('.').last.toUpperCase()}:${element.flower.toString().split('.').last}/${element.color.toString().split('.').last}/${element.bug.toString().split('.').last}';
-      if (element.isUpsidedown) l = '//';
-      if (!element.isThere) l = '---';
+      String typeOfCard = element.typeOfCard.toString().split('.').last.substring(0, 1).toUpperCase();
+      String flower = element.flower.toString().split('.').last;
+      String color = element.color.toString().split('.').last;
+      String bug = element.bug.toString().split('.').last;
+      if (bug == Bugs.none.toString().split('.').last) bug = '';
+
+      String l = '$typeOfCard:$flower/$color/$bug';
+      if (element.isUpsidedown) l = upsideDownCard;
+      if (!element.isThere) l = isNotThereCard;
       if (element.hasStone){
-        String stones = '*' * element.stonesInSpace;
+        String stones = stone * element.stonesInSpace;
          l += '($stones)';
       }
       line.add(l);
@@ -86,7 +97,7 @@ class Gameboard {
   }
   List<String> createDesireRow(List<DesireCard> row){
     List<DesireCard> row2 = row.toList();
-    if (game.day == 2)
+    if (game.day % 2 == 0) // This affects 'even numbers' such as 2,4,6...
     {
       row2.clear();
       for (int x = row.length-1; x > -1; x--) {
@@ -97,12 +108,16 @@ class Gameboard {
     List<String> line = [];
     for (var element in row2) {
       String l = '';
+      String points = element.points.toString();
+      String typeOfDesire = element.typeOfDesire.toString().split('.').last;
+      String requirement = element.requirement.toString();
+      if (typeOfDesire != TypesOfDesire.simple.toString().split('.').last) requirement = requirement.split('.').first;
       
-      l ='${element.points.toString()}/${element.typeOfDesire.toString().split('.').last}/${element.requirement.toString()}';
-      if (element.isUpsidedown) l = '//';
-      if (!element.isThere) l = '---';
+      l ='$points/$typeOfDesire/$requirement';
+      if (element.isUpsidedown) l = upsideDownCard;
+      if (!element.isThere) l = isNotThereCard;
       if (element.hasStone){
-        String stones = '*' * element.stonesInSpace;
+        String stones = stone * element.stonesInSpace;
         l += '($stones)';
       }
       line.add(l);
@@ -111,19 +126,17 @@ class Gameboard {
   }
   List<String> createDeckRow(List<Card> row){
     List<String> line = [];
-    for (var element in game.deck) {
+    for (var element in row) {
       if (element.typeOfCard != TypesOfCards.desire){
         element = element as GardenCard;
-        line.add('${element.typeOfCard.toString().split('.').last.toUpperCase()}:${element.flower.toString().split('.').last}/${element.color.toString().split('.').last}/${element.bug.toString().split('.').last}');
+        line.add('${element.typeOfCard.toString().split('.').last.toUpperCase().substring(0, 1)}:${element.flower.toString().split('.').last}/${element.color.toString().split('.').last}/${element.bug.toString().split('.').last}');
       }
       if (element.typeOfCard == TypesOfCards.desire){
         element = element as DesireCard;
-        line.add('${element.typeOfCard.toString().split('.').last.toUpperCase()}:${element.points.toString()}/${element.typeOfDesire.toString().split('.').last}/${element.requirement.toString()}');
+        line.add('${element.typeOfCard.toString().split('.').last.toUpperCase().substring(0, 1)}:${element.points.toString()}/${element.typeOfDesire.toString().split('.').last}/${element.requirement.toString()}');
       }
     }
     return line;
   }
 
-
-  
 }

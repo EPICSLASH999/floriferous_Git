@@ -20,18 +20,18 @@ void main() {
   group('In Game Cards: ', () {
     test('Tarjeta tomada de mazo es la ultima', () {
       Game game = Game();
-      game.setGardenCards(gardenCards.toList());
+      game.setGardenCards(ListsOfCards().gardenCards.toList());
       GardenCard card = game.drawGardenCard();
 
       //print(gardenCards.elementAt(gardenCards.length-1));
       //print(card);
 
-      expect(gardenCards.elementAt(gardenCards.length-1), equals(card));
+      expect(ListsOfCards().gardenCards.elementAt(ListsOfCards().gardenCards.length-1), equals(card));
 
     });
     test('Al tomar tarjeta se elimina del bonche', () {
       Game game = Game();
-      game.setGardenCards(gardenCards.toList());
+      game.setGardenCards(ListsOfCards().gardenCards.toList());
       int longitudInicial = game.gardenCards.length;
 
       game.drawGardenCard();
@@ -313,9 +313,9 @@ void main() {
     });
     test('Despues de los 3 dias es "gameover"', () {
       Game game = Game();
-      game.endOfDay(gardenCards);
-      game.endOfDay(gardenCards);
-      game.endOfDay(gardenCards);
+      game.endOfDay(ListsOfCards().gardenCards);
+      game.endOfDay(ListsOfCards().gardenCards);
+      game.endOfDay(ListsOfCards().gardenCards);
       bool isGameOver = game.isGameOver;
       expect(isGameOver, equals(true));
     });

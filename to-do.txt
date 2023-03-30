@@ -18,10 +18,10 @@ En game.crowStealsCard();
 
 -TO - DO 
     
-    -Flower a F al imprimir tablero
-    -Glosario para "//" --> Upside Down
     -Imprimir la accion del cuervo
+    - Deck que no diga Bugs.none ni tampoco D:same/Colors.indifferent
 
+    -TypeOfValue {string, int}
     -Mejor ciclo para elegir carta "numero"
     -Si se da enter al ingresar numero da error.
 

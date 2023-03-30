@@ -11,7 +11,7 @@ enum TypesOfDesire {simple, same, different}
 enum CrowReplacements {stone, card}
 
 // LISTS
-List<GardenCard> gardenCards = [
+List<GardenCard> _gardenCards = [
   FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.orange),
   FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.pink),
   FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow),
@@ -69,7 +69,7 @@ List<GardenCard> gardenCards = [
   ArrangementCard(tipoDeCarta: TypesOfCards.arrangement, flor: Flowers.daisy, col: Colors.white, bicho: Bugs.bee),
   ArrangementCard(tipoDeCarta: TypesOfCards.arrangement, flor: Flowers.mum, col: Colors.pink, bicho: Bugs.beetle),
 ];
-List <BountyCard> bountyCards = [
+List <BountyCard> _bountyCards = [
   BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Bugs.ladybug, requerimiento3: Bugs.butterfly),
   BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Flowers.tulip, requerimiento3: Flowers.daisy),
   BountyCard( requerimiento1: Bugs.beetle, requerimiento2: Bugs.ladybug, requerimiento3: Bugs.bee),
@@ -81,7 +81,7 @@ List <BountyCard> bountyCards = [
   BountyCard(requerimiento1: Flowers.poppy, requerimiento2: Flowers.mum, requerimiento3: Bugs.butterfly)
   
 ];
-List<DesireCard> desireCards = [
+List<DesireCard> _desireCards = [
   DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.simple, requerimiento: Bugs.bee, puntos: [3]),
   DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.simple, requerimiento: Flowers.mum, puntos: [2]),
   DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.simple, requerimiento: Colors.yellow, puntos: [2]),
@@ -104,7 +104,7 @@ List<DesireCard> desireCards = [
   DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.simple, requerimiento: Flowers.daisy, puntos: [2]),
   DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.simple, requerimiento: Flowers.poppy, puntos: [2])
 ];
-List<CrowCard> crowCards = [
+List<CrowCard> _crowCards = [
   CrowCard(renglon: 3, reemplazo: CrowReplacements.stone, numeroDePiedras: 2),
   CrowCard(renglon: 3, reemplazo: CrowReplacements.stone, numeroDePiedras: 1),
   CrowCard(renglon: 3, reemplazo: CrowReplacements.card),
@@ -115,6 +115,13 @@ List<CrowCard> crowCards = [
   CrowCard(renglon: 2, reemplazo: CrowReplacements.stone, numeroDePiedras: 1),
   CrowCard(renglon: 2, reemplazo: CrowReplacements.card)
 ];
+
+class ListsOfCards{
+  List<GardenCard> get gardenCards => _gardenCards;
+  List <BountyCard> get bountyCards => _bountyCards;
+  List<DesireCard> get desireCards => _desireCards;
+  List<CrowCard> get crowCards => _crowCards;
+}
 
 // CLASSES
 class Card extends Equatable{

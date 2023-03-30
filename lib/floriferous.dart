@@ -55,9 +55,9 @@ class Game{
   Crow crow = Crow();
 
   Game(){
-    setGardenCards(shuffleGardenCards(gardenCards.toList()));
-    setDesireCards(shuffleDesireCards(desireCards.toList()));
-    setCrowCards(shuffleCrowCards(crowCards.toList()));
+    setGardenCards(shuffleGardenCards(ListsOfCards().gardenCards.toList()));
+    setDesireCards(shuffleDesireCards(ListsOfCards().desireCards.toList()));
+    setCrowCards(shuffleCrowCards(ListsOfCards().crowCards.toList()));
     setBountyCards(obtainThreeBountyCards().toList());
 
     generateDay();
@@ -122,7 +122,7 @@ class Game{
   
   // GENERATE ROWS 
   List<BountyCard> obtainThreeBountyCards() {
-    List<BountyCard> shuffledBCards = shuffleBountyCards(bountyCards.toList()).toList();
+    List<BountyCard> shuffledBCards = shuffleBountyCards(ListsOfCards().bountyCards.toList()).toList();
     List<BountyCard> tempCards = [];
     for (var i = 0; i < 3; i++) {
       tempCards.add(shuffledBCards.elementAt(i));
@@ -176,7 +176,7 @@ class Game{
   }
   CrowCard drawCrowCard() {
     if (_crowCards.isEmpty){
-      _crowCards = shuffleCrowCards(crowCards.toList()).toList();
+      _crowCards = shuffleCrowCards(ListsOfCards().crowCards.toList()).toList();
     }
 
     CrowCard card = _crowCards.elementAt(_crowCards.length-1);
