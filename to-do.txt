@@ -15,4 +15,15 @@ TESTS
 En game.crowStealsCard();
 //String? positionOfCard = stdin.readLineSync();
 
-Print list of cards to give to crow better.
+
+-TO - DO 
+    -Pasar a clases
+    -Separar imprimirTablero a funcion
+
+    -Glosario para "//" --> Upside Down
+    -Mejor ciclo para elegir carta "numero"
+    -Cambiar Bugs.none a null
+    -Flower a F al imprimir tablero
+    -Primero checar bounty cards y luego pagar al cuervo
+    -Imprimir la accion del cuervo
+    -Olores de código

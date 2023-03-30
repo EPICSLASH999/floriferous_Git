@@ -1,9 +1,7 @@
-
-/* ---------------------------------------------------------------------------- */
-/* ----------------------------------- CARDS ---------------------------------- */
-// ENUMS
 import 'package:equatable/equatable.dart';
 
+
+// ENUMS
 enum Flowers {daisy, lily, mum, poppy, tulip, indifferent}
 enum Colors {white, yellow, orange, pink, purple, indifferent}
 enum Bugs {bee, beetle, butterfly, ladybug, moth, none, indifferent}
@@ -128,13 +126,27 @@ class Card extends Equatable{
   bool get isUpsidedown => _isUpsidedown;
 
   bool _isThere = true;
+  bool get isThere => _isThere;
+
   int _stonesInSpace = 0;
+  int get stonesInSpace => _stonesInSpace;
 
   bool hasStone = false;
 
   Card({required TypesOfCards tipoDeCarta}){
     _typeOfCard = tipoDeCarta;
   }
+
+  void setUpsideDown(bool value){
+    _isUpsidedown = value;
+  }
+  void setStonesInSpace(int value){
+    _stonesInSpace = value;
+  }
+  void setIsThere(bool value){
+    _isThere = value;
+  }
+
   @override
   List<Object?> get props => [];
 }
@@ -154,7 +166,7 @@ class GardenCard extends Card{
     
   }
 
-  void TurnCard(){
+  void turnCard(){
     _isUpsidedown = !_isUpsidedown;
   }
 
@@ -184,42 +196,6 @@ class ArrangementCard extends GardenCard{
     _bug = bicho;
   }
   
-  int obtainScore2(List<Card> miDeck) {
-    int counter = 0;
-    List<Card> tempCards = miDeck.toList();
-
-      for (var element in tempCards) {
-        if (element.typeOfCard != TypesOfCards.flower) continue;
-        element = element as FlowerCard;
-        if (element._bug == _bug){
-          tempCards.remove(element);
-          counter++;
-          break;
-        }
-      }
-    
-    for (var element in tempCards) {
-        if (element.typeOfCard != TypesOfCards.flower) continue;
-        element = element as FlowerCard;
-        if (element._flower == _flower){
-          tempCards.remove(element);
-          counter++;
-          break;
-        }
-    }
-
-    for (var element in tempCards) {
-        if (element.typeOfCard != TypesOfCards.flower) continue;
-        element = element as FlowerCard;
-        if (element._color == _color){
-          tempCards.remove(element);
-          counter++;
-          break;
-        }
-    }
-    if (counter == 0) return 0;
-    return points[counter-1];
-  }
   int obtainScore(List<Card> miDeck) {
     int counter = 0;
     List<Card> tempCards = miDeck.toList();
@@ -308,176 +284,8 @@ class BountyCard extends Equatable{
     requirement3 = requerimiento3;
   }
 
-  void checkIfCompleated4(List<Card> deck, int day) {
-    int counter = 0;
-    List<Card> tempCards = deck.toList();
-    List list = [requirement1, requirement2, requirement3];
-
-    for (var i = 0; i < 3; i++) {
-      for (var element in tempCards) {
-        if (element.typeOfCard != TypesOfCards.flower) continue;
-        FlowerCard? c = checkIfMeetsRequirements(element, list[i]);
-        if(c != null) {
-          counter++;
-          tempCards.remove(c);
-          break;
-        }
-      }
-    }
-    if (counter == 3) {
-      compleatedAtDay(day);
-    }
-  }
-  void checkIfCompleated3(List<Card> deck, int day){
-    int counter = 0;
-    List<Card> tempCards = deck.toList();
-    List list = [requirement1, requirement2, requirement3];
-    Map map = {};
-
-    for (var i = 0; i < 3; i++) {
-      for (var element in tempCards) {
-        if (element.typeOfCard != TypesOfCards.flower) continue;
-        element = element as FlowerCard;
-        if ((element._bug == list[0]) || (element._bug == list[1]) || (element._bug == list[2])){
-          if (!map.containsKey(element)) {
-            map[element] = 1;
-          } else {
-            map[element] += 1;
-          }
-        }
-        if ((element._flower == list[0]) || (element._flower == list[1]) || (element._flower == list[2])){
-          if (!map.containsKey(element)) {
-            map[element] = 1;
-          } else {
-            map[element] += 1;
-          }
-        }
-      }
-      print(map);
-      List sortedValues = map.values.toList()..sort();
-      if (sortedValues.isNotEmpty) {
-        int leastValuableValue = sortedValues.first;
-        var key = map.keys.firstWhere((k)
-              => map[k] == leastValuableValue, orElse: () => null);
-        tempCards.remove(key);
-        counter++;
-        map = {};
-      }
-    }
-      
-      /* 
-      for (var element in tempCards) {
-        if (element.typeOfCard != TypesOfCards.flower) continue;
-        element = element as FlowerCard;
-        if ((element._bug == list[0]) || (element._bug == list[1]) || (element._bug == list[2])){
-          if (!map.containsKey(element)) {
-            map[element] = 1;
-          } else {
-            map[element] += 1;
-          }
-        }
-        if ((element._flower == list[0]) || (element._flower == list[1]) || (element._flower == list[2])){
-          if (!map.containsKey(element)) {
-            map[element] = 1;
-          } else {
-            map[element] += 1;
-          }
-        }
-      }
-      print(map);
-      sortedValues = map.values.toList()..sort();
-      if (sortedValues.isNotEmpty) {
-        int leastValuableValue = sortedValues.first;
-        var key = map.keys.firstWhere((k)
-              => map[k] == leastValuableValue, orElse: () => null);
-        tempCards.remove(key);
-        counter++;
-        map = {};
-      }
-      
-      //
-      for (var element in tempCards) {
-        if (element.typeOfCard != TypesOfCards.flower) continue;
-        element = element as FlowerCard;
-        if ((element._bug == list[0]) || (element._bug == list[1]) || (element._bug == list[2])){
-          if (!map.containsKey(element)) {
-            map[element] = 1;
-          } else {
-            map[element] += 1;
-          }
-        }
-        if ((element._flower == list[0]) || (element._flower == list[1]) || (element._flower == list[2])){
-          if (!map.containsKey(element)) {
-            map[element] = 1;
-          } else {
-            map[element] += 1;
-          }
-        }
-      }
-      print(map);
-      sortedValues = map.values.toList()..sort();
-      if (sortedValues.isNotEmpty) {
-        int leastValuableValue = sortedValues.first;
-        var key = map.keys.firstWhere((k)
-              => map[k] == leastValuableValue, orElse: () => null);
-        tempCards.remove(key);
-        counter++;
-        map = {};
-      }*/
-
-      if (counter == 3) {
-      _isCompleated = true;
-      compleatedAtDay(day);
-    }
-      
-  }
-  void checkIfCompleated2(List<Card> deck, int day){
-    int counter = 0;
-    List<Card> tempCards = deck.toList();
-    List requirementsList = [requirement1, requirement2, requirement3];
-    Map map = {};
-
-    for (var i = 0; i < 3; i++) {
-      for (var element in tempCards) {
-        if (element.typeOfCard != TypesOfCards.flower) continue;
-        element = element as FlowerCard;
-        if ((element._bug == requirementsList[0]) || (element._bug == requirementsList[1]) || (element._bug == requirementsList[2])){
-          if (!map.containsKey(element)) {
-            map[element] = 1;
-          } else {
-            map[element] += 1;
-          }
-        }
-        if ((element._flower == requirementsList[0]) || (element._flower == requirementsList[1]) || (element._flower == requirementsList[2])){
-          if (!map.containsKey(element)) {
-            map[element] = 1;
-          } else {
-            map[element] += 1;
-          }
-        }
-      }
-    
-      //print(map);
-      List sortedValues = map.values.toList()..sort();
-      if (sortedValues.isNotEmpty) {
-        int leastValuableValue = sortedValues.first;
-        var key = map.keys.firstWhere((k)
-              => map[k] == leastValuableValue, orElse: () => null);
-        tempCards.remove(key);
-        //print(key);
-        counter++;
-        map = {};
-      }
-    
-      }
-      
-      if (counter == 3) {
-      _isCompleated = true;
-      compleatedAtDay(day);
-    }
-      
-  }
   void checkIfCompleated(List<Card> deck, int day){
+    if (isCompleated) return;
     List<String> requirements = [requirement1.toString(),requirement2.toString(),requirement3.toString()];
     requirements.sort();
     //print(requirements);
@@ -619,14 +427,6 @@ class BountyCard extends Equatable{
       
   }
 
-  FlowerCard? checkIfMeetsRequirements(Card element, Enum requirement) {
-    element = element as FlowerCard;
-    if ((element._bug == requirement) || (element._flower == requirement)){
-      return element;
-    }
-    FlowerCard? c;
-    return c;
-  }
 
   void compleatedAtDay(int day){
     _isCompleated = true;
@@ -694,7 +494,7 @@ class DesireCard extends Card{
   }
 
   int obtainRequerimentOccurence(List<Card> listOfCards){
-    var map = Map();
+    var map = {};
 
     for (var element in listOfCards) {
       if (element.typeOfCard != TypesOfCards.flower) continue;
@@ -757,7 +557,7 @@ class DesireCard extends Card{
     var key = map.keys.firstWhere((k)
           => map[k] == popularValue, orElse: () => null);
     
-    var map2 = Map();
+    var map2 = {};
     map2[key] = popularValue;
 
     //return key; //it was return Enum
@@ -807,6 +607,10 @@ class CrowCard extends Equatable{
   late final Enum _replaceWith;
   late final int _numberOfStones;
 
+  int get replaceRowAt => _replaceRowAt;
+  Enum get replaceWith => _replaceWith;
+  int get numberOfStones => _numberOfStones;
+
   CrowCard({required int renglon, required CrowReplacements reemplazo, int numeroDePiedras = 0}){
     _replaceRowAt = renglon;
     _replaceWith = reemplazo;
@@ -839,5 +643,3 @@ List<CrowCard> shuffleCrowCards(List<CrowCard> cards){
 }
 
 
-/* ---------------------------- END OF CARDS ---------------------------------- */
-/* ---------------------------------------------------------------------------- */

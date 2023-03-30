@@ -6,9 +6,9 @@
 import 'dart:io';
 //import 'dart:math';
 
-import 'package:collection/collection.dart';
-import 'package:equatable/equatable.dart';
-//import 'package:floriferous/cards.dart';
+//import 'package:collection/collection.dart';
+//import 'package:equatable/equatable.dart';
+import 'package:floriferous/cards.dart';
 //import 'package:floriferous/floriferous.dart';
 import 'package:test/test.dart';
 
@@ -16,78 +16,6 @@ import 'package:test/test.dart';
 
 void main() {
 
-  group('Cards: ', () {
-    test('Tamaño de cards = 55', () {
-    expect(gardenCards.length, equals(55));
-  });
-    test('Tarjeta de Flores es tipo "Flower"', () {
-      FlowerCard card = FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.daisy, col: Colors.orange);
-      expect(card.typeOfCard, equals(TypesOfCards.flower));
-    });
-    test('Requerimiento1 de BountyCard1 es "tulip"', () {
-      BountyCard bounty = bountyCards.elementAt(0);
-      expect(bounty.requirement1, equals(Flowers.tulip));
-    });
-    test('Tamaño de bountyCards es 9', () {
-      expect(bountyCards.length, equals(9));
-    });
-    test('La primera carta de gardenCards es color "Orange"', () {
-      GardenCard card = gardenCards.elementAt(0);
-      expect(card.color, equals(Colors.orange));
-    });
-    test('La primera carta de gardenCards es tipo "Flower"', () {
-      GardenCard card = gardenCards.elementAt(0);
-      expect(card.typeOfCard, equals(TypesOfCards.flower));
-    });
-    test('Cast as FlowerCard from GardenCard', () {
-      FlowerCard card = gardenCards.elementAt(0) as FlowerCard;
-      expect(card, equals(isA<FlowerCard>()));
-    });
-    test('Las cartas no tienen piedra por "omisión"', () {
-      FlowerCard card = gardenCards.elementAt(0) as FlowerCard;
-      expect(card.hasStone, equals(false));
-    });
-    test('Primera carta de nueva lista de bounties es igual a index 0 de bountyCards', () {
-      List<BountyCard> bounties = bountyCards.toList();
-      BountyCard bCard = bounties.elementAt(0);
-      //print(bCard);
-      expect(bCard, equals(bountyCards.elementAt(0)));
-    });
-    test('Bounties barajeadas no es igual a lista original', () {
-      List<BountyCard> randomBounties = shuffleBountyCards(bountyCards.toList());
-
-      //print(randomBounties.elementAt(0));
-      //print(bountyCards.elementAt(0));
-
-      expect(randomBounties.equals(bountyCards), equals(false));
-    });
-    test('GardenCards barajeadas no es igual a lista original', () {
-      List<GardenCard> randomCards = shuffleGardenCards(gardenCards.toList());
-
-      //print(randomCards.elementAt(0));
-      //print(gardenCards.elementAt(0));
-
-      expect(randomCards.equals(gardenCards), equals(false));
-    });  
-    test('DesireCards son 21', () {
-      expect(desireCards.length, equals(21));
-    });
-    test('DesireCard 1 es tipo Simple', () {
-      DesireCard card = desireCards.elementAt(0);
-      expect(card.typeOfDesire, TypesOfDesire.simple);
-    });
-    test('CrowCards son 9', () {
-      expect(crowCards.length, equals(9));
-    });    
-    test('CrowCards barajeadas no es igual a lista original', () {
-      List<CrowCard> cards = shuffleCrowCards(crowCards.toList());
-      //print(cards.elementAt(0));
-      //print(crowCards.elementAt(0));
-      expect(cards.equals(crowCards), equals(false));
-    });
-    
-
-  });
   group('In Game Cards: ', () {
     test('Tarjeta tomada de mazo es la ultima', () {
       Game game = Game();
@@ -187,420 +115,12 @@ void main() {
     test('Esta bocaabajo una DesireCard', () {
       Game game = Game();
       //print(game.row3.elementAt(0).isUpsidedown);
-      game.row3.elementAt(0)._isUpsidedown = true;
+      game.row3.elementAt(0).setUpsideDown(true);
       expect(game.row3.elementAt(0).isUpsidedown, equals(true));
     });
   });
-  group('Puntajes Desire Simples: ', () {   
-    test('3 flores de color amarillo son 6 puntos', () {
-      List<Card> misCartas = [
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.purple),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.purple, bicho: Bugs.butterfly),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.orange, bicho: Bugs.beetle),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.white, bicho: Bugs.ladybug),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.pink, bicho: Bugs.bee),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.moth),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.white),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.orange),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.pink),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.yellow)
-      ];
-      DesireCard desireC = desireCards.elementAt(2);
-      int score = desireC.obtainScore(misCartas);
-      expect(score, equals(6));
-    });
-    test('4 abejas son 12 puntos', () {
-      List<Card> misCartas = [
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.bee),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.purple),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.purple, bicho: Bugs.butterfly),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.orange, bicho: Bugs.beetle),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.white, bicho: Bugs.ladybug),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.pink, bicho: Bugs.bee),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.moth),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.white),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.orange),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.pink, bicho: Bugs.bee),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.yellow, bicho: Bugs.bee)
-      ];
-      DesireCard desireC = DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.simple, requerimiento: Bugs.bee, puntos: [3]);
-      int score = desireC.obtainScore(misCartas);
-      expect(score, equals(12));
-    });
-    test('3 mum son 6 puntos', () {
-      List<Card> misCartas = [
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.purple, bicho: Bugs.butterfly),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.orange, bicho: Bugs.beetle),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.white, bicho: Bugs.ladybug),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.white),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.orange),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.pink, bicho: Bugs.bee),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.yellow, bicho: Bugs.bee)
-      ];
-      DesireCard desireC = DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.simple, requerimiento: Flowers.mum, puntos: [2]);
-      int score = desireC.obtainScore(misCartas);
-      expect(score, equals(6));
-    });
-    test('1 abejas son 3 puntos', () {
-      List<Card> misCartas = [
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.purple, bicho: Bugs.butterfly),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.orange, bicho: Bugs.beetle),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.white, bicho: Bugs.ladybug),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.white, bicho: Bugs.ladybug),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.orange, bicho: Bugs.ladybug),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.pink, bicho: Bugs.bee),
-      ];
-      DesireCard desireC = DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.simple, requerimiento: Bugs.bee, puntos: [3]);
-      int score = desireC.obtainScore(misCartas);
-      expect(score, equals(3));
-    });
-    test('0 abejas son 0 puntos', () {
-      List<Card> misCartas = [
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.purple, bicho: Bugs.butterfly),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.orange, bicho: Bugs.beetle),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.white, bicho: Bugs.ladybug),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.white, bicho: Bugs.ladybug),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.orange, bicho: Bugs.ladybug),
-      ];
-      DesireCard desireC = DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.simple, requerimiento: Bugs.bee, puntos: [3]);
-      int score = desireC.obtainScore(misCartas);
-      expect(score, equals(0));
-    });
-  });
-  group('Puntajes Desire Same: ', () {
-    test('Obtener que flor aparece más', () {
-      List<Card> misCartas = [
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.orange),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.pink),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.white),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.purple),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.purple, bicho: Bugs.butterfly),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.orange, bicho: Bugs.beetle),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.white, bicho: Bugs.ladybug),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.pink, bicho: Bugs.bee),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.moth),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.white),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.orange),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.pink),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.yellow)
-      ];
-      DesireCard desireC = desireCards.elementAt(1);
-      expect(desireC.obtainMaxSameOccurence(misCartas).keys.first, equals(Flowers.mum));
-    });
-    test('Obtener que color aparece más', () {
-      List<Card> misCartas = [
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.pink),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.purple, bicho: Bugs.butterfly),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.orange, bicho: Bugs.beetle),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.pink, bicho: Bugs.bee),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.moth),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.white),
-      ];
-      DesireCard desireC = desireCards.elementAt(2);
-      expect(desireC.obtainMaxSameOccurence(misCartas).keys.first, equals(Colors.pink));
-    });
-    test('Obtener que insecto aparece más', () {
-      List<Card> misCartas = [
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.orange),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.pink),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.white),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.purple),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.purple, bicho: Bugs.butterfly),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.orange, bicho: Bugs.beetle),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.white, bicho: Bugs.ladybug),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.pink, bicho: Bugs.bee),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.moth),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.white),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.orange),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.pink),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.yellow, bicho: Bugs.moth)
-      ];
-      DesireCard desireC = desireCards.elementAt(0);
-      expect(desireC.obtainMaxSameOccurence(misCartas).keys.first, equals(Bugs.moth));
-    });   
-    test('Mayormente 3 flores amarillas son 2 puntos', () {
-      List<Card> misCartas = [
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.purple),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.purple, bicho: Bugs.butterfly),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.orange, bicho: Bugs.beetle),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.white, bicho: Bugs.ladybug),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.pink, bicho: Bugs.bee),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.moth),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.white),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.orange),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.pink),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.yellow)
-      ];
-      DesireCard desireC = DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.same, requerimiento: Colors.indifferent, puntos: [0,1,2,4,7]);
-      int score = desireC.obtainScore(misCartas);
-      expect(score, equals(2));
-    });
-    test('Mayormente 6 flores amarillas son 7 puntos', () {
-      List<Card> misCartas = [
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.purple, bicho: Bugs.butterfly),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.orange, bicho: Bugs.beetle),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.ladybug),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.bee),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.moth),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.white),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.orange),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.pink),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.yellow)
-      ];
-      DesireCard desireC = DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.same, requerimiento: Colors.indifferent, puntos: [0,1,2,4,7]);
-      int score = desireC.obtainScore(misCartas);
-      expect(score, equals(7));
-    });
-    test('Mayormente ningun insecto son 0 puntos', () {
-      List<Card> misCartas = [
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.purple),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.white),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.orange),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.pink),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.yellow)
-      ];
-      DesireCard desireC = DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.same, requerimiento: Bugs.indifferent, puntos: [0,1,2,4,7]);
-      int score = desireC.obtainScore(misCartas);
-      expect(score, equals(0));
-    });
-  });
-  group('Puntajes Desire Different: ', () {
-    test('1 insectos diferente son 0 pts', () {
-      List<Card> misCartas = [
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.butterfly),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.white),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.orange),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.pink),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.yellow)
-      ];
-      DesireCard desireC = DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.different, requerimiento: Bugs.indifferent, puntos: [0,1,2,4,7]);
-      int score = desireC.obtainScore(misCartas);
-      expect(score, equals(0));
-    });
-    test('2 insectos diferentes son 1 pts', () {
-      List<Card> misCartas = [
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.butterfly),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.orange, bicho: Bugs.beetle),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.butterfly),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.butterfly),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.butterfly),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.white),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.orange),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.pink),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.yellow)
-      ];
-      DesireCard desireC = DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.different, requerimiento: Bugs.indifferent, puntos: [0,1,2,4,7]);
-      int score = desireC.obtainScore(misCartas);
-      expect(score, equals(1));
-    });
-    test('3 insectos diferentes son 2 pts', () {
-      List<Card> misCartas = [
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.purple, bicho: Bugs.butterfly),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.orange, bicho: Bugs.beetle),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.ladybug),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.white),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.orange),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.pink),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.yellow)
-      ];
-      DesireCard desireC = DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.different, requerimiento: Bugs.indifferent, puntos: [0,1,2,4,7]);
-      int score = desireC.obtainScore(misCartas);
-      expect(score, equals(2));
-    });
-    test('5 insectos diferentes son 7 pts', () {
-      List<Card> misCartas = [
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.purple, bicho: Bugs.butterfly),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.orange, bicho: Bugs.beetle),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.ladybug),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.bee),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.moth),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.white),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.orange),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.pink),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.yellow)
-      ];
-      DesireCard desireC = DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.different, requerimiento: Bugs.indifferent, puntos: [0,1,2,4,7]);
-      int score = desireC.obtainScore(misCartas);
-      expect(score, equals(7));
-    });
-    test('0 insectos diferentes son 0 pts', () {
-      List<Card> misCartas = [
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.white),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.orange),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.pink),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.yellow)
-      ];
-      DesireCard desireC = DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.different, requerimiento: Bugs.indifferent, puntos: [0,1,2,4,7]);
-      int score = desireC.obtainScore(misCartas);
-      expect(score, equals(0));
-    });
-    test('Muchos insectos repetidos pero 5 diferentes son 7 pts', () {
-      List<Card> misCartas = [
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.butterfly),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.butterfly),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.purple, bicho: Bugs.butterfly),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.orange, bicho: Bugs.beetle),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.ladybug),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.bee),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.moth),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.white),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.orange),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.pink),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.yellow)
-      ];
-      DesireCard desireC = DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.different, requerimiento: Bugs.indifferent, puntos: [0,1,2,4,7]);
-      int score = desireC.obtainScore(misCartas);
-      expect(score, equals(7));
-    });
-    test('2 insectos diferentes pero repetidos son 1 pts', () {
-      List<Card> misCartas = [
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.butterfly),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.orange, bicho: Bugs.beetle),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.white, bicho: Bugs.butterfly),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.orange, bicho: Bugs.butterfly),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.pink),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.yellow)
-      ];
-      DesireCard desireC = DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.different, requerimiento: Bugs.indifferent, puntos: [0,1,2,4,7]);
-      int score = desireC.obtainScore(misCartas);
-      expect(score, equals(1));
-    });
- 
-  });
-  group('Puntaje ArrangementCards', () {
-    test('Obtener puntaje SOLO con arrangement card', () {
-      List<Card> miDeck = [
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.pink, bicho: Bugs.beetle),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.purple, bicho: Bugs.bee),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.orange, bicho: Bugs.moth),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.pink, bicho: Bugs.beetle),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.yellow, bicho: Bugs.butterfly),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.orange, bicho: Bugs.bee),
-      ];
-      ArrangementCard arrangementC = ArrangementCard(tipoDeCarta: TypesOfCards.arrangement, flor: Flowers.poppy, col: Colors.orange, bicho: Bugs.moth);
-      int score = arrangementC.obtainScore(miDeck);
-      expect(score, equals(5));
-    });
-    test('Obtener puntaje con arrangement card de 0 pts', () {
-      List<Card> miDeck = [
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.purple, bicho: Bugs.bee),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.pink, bicho: Bugs.beetle),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.yellow, bicho: Bugs.butterfly),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.pink, bicho: Bugs.bee),
-      ];
-      ArrangementCard arrangementC = ArrangementCard(tipoDeCarta: TypesOfCards.arrangement, flor: Flowers.poppy, col: Colors.orange, bicho: Bugs.moth);
-      int score = arrangementC.obtainScore(miDeck);
-      expect(score, equals(0));
-    });
-    test('Arrangement cards distingue solo las carteas de flores', () {
-      List<Card> miDeck = [
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.purple, bicho: Bugs.bee),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.pink, bicho: Bugs.beetle),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.yellow, bicho: Bugs.butterfly),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.pink, bicho: Bugs.bee),
-
-        ArrangementCard(tipoDeCarta: TypesOfCards.arrangement, flor: Flowers.poppy, col: Colors.orange, bicho: Bugs.moth),
-        ArrangementCard(tipoDeCarta: TypesOfCards.arrangement, flor: Flowers.poppy, col: Colors.orange, bicho: Bugs.moth),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.orange, bicho: Bugs.bee),
-      ];
-      ArrangementCard arrangementC = ArrangementCard(tipoDeCarta: TypesOfCards.arrangement, flor: Flowers.poppy, col: Colors.orange, bicho: Bugs.moth);
-      int score = arrangementC.obtainScore(miDeck);
-      expect(score, equals(1));
-    });
-    test('Arrangement card toma la carta que mas le conviene al jugador', () {
-      List<Card> miDeck = [
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.pink, bicho: Bugs.beetle),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.purple, bicho: Bugs.bee),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.orange, bicho: Bugs.moth),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.pink, bicho: Bugs.beetle),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.yellow, bicho: Bugs.butterfly),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.pink, bicho: Bugs.moth),
-      ];
-      ArrangementCard arrangementC = ArrangementCard(tipoDeCarta: TypesOfCards.arrangement, flor: Flowers.poppy, col: Colors.orange, bicho: Bugs.moth);
-      int score = arrangementC.obtainScore(miDeck);
-      expect(score, equals(5));
-    });
-    test('Arrangement card toma la carta que mas le conviene al jugador (Prueba 2)', () {
-      List<Card> miDeck = [
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.white, bicho: Bugs.beetle),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.pink, bicho: Bugs.bee),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.white, bicho: Bugs.butterfly),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.white, bicho: Bugs.bee),
-      ];
-      ArrangementCard arrangementC = ArrangementCard(tipoDeCarta: TypesOfCards.arrangement, flor: Flowers.tulip, col: Colors.pink, bicho: Bugs.bee);
-      int score = arrangementC.obtainScore(miDeck);
-      expect(score, equals(5));
-    });
-  });
-  group('Puntajes de BountyCards', () {
-    test('Puntaje de bountycard en dia 0 es 0', () {
-      List<Card> miDeck = [
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.white, bicho: Bugs.bee),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.pink, bicho: Bugs.ladybug),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.white, bicho: Bugs.butterfly),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.white, bicho: Bugs.bee),
-      ];
-      BountyCard bountyC = BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Bugs.ladybug, requerimiento3: Bugs.butterfly);
-      //BountyCard bountyC = BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Flowers.tulip, requerimiento3: Flowers.daisy);
-      bountyC.checkIfCompleated(miDeck, 0);
-      
-      expect(bountyC.obtainScore(), equals(0));
-    });
-    test('Puntaje de bountycard en dia 1 es 5', () {
-      List<Card> miDeck = [
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.white, bicho: Bugs.bee),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.pink, bicho: Bugs.ladybug),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.white, bicho: Bugs.butterfly),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.white, bicho: Bugs.bee),
-      ];
-      BountyCard bountyC = BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Bugs.ladybug, requerimiento3: Bugs.butterfly);
-      //BountyCard bountyC = BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Flowers.tulip, requerimiento3: Flowers.daisy);
-      bountyC.checkIfCompleated(miDeck, 1);
-      
-      expect(bountyC.obtainScore(), equals(5));
-    });
-    test('Puntaje de bountycard en dia 2 es 3', () {
-      List<Card> miDeck = [
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.white, bicho: Bugs.bee),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.pink, bicho: Bugs.ladybug),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.white, bicho: Bugs.butterfly),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.white, bicho: Bugs.bee),
-      ];
-      BountyCard bountyC = BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Bugs.ladybug, requerimiento3: Bugs.butterfly);
-      //BountyCard bountyC = BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Flowers.tulip, requerimiento3: Flowers.daisy);
-      bountyC.checkIfCompleated(miDeck, 2);
-      
-      expect(bountyC.obtainScore(), equals(3));
-    });
-    test('Puntaje de bountycard en dia 3 es 2', () {
-      List<Card> miDeck = [
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.white, bicho: Bugs.bee),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.pink, bicho: Bugs.ladybug),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.white, bicho: Bugs.butterfly),
-        FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.white, bicho: Bugs.bee),
-      ];
-      BountyCard bountyC = BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Bugs.ladybug, requerimiento3: Bugs.butterfly);
-      //BountyCard bountyC = BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Flowers.tulip, requerimiento3: Flowers.daisy);
-      bountyC.checkIfCompleated(miDeck, 3);
-      
-      expect(bountyC.obtainScore(), equals(2));
-    });
-
-
-  });
+  
+  
   group('Final de dia: ', () {
     test('Al terminar el dia es "Dia 2"', () {
       Game game = Game();
@@ -821,7 +341,7 @@ void main() {
       //game.imprimirTablero();
       
 
-      expect(game.row1.elementAt(0)._isThere, equals(false));
+      expect(game.row1.elementAt(0).isThere, equals(false));
 
     });
     test('Tarjeta tomada cambia a siguiente columna', () {
@@ -873,7 +393,7 @@ void main() {
       Game game = Game();
       CrowCard crowC = CrowCard(renglon: 3, reemplazo: CrowReplacements.stone, numeroDePiedras: 2);
       game.crowActs(crowC);
-      bool didHappen = (game.row3.elementAt(0)._isThere == false) && (game.row3.elementAt(0)._stonesInSpace == 2);
+      bool didHappen = (game.row3.elementAt(0).isThere == false) && (game.row3.elementAt(0).stonesInSpace == 2);
       //game.imprimirTablero();
       expect(didHappen, equals(true));
     });
@@ -999,6 +519,21 @@ void main() {
 
 }
 /* -------------------------------- GAME -------------------------------------- */
+class Crow{
+  int _stones = 0;
+
+  int howManyStonesHas(){
+    return _stones;
+  }
+  void addStones(int s){
+    _stones += s;
+  }
+  void subtractStones(int s){
+    _stones -= s;
+  }
+
+}
+
 class Game{
   List<BountyCard> _bountyCards = [];
   List<GardenCard> _gardenCards = [];
@@ -1055,12 +590,12 @@ class Game{
   }
   void setCardsOfGardenRows(){
 
-    row1[1].TurnCard();
-    row1[3].TurnCard();
+    row1[1].turnCard();
+    row1[3].turnCard();
 
-    row2[0].hasStone = true; row2[0]._stonesInSpace = 1;
-    row2[2].hasStone = true; row2[2]._stonesInSpace = 1;
-    row2[4].hasStone = true; row2[4]._stonesInSpace = 1;
+    row2[0].hasStone = true; row2[0].setStonesInSpace(1);
+    row2[2].hasStone = true; row2[2].setStonesInSpace(1);
+    row2[4].hasStone = true; row2[4].setStonesInSpace(1);
   }
   void generateDesireRow() {
     row3 = drawDesireCards(5).toList();
@@ -1109,44 +644,44 @@ class Game{
     if (_gameOver) return;
     switch (row){
       case 1: GardenCard card = row1.elementAt(column-1);
-              if (!card._isThere && card.hasStone){
-                crow.subtractStones(card._stonesInSpace);
+              if (!card.isThere && card.hasStone){
+                crow.subtractStones(card.stonesInSpace);
               }
-              if (card._isThere){
+              if (card.isThere){
                 _deck.add(card);
-                card._isThere = false; // probar si funciona esto, sino reemplazar por "row1.elementAt(column-1)._isThere = false"
+                card.setIsThere(false); // probar si funciona esto, sino reemplazar por "row1.elementAt(column-1)._isThere = false"
               }
               if (card.hasStone) {
-                _stones += card._stonesInSpace;
-                card._stonesInSpace = 0;
+                _stones += card.stonesInSpace;
+                card.setStonesInSpace(0);
                 card.hasStone = false;
               }
         break;
       case 2: GardenCard card = row2.elementAt(column-1);
-              if (!card._isThere && card.hasStone){
-                crow.subtractStones(card._stonesInSpace);
+              if (!card.isThere && card.hasStone){
+                crow.subtractStones(card.stonesInSpace);
               }
-              if (card._isThere){
+              if (card.isThere){
                 _deck.add(card);
-                card._isThere = false; 
+                card.setIsThere(false); 
               }
               if (card.hasStone) {
-                _stones += card._stonesInSpace;
-                card._stonesInSpace = 0;
+                _stones += card.stonesInSpace;
+                card.setStonesInSpace(0);
                 card.hasStone = false;
               }
         break;
       case 3: DesireCard card = row3.elementAt(column-1);
-              if (!card._isThere && card.hasStone){
-                crow.subtractStones(card._stonesInSpace);
+              if (!card.isThere && card.hasStone){
+                crow.subtractStones(card.stonesInSpace);
               }
-              if (card._isThere){
+              if (card.isThere){
                 _deck.add(card);
-                card._isThere = false; 
+                card.setIsThere(false); 
               }
               if (card.hasStone) {
-                _stones += card._stonesInSpace;
-                card._stonesInSpace = 0;
+                _stones += card.stonesInSpace;
+                card.setStonesInSpace(0);
                 card.hasStone = false;
               }
         break;
@@ -1202,34 +737,34 @@ class Game{
   // DEVIL CROW
   void crowActs(CrowCard crowC) {
     //print(crowC);
-    switch(crowC._replaceWith){
+    switch(crowC.replaceWith){
       case CrowReplacements.stone:
-        switch (crowC._replaceRowAt){
-          case 1: row1.elementAt(column-1)._isThere = false;
+        switch (crowC.replaceRowAt){
+          case 1: row1.elementAt(column-1).setIsThere(false);
                   row1.elementAt(column-1).hasStone = true;
-                  row1.elementAt(column-1)._stonesInSpace = crowC._numberOfStones;
+                  row1.elementAt(column-1).setStonesInSpace(crowC.numberOfStones);
             break;
-          case 2: row2.elementAt(column-1)._isThere = false;
+          case 2: row2.elementAt(column-1).setIsThere(false);
                   row2.elementAt(column-1).hasStone = true;
-                  row2.elementAt(column-1)._stonesInSpace = crowC._numberOfStones;
+                  row2.elementAt(column-1).setStonesInSpace(crowC.numberOfStones);
             break;
-          case 3: row3.elementAt(column-1)._isThere = false;
+          case 3: row3.elementAt(column-1).setIsThere(false);
                   row3.elementAt(column-1).hasStone = true;
-                  row3.elementAt(column-1)._stonesInSpace = crowC._numberOfStones;
+                  row3.elementAt(column-1).setStonesInSpace(crowC.numberOfStones);
             break;
         }
-        crow.addStones(crowC._numberOfStones);
+        crow.addStones(crowC.numberOfStones);
         break;
       case CrowReplacements.card: 
-        switch (crowC._replaceRowAt){
+        switch (crowC.replaceRowAt){
           case 1: row1[column-1] = drawGardenCard();
-                  row1[column-1]._isUpsidedown = true;
+                  row1[column-1].setUpsideDown(true);
             break;
           case 2: row2[column-1] = drawGardenCard();
-                  row2[column-1]._isUpsidedown = true;
+                  row2[column-1].setUpsideDown(true);
             break;
           case 3: row3[column-1] = drawDesireCard();
-                  row3[column-1]._isUpsidedown = true;
+                  row3[column-1].setUpsideDown(true);
             break;
         }
         break;
@@ -1312,7 +847,7 @@ class Game{
   // OBTAIN SCORE
   int obtainFinalScore(){
     _finalScore += obtainDeckScore();
-    print('Score of Arrangement & Desire: ${obtainDeckScore()}');
+    //print('Score of Arrangement & Desire: ${obtainDeckScore()}');
     _finalScore += obtainBountyCardsScore();
     print('Score of BountyCards: ${obtainBountyCardsScore()}');
     _finalScore += obtainCupOfTeaCardScore();
@@ -1323,6 +858,7 @@ class Game{
   }
   int obtainDeckScore(){
     int score = 0;
+    int score2 = 0;
     for (var element in _deck) {
       if (element.typeOfCard == TypesOfCards.desire){
         element = element as DesireCard;
@@ -1330,10 +866,12 @@ class Game{
       }
       if (element.typeOfCard == TypesOfCards.arrangement){
         element = element as ArrangementCard;
-        score += element.obtainScore(_deck);
+        score2 += element.obtainScore(_deck);
       }
     }
-    return score;
+    print('Score of Desire: $score');
+    print('Score of Arrangement: $score2');
+    return score + score2;
   }
   int obtainCupOfTeaCardScore(){
     if (!_usedCupOfTeaCard) return 2;
@@ -1399,7 +937,6 @@ class Game{
   void printGardenCardsZone(){
     List<GardenCard> row1 = this.row1;
     List<GardenCard> row2 = this.row2;
-    List<DesireCard> row3 = this.row3;
 
     print(createGardenRow(row1));
     print(createGardenRow(row2));
@@ -1424,11 +961,11 @@ class Game{
 
     List<String> line = [];
     for (var element in row2) {
-      String l = '${element.typeOfCard.toString().split('.').last.toUpperCase()}:${element._flower.toString().split('.').last}/${element.color.toString().split('.').last}/${element._bug.toString().split('.').last}';
+      String l = '${element.typeOfCard.toString().split('.').last.toUpperCase()}:${element.flower.toString().split('.').last}/${element.color.toString().split('.').last}/${element.bug.toString().split('.').last}';
       if (element.isUpsidedown) l = '//';
-      if (!element._isThere) l = '---';
+      if (!element.isThere) l = '---';
       if (element.hasStone){
-        String stones = '*' * element._stonesInSpace;
+        String stones = '*' * element.stonesInSpace;
          l += '($stones)';
       }
       line.add(l);
@@ -1452,9 +989,9 @@ class Game{
       
       l ='${element.points.toString()}/${element.typeOfDesire.toString().split('.').last}/${element.requirement.toString()}';
       if (element.isUpsidedown) l = '//';
-      if (!element._isThere) l = '---';
+      if (!element.isThere) l = '---';
       if (element.hasStone){
-        String stones = '*' * element._stonesInSpace;
+        String stones = '*' * element.stonesInSpace;
         l += '($stones)';
       }
       line.add(l);
@@ -1466,7 +1003,7 @@ class Game{
     for (var element in _deck) {
       if (element.typeOfCard != TypesOfCards.desire){
         element = element as GardenCard;
-        line.add('${element.typeOfCard.toString().split('.').last.toUpperCase()}:${element._flower.toString().split('.').last}/${element.color.toString().split('.').last}/${element._bug.toString().split('.').last}');
+        line.add('${element.typeOfCard.toString().split('.').last.toUpperCase()}:${element.flower.toString().split('.').last}/${element.color.toString().split('.').last}/${element.bug.toString().split('.').last}');
       }
       if (element.typeOfCard == TypesOfCards.desire){
         element = element as DesireCard;
@@ -1510,862 +1047,7 @@ class Game{
 
 }
 
-class Crow{
-  int _stones = 0;
 
-  int howManyStonesHas(){
-    return _stones;
-  }
-  void addStones(int s){
-    _stones += s;
-  }
-  void subtractStones(int s){
-    _stones -= s;
-  }
-
-}
 /* ----------------------------- END OF GAME ---------------------------------- */
 
-/* ---------------------------------------------------------------------------- */
-/* ----------------------------------- CARDS ---------------------------------- */
-// ENUMS
 
-
-enum Flowers {daisy, lily, mum, poppy, tulip, indifferent}
-enum Colors {white, yellow, orange, pink, purple, indifferent}
-enum Bugs {bee, beetle, butterfly, ladybug, moth, none, indifferent}
-
-enum TypesOfCards {flower, arrangement, desire}
-enum TypesOfDesire {simple, same, different}
-enum CrowReplacements {stone, card}
-
-// LISTS
-List<GardenCard> gardenCards = [
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.orange),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.pink),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.white),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.purple),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.purple, bicho: Bugs.butterfly),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.orange, bicho: Bugs.beetle),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.white, bicho: Bugs.ladybug),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.pink, bicho: Bugs.bee),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.mum, col: Colors.yellow, bicho: Bugs.moth),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.white),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.orange),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.pink),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.yellow),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.purple),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.purple, bicho: Bugs.beetle),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.pink, bicho: Bugs.butterfly),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.orange, bicho: Bugs.ladybug),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.yellow, bicho: Bugs.bee),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.poppy, col: Colors.white, bicho: Bugs.moth),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.pink),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.orange),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.white),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.yellow),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.purple),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.pink, bicho: Bugs.beetle),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.orange, bicho: Bugs.moth),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.white, bicho: Bugs.bee),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.yellow, bicho: Bugs.butterfly),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.tulip, col: Colors.purple, bicho: Bugs.ladybug),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.daisy, col: Colors.purple),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.daisy, col: Colors.pink),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.daisy, col: Colors.white),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.daisy, col: Colors.orange),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.daisy, col: Colors.yellow),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.daisy, col: Colors.purple, bicho: Bugs.moth),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.daisy, col: Colors.pink, bicho: Bugs.ladybug),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.daisy, col: Colors.white, bicho: Bugs.butterfly),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.daisy, col: Colors.orange, bicho: Bugs.bee),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.daisy, col: Colors.yellow, bicho: Bugs.beetle),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.purple),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.orange),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.white),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.yellow),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.pink),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.purple, bicho: Bugs.bee),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.orange, bicho: Bugs.butterfly),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.white, bicho: Bugs.beetle),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.yellow, bicho: Bugs.ladybug),
-  FlowerCard(tipoDeCarta: TypesOfCards.flower, flor: Flowers.lily, col: Colors.pink, bicho: Bugs.moth),
-
-  ArrangementCard(tipoDeCarta: TypesOfCards.arrangement, flor: Flowers.poppy, col: Colors.orange, bicho: Bugs.moth),
-  ArrangementCard(tipoDeCarta: TypesOfCards.arrangement, flor: Flowers.tulip, col: Colors.yellow, bicho: Bugs.ladybug),
-  ArrangementCard(tipoDeCarta: TypesOfCards.arrangement, flor: Flowers.lily, col: Colors.purple, bicho: Bugs.butterfly),
-  ArrangementCard(tipoDeCarta: TypesOfCards.arrangement, flor: Flowers.daisy, col: Colors.white, bicho: Bugs.bee),
-  ArrangementCard(tipoDeCarta: TypesOfCards.arrangement, flor: Flowers.mum, col: Colors.pink, bicho: Bugs.beetle),
-];
-List <BountyCard> bountyCards = [
-  BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Bugs.ladybug, requerimiento3: Bugs.butterfly),
-  BountyCard(requerimiento1: Flowers.tulip, requerimiento2: Flowers.tulip, requerimiento3: Flowers.daisy),
-  BountyCard( requerimiento1: Bugs.beetle, requerimiento2: Bugs.ladybug, requerimiento3: Bugs.bee),
-  BountyCard(requerimiento1: Flowers.lily, requerimiento2: Flowers.mum, requerimiento3: Flowers.tulip),
-  BountyCard(requerimiento1: Flowers.daisy, requerimiento2: Flowers.mum, requerimiento3: Bugs.bee),
-  BountyCard(requerimiento1: Flowers.lily, requerimiento2: Flowers.lily, requerimiento3: Bugs.ladybug),
-  BountyCard(requerimiento1: Flowers.poppy, requerimiento2: Flowers.daisy, requerimiento3: Bugs.beetle),
-  BountyCard(requerimiento1: Flowers.lily, requerimiento2: Flowers.poppy, requerimiento3: Bugs.moth),
-  BountyCard(requerimiento1: Flowers.poppy, requerimiento2: Flowers.mum, requerimiento3: Bugs.butterfly)
-  
-];
-List<DesireCard> desireCards = [
-  DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.simple, requerimiento: Bugs.bee, puntos: [3]),
-  DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.simple, requerimiento: Flowers.mum, puntos: [2]),
-  DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.simple, requerimiento: Colors.yellow, puntos: [2]),
-  DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.same, requerimiento: Bugs.indifferent, puntos: [0,2,4,7,10]),
-  DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.simple, requerimiento: Bugs.butterfly, puntos: [3]),
-  DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.simple, requerimiento: Colors.orange, puntos: [2]),
-  DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.different, requerimiento: Colors.indifferent, puntos: [0,0,1,3,5]),
-  DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.simple, requerimiento: Bugs.beetle, puntos: [3]),
-  DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.simple, requerimiento: Colors.white, puntos: [2]),
-  DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.simple, requerimiento: Bugs.ladybug, puntos: [3]),
-  DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.simple, requerimiento: Flowers.lily, puntos: [2]),
-  DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.same, requerimiento: Flowers.indifferent, puntos: [0,1,2,4,7]),
-  DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.different, requerimiento: Flowers.indifferent, puntos: [0,0,1,3,5]),
-  DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.simple, requerimiento: Colors.purple, puntos: [2]),
-  DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.simple, requerimiento: Colors.pink, puntos: [2]),
-  DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.same, requerimiento: Colors.indifferent, puntos: [0,1,2,4,7]),
-  DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.simple, requerimiento: Flowers.tulip, puntos: [2]),
-  DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.different, requerimiento: Bugs.indifferent, puntos: [0,1,2,4,7]),
-  DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.simple, requerimiento: Bugs.moth, puntos: [3]),
-  DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.simple, requerimiento: Flowers.daisy, puntos: [2]),
-  DesireCard(tipoDeCarta: TypesOfCards.desire, tipoDeDesire: TypesOfDesire.simple, requerimiento: Flowers.poppy, puntos: [2])
-];
-List<CrowCard> crowCards = [
-  CrowCard(renglon: 3, reemplazo: CrowReplacements.stone, numeroDePiedras: 2),
-  CrowCard(renglon: 3, reemplazo: CrowReplacements.stone, numeroDePiedras: 1),
-  CrowCard(renglon: 3, reemplazo: CrowReplacements.card),
-  CrowCard(renglon: 1, reemplazo: CrowReplacements.stone, numeroDePiedras: 2),
-  CrowCard(renglon: 2, reemplazo: CrowReplacements.stone, numeroDePiedras: 2),
-  CrowCard(renglon: 1, reemplazo: CrowReplacements.stone, numeroDePiedras: 1),
-  CrowCard(renglon: 1, reemplazo: CrowReplacements.card),
-  CrowCard(renglon: 2, reemplazo: CrowReplacements.stone, numeroDePiedras: 1),
-  CrowCard(renglon: 2, reemplazo: CrowReplacements.card)
-];
-
-// CLASSES
-class Card extends Equatable{
-
-  late final TypesOfCards _typeOfCard;
-  TypesOfCards get typeOfCard => _typeOfCard;
-
-  bool _isUpsidedown = false;
-  bool get isUpsidedown => _isUpsidedown;
-
-  bool _isThere = true;
-  int _stonesInSpace = 0;
-
-  bool hasStone = false;
-
-  Card({required TypesOfCards tipoDeCarta}){
-    _typeOfCard = tipoDeCarta;
-  }
-  @override
-  List<Object?> get props => [];
-}
-
-class GardenCard extends Card{
-  late final Flowers _flower;
-  late final Colors _color;
-  late final Bugs _bug; 
-
-  Flowers get flower => _flower;
-  Colors get color => _color;
-  Bugs get bug => _bug;
-
-
-  // ignore: empty_constructor_bodies
-  GardenCard({required super.tipoDeCarta}){
-    
-  }
-
-  void TurnCard(){
-    _isUpsidedown = !_isUpsidedown;
-  }
-
-  @override
-  List<Object?> get props => [_flower, _color, _bug];
-
-}
-
-class FlowerCard extends GardenCard{
-
-  FlowerCard({required super.tipoDeCarta, required Flowers flor,required Colors col, Bugs bicho = Bugs.none}){
-    _flower = flor;
-    _color = col;
-    _bug = bicho;
-  }
-
-
-}
-
-class ArrangementCard extends GardenCard{
-
-  final List<int> points = [1,3,5];
-
-  ArrangementCard({required super.tipoDeCarta, required Flowers flor,required Colors col, required Bugs bicho}){
-    _flower = flor;
-    _color = col;
-    _bug = bicho;
-  }
-  
-  int obtainScore2(List<Card> miDeck) {
-    int counter = 0;
-    List<Card> tempCards = miDeck.toList();
-
-      for (var element in tempCards) {
-        if (element.typeOfCard != TypesOfCards.flower) continue;
-        element = element as FlowerCard;
-        if (element._bug == _bug){
-          tempCards.remove(element);
-          counter++;
-          break;
-        }
-      }
-    
-    for (var element in tempCards) {
-        if (element.typeOfCard != TypesOfCards.flower) continue;
-        element = element as FlowerCard;
-        if (element._flower == _flower){
-          tempCards.remove(element);
-          counter++;
-          break;
-        }
-    }
-
-    for (var element in tempCards) {
-        if (element.typeOfCard != TypesOfCards.flower) continue;
-        element = element as FlowerCard;
-        if (element._color == _color){
-          tempCards.remove(element);
-          counter++;
-          break;
-        }
-    }
-    if (counter == 0) return 0;
-    return points[counter-1];
-  }
-  int obtainScore(List<Card> miDeck) {
-    int counter = 0;
-    List<Card> tempCards = miDeck.toList();
-    Map map = {};
-
-      for (var element in tempCards) {
-        if (element.typeOfCard != TypesOfCards.flower) continue;
-        element = element as FlowerCard;
-        if (element._bug == _bug){
-          if (!map.containsKey(element)) {
-            map[element] = 1;
-          } else {
-            map[element] += 1;
-          }
-          if (element._flower == _flower) map[element] += 1;
-          if (element._color == _color) map[element] += 1;
-        }
-      }
-      List sortedValues = map.values.toList()..sort();
-      if (sortedValues.isNotEmpty) {
-        int leastValuableValue = sortedValues.first;
-        var key = map.keys.firstWhere((k)
-              => map[k] == leastValuableValue, orElse: () => null);
-        tempCards.remove(key);
-        counter++;
-        map = {};
-      }
-      
-      
-    for (var element in tempCards) {
-        if (element.typeOfCard != TypesOfCards.flower) continue;
-        element = element as FlowerCard;
-        if (element._flower == _flower){
-          if (!map.containsKey(element)) {
-            map[element] = 1;
-          } else {
-            map[element] += 1;
-          }
-          if (element._color == _color) map[element] += 1;
-        }
-    }
-    sortedValues = map.values.toList()..sort();
-      if (sortedValues.isNotEmpty) {
-        int leastValuableValue = sortedValues.first;
-        var key = map.keys.firstWhere((k)
-              => map[k] == leastValuableValue, orElse: () => null);
-        tempCards.remove(key);
-        counter++;
-        map = {};
-      }
-
-    for (var element in tempCards) {
-        if (element.typeOfCard != TypesOfCards.flower) continue;
-        element = element as FlowerCard;
-        if (element._color == _color){
-          tempCards.remove(element);
-          counter++;
-          break;
-        }
-    }
-    if (counter == 0) return 0;
-    return points[counter-1];
-  }
-  
-  
-}
-
-class BountyCard extends Equatable{
-  // Equatable is for its "parameters" to be seen when print
-
-  late final Enum requirement1;
-  late final Enum requirement2;
-  late final Enum requirement3;
-
-  bool _isCompleated = false;
-  bool get isCompleated  => _isCompleated;
-
-  int _wasCompleatedAtDay = 0;
-  int get wasCompleatedAtDay => _wasCompleatedAtDay;
-
-  List points = [0,5,3,2];
-
-  BountyCard({required Enum requerimiento1, required Enum requerimiento2, required Enum requerimiento3}) {
-    requirement1 = requerimiento1;
-    requirement2 = requerimiento2;
-    requirement3 = requerimiento3;
-  }
-
-  void checkIfCompleated4(List<Card> deck, int day) {
-    int counter = 0;
-    List<Card> tempCards = deck.toList();
-    List list = [requirement1, requirement2, requirement3];
-
-    for (var i = 0; i < 3; i++) {
-      for (var element in tempCards) {
-        if (element.typeOfCard != TypesOfCards.flower) continue;
-        FlowerCard? c = checkIfMeetsRequirements(element, list[i]);
-        if(c != null) {
-          counter++;
-          tempCards.remove(c);
-          break;
-        }
-      }
-    }
-    if (counter == 3) {
-      compleatedAtDay(day);
-    }
-  }
-  void checkIfCompleated3(List<Card> deck, int day){
-    int counter = 0;
-    List<Card> tempCards = deck.toList();
-    List list = [requirement1, requirement2, requirement3];
-    Map map = {};
-
-    for (var i = 0; i < 3; i++) {
-      for (var element in tempCards) {
-        if (element.typeOfCard != TypesOfCards.flower) continue;
-        element = element as FlowerCard;
-        if ((element._bug == list[0]) || (element._bug == list[1]) || (element._bug == list[2])){
-          if (!map.containsKey(element)) {
-            map[element] = 1;
-          } else {
-            map[element] += 1;
-          }
-        }
-        if ((element._flower == list[0]) || (element._flower == list[1]) || (element._flower == list[2])){
-          if (!map.containsKey(element)) {
-            map[element] = 1;
-          } else {
-            map[element] += 1;
-          }
-        }
-      }
-      print(map);
-      List sortedValues = map.values.toList()..sort();
-      if (sortedValues.isNotEmpty) {
-        int leastValuableValue = sortedValues.first;
-        var key = map.keys.firstWhere((k)
-              => map[k] == leastValuableValue, orElse: () => null);
-        tempCards.remove(key);
-        counter++;
-        map = {};
-      }
-    }
-      
-      /* 
-      for (var element in tempCards) {
-        if (element.typeOfCard != TypesOfCards.flower) continue;
-        element = element as FlowerCard;
-        if ((element._bug == list[0]) || (element._bug == list[1]) || (element._bug == list[2])){
-          if (!map.containsKey(element)) {
-            map[element] = 1;
-          } else {
-            map[element] += 1;
-          }
-        }
-        if ((element._flower == list[0]) || (element._flower == list[1]) || (element._flower == list[2])){
-          if (!map.containsKey(element)) {
-            map[element] = 1;
-          } else {
-            map[element] += 1;
-          }
-        }
-      }
-      print(map);
-      sortedValues = map.values.toList()..sort();
-      if (sortedValues.isNotEmpty) {
-        int leastValuableValue = sortedValues.first;
-        var key = map.keys.firstWhere((k)
-              => map[k] == leastValuableValue, orElse: () => null);
-        tempCards.remove(key);
-        counter++;
-        map = {};
-      }
-      
-      //
-      for (var element in tempCards) {
-        if (element.typeOfCard != TypesOfCards.flower) continue;
-        element = element as FlowerCard;
-        if ((element._bug == list[0]) || (element._bug == list[1]) || (element._bug == list[2])){
-          if (!map.containsKey(element)) {
-            map[element] = 1;
-          } else {
-            map[element] += 1;
-          }
-        }
-        if ((element._flower == list[0]) || (element._flower == list[1]) || (element._flower == list[2])){
-          if (!map.containsKey(element)) {
-            map[element] = 1;
-          } else {
-            map[element] += 1;
-          }
-        }
-      }
-      print(map);
-      sortedValues = map.values.toList()..sort();
-      if (sortedValues.isNotEmpty) {
-        int leastValuableValue = sortedValues.first;
-        var key = map.keys.firstWhere((k)
-              => map[k] == leastValuableValue, orElse: () => null);
-        tempCards.remove(key);
-        counter++;
-        map = {};
-      }*/
-
-      if (counter == 3) {
-      _isCompleated = true;
-      compleatedAtDay(day);
-    }
-      
-  }
-  void checkIfCompleated2(List<Card> deck, int day){
-    int counter = 0;
-    List<Card> tempCards = deck.toList();
-    List requirementsList = [requirement1, requirement2, requirement3];
-    Map map = {};
-
-    for (var i = 0; i < 3; i++) {
-      for (var element in tempCards) {
-        if (element.typeOfCard != TypesOfCards.flower) continue;
-        element = element as FlowerCard;
-        if ((element._bug == requirementsList[0]) || (element._bug == requirementsList[1]) || (element._bug == requirementsList[2])){
-          if (!map.containsKey(element)) {
-            map[element] = 1;
-          } else {
-            map[element] += 1;
-          }
-        }
-        if ((element._flower == requirementsList[0]) || (element._flower == requirementsList[1]) || (element._flower == requirementsList[2])){
-          if (!map.containsKey(element)) {
-            map[element] = 1;
-          } else {
-            map[element] += 1;
-          }
-        }
-      }
-    
-      //print(map);
-      List sortedValues = map.values.toList()..sort();
-      if (sortedValues.isNotEmpty) {
-        int leastValuableValue = sortedValues.first;
-        var key = map.keys.firstWhere((k)
-              => map[k] == leastValuableValue, orElse: () => null);
-        tempCards.remove(key);
-        //print(key);
-        counter++;
-        map = {};
-      }
-    
-      }
-      
-      if (counter == 3) {
-      _isCompleated = true;
-      compleatedAtDay(day);
-    }
-      
-  }
-  void checkIfCompleated(List<Card> deck, int day){
-    if (isCompleated) return;
-    List<String> requirements = [requirement1.toString(),requirement2.toString(),requirement3.toString()];
-    requirements.sort();
-    //print(requirements);
-    int counter = 0;
-    List<Card> tempCards = deck.toList();
-    //List requirementsList = [requirement1, requirement2, requirement3];
-    Map map = {};
-
-    for (var element in tempCards) {
-      if (element.typeOfCard != TypesOfCards.flower) continue;
-      element = element as FlowerCard;
-      //print(requirements[0]);
-      if (requirements[0].split('.').first == 'Bugs'){
-        //print(element._bug.toString() == requirements[0]);
-        if ((element._bug.toString() == requirements[0])){
-            
-          if (!map.containsKey(element)) {
-            map[element] = 1;
-          } else {
-            map[element] += 1;
-          }
-          if (requirements[1].split('.').first != 'Bugs'){
-            if (requirements[1] == element._flower.toString()) map[element] += 1;
-          }
-          if (requirements[2].split('.').first != 'Bugs'){
-            if (requirements[2] == element._flower.toString()) map[element] += 1;
-          }
-        }
-      } else {
-        if (element._flower.toString() == requirements[0]){
-          if (!map.containsKey(element)) {
-            map[element] = 1;
-          } else {
-            map[element] += 1;
-          }
-        }
-      }
-    }
-    
-    //print(map);
-    List sortedValues = map.values.toList()..sort();
-    if (sortedValues.isNotEmpty) {
-      int leastValuableValue = sortedValues.first;
-      var key = map.keys.firstWhere((k)
-            => map[k] == leastValuableValue, orElse: () => null);
-      tempCards.remove(key);
-      //print(key);
-      counter++;
-      map = {};
-    }
-
-    /* SECOND CHECK */
-    for (var element in tempCards) {
-      if (element.typeOfCard != TypesOfCards.flower) continue;
-      element = element as FlowerCard;
-      if (requirements[1].split('.').first == 'Bugs'){
-        if ((element._bug.toString() == requirements[1])){
-          if (!map.containsKey(element)) {
-            map[element] = 1;
-          } else {
-            map[element] += 1;
-          }
-          if (requirements[2].split('.').first != 'Bugs'){
-            if (requirements[2] == element._flower.toString()) map[element] += 1;
-          }
-
-        }
-       
-      } else {
-        if (element._flower.toString() == requirements[1]){
-          if (!map.containsKey(element)) {
-            map[element] = 1;
-          } else {
-            map[element] += 1;
-          }
-        }
-        
-      }
-        
-    }
-    
-    //print(map);
-    sortedValues = map.values.toList()..sort();
-    if (sortedValues.isNotEmpty) {
-      int leastValuableValue = sortedValues.first;
-      var key = map.keys.firstWhere((k)
-            => map[k] == leastValuableValue, orElse: () => null);
-      tempCards.remove(key);
-      //print(key);
-      counter++;
-      map = {};
-    }
-
-    /* THIRD CHECK */
-    for (var element in tempCards) {
-      if (element.typeOfCard != TypesOfCards.flower) continue;
-      element = element as FlowerCard;
-      if (requirements[2].split('.').first == 'Bugs'){
-        if ((element._bug.toString() == requirements[2])){
-          if (!map.containsKey(element)) {
-            map[element] = 1;
-          } else {
-            map[element] += 1;
-          }
-
-        }
-       
-      } else {
-        if (element._flower.toString() == requirements[2]){
-          if (!map.containsKey(element)) {
-            map[element] = 1;
-          } else {
-            map[element] += 1;
-          }
-        }
-      }
-    }
-    
-    //print(map);
-    sortedValues = map.values.toList()..sort();
-    if (sortedValues.isNotEmpty) {
-      int leastValuableValue = sortedValues.first;
-      var key = map.keys.firstWhere((k)
-            => map[k] == leastValuableValue, orElse: () => null);
-      tempCards.remove(key);
-      //print(key);
-      counter++;
-      map = {};
-    }
-
-
-
-
-    // Final piece of code "return"
-    if (counter == 3) {
-    _isCompleated = true;
-    compleatedAtDay(day);
-    }
-      
-  }
-
-  FlowerCard? checkIfMeetsRequirements(Card element, Enum requirement) {
-    element = element as FlowerCard;
-    if ((element._bug == requirement) || (element._flower == requirement)){
-      return element;
-    }
-    FlowerCard? c;
-    return c;
-  }
-
-  void compleatedAtDay(int day){
-    _isCompleated = true;
-    _wasCompleatedAtDay = day;
-  }
-
-  int obtainScore(){
-    return points[wasCompleatedAtDay];
-  }
-
-  @override
-  List<Object?> get props => [requirement1, requirement2, requirement3];
-}
-
-class DesireCard extends Card{
-
-  late final Enum typeOfDesire;
-  late final Enum requirement;
-  late final List<int> points;
-  final occurrencesLimit = 5;
-
-  DesireCard({required super.tipoDeCarta, required TypesOfDesire tipoDeDesire, required Enum requerimiento, required List<int> puntos}){
-    typeOfDesire = tipoDeDesire;
-    requirement = requerimiento;
-    points = puntos;
-  }
-
-  int obtainScore(List<Card> listOfCards) {
-    String type = typeOfDesire.toString().split('.').last;
-    int score = 0;
-    switch(type){
-      case 'simple': score += obtainSimpleScore(listOfCards);
-        break;
-      case 'same': score += obtainSameScore(listOfCards);
-        break;
-      case 'different': score += obtainDifferentScore(listOfCards);
-        break;
-    }
-    return score;
-  }
-
-  int obtainSimpleScore(List<Card> listOfCards){
-    int maxOccurrence = obtainRequerimentOccurence(listOfCards);
-    int score = maxOccurrence * points[0];
-    return score;
-  }
-  int obtainSameScore(List<Card> listOfCards){
-    Map maxOccurrence = obtainMaxSameOccurence(listOfCards);
-    int occurrences = maxOccurrence.values.first > occurrencesLimit? occurrencesLimit:maxOccurrence.values.first;
-    if (occurrences <= 0) occurrences = 1;
-
-    //print(occurrences);
-    int score = points[occurrences-1];
-    //print(maxOccurrence);
-    //print(maxOccurrence.keys.first);
-    //print(maxOccurrence.values.first);
-    return score;
-  }
-  int obtainDifferentScore(List<Card> listOfCards){
-    int occurrences = obtainDifferentOccurrences(listOfCards);
-    if (occurrences > occurrencesLimit) occurrences = occurrencesLimit;
-    if (occurrences <= 0) occurrences = 1;
-    int score = points[occurrences-1];
-    return score;
-  }
-
-  int obtainRequerimentOccurence(List<Card> listOfCards){
-    var map = Map();
-
-    for (var element in listOfCards) {
-      if (element.typeOfCard != TypesOfCards.flower) continue;
-      GardenCard card = element as GardenCard;
-
-      Enum? keyValue;
-      String enumName = requirement.toString().split('.').first;
-
-      switch (enumName){
-        case "Flowers": keyValue = card._flower; 
-          break;
-        case "Colors": keyValue = card._color; 
-          break; 
-        case "Bugs": keyValue = card._bug; 
-          break;
-      }
-
-      if (!map.containsKey(keyValue)) {
-        map[keyValue] = 1;
-      } else {
-        map[keyValue] += 1;
-      }
-    }
-    if (map.containsKey(Bugs.none)) map.remove(Bugs.none);
-    
-    if (map[requirement] == null) return 0;
-    return map[requirement];
-  } 
-  Map obtainMaxSameOccurence(List<Card> listOfCards){
-    var map = {};
-    
-    for (var element in listOfCards) {
-      if (element.typeOfCard != TypesOfCards.flower) continue;
-      GardenCard card = element as GardenCard;
-
-      Enum? keyValue;
-      String enumName = requirement.toString().split('.').first;
-
-      switch (enumName){
-        case "Flowers": keyValue = card._flower; 
-          break;
-        case "Colors": keyValue = card._color; 
-          break; 
-        case "Bugs": keyValue = card._bug; 
-          break;
-      }
-
-      if (!map.containsKey(keyValue)) {
-        map[keyValue] = 1;
-      } else {
-        map[keyValue] += 1;
-      }
-    }
-    if (map.containsKey(Bugs.none)) map.remove(Bugs.none);
-    
-    List sortedValues = map.values.toList()..sort();
-    if (sortedValues.isEmpty) return {requirement:0};
-
-    int popularValue = sortedValues.last;
-    var key = map.keys.firstWhere((k)
-          => map[k] == popularValue, orElse: () => null);
-    
-    var map2 = Map();
-    map2[key] = popularValue;
-
-    //return key; //it was return Enum
-    return map2;
-  }
-  int obtainDifferentOccurrences(List<Card> listOfCards){
-    var map = {};
-
-    for (var element in listOfCards) {
-      if (element.typeOfCard != TypesOfCards.flower) continue;
-      GardenCard card = element as GardenCard;
-
-      Enum? keyValue;
-      String enumName = requirement.toString().split('.').first;
-
-      switch (enumName){
-        case "Flowers": keyValue = card._flower; 
-          break;
-        case "Colors": keyValue = card._color; 
-          break; 
-        case "Bugs": keyValue = card._bug; 
-          break;
-      }
-
-      if (!map.containsKey(keyValue)) {
-        map[keyValue] = 1;
-      } else {
-        map[keyValue] += 1;
-      }
-    }
-    if (map.containsKey(Bugs.none)) map.remove(Bugs.none);
-    if (map.containsKey(Bugs.indifferent)) map.remove(Bugs.indifferent);
-    
-    List sortedValues = map.values.toList()..sort();
-    if (sortedValues.isEmpty) return 0;
-
-    return sortedValues.length;
-  }
-  
-  @override
-  List<Object?> get props => [points, typeOfDesire, requirement];
-}
-
-class CrowCard extends Equatable{
-
-  late final int _replaceRowAt;
-  late final Enum _replaceWith;
-  late final int _numberOfStones;
-
-  CrowCard({required int renglon, required CrowReplacements reemplazo, int numeroDePiedras = 0}){
-    _replaceRowAt = renglon;
-    _replaceWith = reemplazo;
-    _numberOfStones = numeroDePiedras;
-  }
-
-  
-  @override
-  List<Object?> get props => [_replaceRowAt, _replaceWith, _numberOfStones];
-
-}
-
-
-// FUNCIONES
-List<BountyCard> shuffleBountyCards(List<BountyCard> cards){
-  cards.shuffle();
-  return cards;
-}
-List<GardenCard> shuffleGardenCards(List<GardenCard> cards){
-  cards.shuffle();
-  return cards;
-}
-List<DesireCard> shuffleDesireCards(List<DesireCard> cards){
-  cards.shuffle();
-  return cards;
-}
-List<CrowCard> shuffleCrowCards(List<CrowCard> cards){
-  cards.shuffle();
-  return cards;
-}
-
-
-/* ---------------------------- END OF CARDS ---------------------------------- */
-/* ---------------------------------------------------------------------------- */
