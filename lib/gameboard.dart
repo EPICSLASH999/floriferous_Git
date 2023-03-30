@@ -1,3 +1,4 @@
+import 'package:chalkdart/chalk.dart';
 import 'package:floriferous/cards.dart';
 import 'package:floriferous/floriferous.dart';
 
@@ -14,6 +15,8 @@ class Gameboard {
 
   
   void printBoard(){
+    print(chalk.yellow.onBlue('Hello world!'));
+
     printBountyCardsZone();
     if (game.day <= game.maxDays) print('DAY: ${game.day}');
     if (game.day <= game.maxDays) printSymbology();
@@ -43,7 +46,7 @@ class Gameboard {
       String req3 = game.bountyCards.elementAt(i).requirement3.name.toUpperCase();
       String bountyWasCompleatedAtDay = '(Day:${game.bountyCards.elementAt(i).wasCompleatedAtDay.toString()})';
       if (game.bountyCards.elementAt(i).wasCompleatedAtDay == 0) bountyWasCompleatedAtDay = '';
-      message += '$req1 $req2 $req3 $bountyWasCompleatedAtDay ||';
+      message += '$req1 $req2 $req3 $bountyWasCompleatedAtDay || ';
     }
     String title = ' BOUNTY CARDS ';
     String line1 = '-' * ((message.length~/2) - title.length~/2);

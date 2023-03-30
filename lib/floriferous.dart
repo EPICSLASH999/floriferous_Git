@@ -181,7 +181,7 @@ class Game{
   
   // TURNS
   void takeTurn(){
-    printMessage('Which card shall thou take?');
+    printMessage('Which card shall thou take? (1-3)');
     List<String> validAnswers = fillListOfNumbers(1, 3);
     int numericResponse = obtainSpecificNumericResponse(validAnswers);
     takeCard(numericResponse);
